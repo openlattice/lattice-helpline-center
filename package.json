@@ -68,6 +68,11 @@
     "@babel/preset-flow": "~7.10.4",
     "@babel/preset-react": "~7.10.4",
     "@babel/register": "~7.10.4",
+    "@storybook/addon-actions": "~5.3.19",
+    "@storybook/addon-docs": "~5.3.19",
+    "@storybook/addon-links": "~5.3.19",
+    "@storybook/addons": "~5.3.19",
+    "@storybook/react": "~5.3.19",
     "babel-eslint": "~10.1.0",
     "babel-jest": "~26.1.0",
     "babel-loader": "~8.1.0",
@@ -114,6 +119,8 @@
     "lint:js": "eslint --config .eslintrc src",
     "test": "jest --config config/jest/jest.config.js --coverage=false",
     "test:travis": "jest --maxWorkers=4 --config config/jest/jest.config.js",
-    "test:watch": "jest --config config/jest/jest.config.js --watch --coverage=false"
+    "test:watch": "jest --config config/jest/jest.config.js --watch --coverage=false",
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook"
   }
 }
