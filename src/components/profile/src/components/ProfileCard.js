@@ -37,9 +37,10 @@ const PortraitSegment = styled(CardSegment)`
 
 type Props = {
   person :Map;
+  imageUrl :string;
 };
 
-const ProfileCard = ({ person } :Props) => {
+const ProfileCard = ({ imageUrl, person } :Props) => {
   const [firstName, lastName, dob] = getPropertyValues(person, [
     GIVEN_NAME,
     SURNAME,
@@ -51,7 +52,7 @@ const ProfileCard = ({ person } :Props) => {
   return (
     <InlineCard>
       <PortraitSegment>
-        <Portrait />
+        <Portrait imageUrl={imageUrl} />
       </PortraitSegment>
       <CardDetails>
         <Label subtle>Last Name</Label>
@@ -66,7 +67,8 @@ const ProfileCard = ({ person } :Props) => {
 };
 
 ProfileCard.defaultProps = {
-  person: Map()
+  imageUrl: undefined,
+  person: Map(),
 };
 
 export default ProfileCard;

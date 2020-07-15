@@ -14,7 +14,7 @@ type Props = {
   width ? :string;
 }
 const Image = styled.img`
-  border-radius: 10%;
+  border-radius: 3px;
   object-fit: cover;
   object-position: 50% 50%;
 `;
