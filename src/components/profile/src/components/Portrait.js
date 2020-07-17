@@ -6,13 +6,14 @@ import { LangUtils } from 'lattice-utils';
 
 import { OLPortrait } from '../../../../assets/svg/icons';
 
-const { isEmptyString } = LangUtils;
+const { isNonEmptyString } = LangUtils;
 
 type Props = {
-  imageUrl ? :string;
-  height ? :string;
-  width ? :string;
-}
+  imageUrl ?:string;
+  height ?:number;
+  width ?:number;
+};
+
 const Image = styled.img`
   border-radius: 3px;
   object-fit: cover;
@@ -26,18 +27,16 @@ const Portrait = (props :Props) => {
     width,
   } = props;
 
-  if (isEmptyString(imageUrl)) {
-    return (
-      <OLPortrait />
-    );
+  if (isNonEmptyString(imageUrl)) {
+    return <Image src={imageUrl} height={height} width={width} />;
   }
 
-  return <Image src={imageUrl} height={height} width={width} />;
+  return <OLPortrait />;
 };
 
 Portrait.defaultProps = {
-  height: '247',
-  width: '247',
+  height: 247,
+  width: 247,
   imageUrl: ''
 };
 

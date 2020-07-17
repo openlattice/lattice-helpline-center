@@ -112,15 +112,15 @@
     "app": "webpack-dev-server --config config/webpack/webpack.config.app.js --env.development",
     "build:dev": "webpack --config config/webpack/webpack.config.app.js --env.development",
     "build:prod": "webpack --config config/webpack/webpack.config.app.js --env.production",
+    "build:storybook": "build-storybook",
     "clean": "rimraf build/*",
     "flow": "flow",
     "lint": "npm-run-all lint:css lint:js",
     "lint:css": "stylelint './src/**/*.js'",
     "lint:js": "eslint --config .eslintrc src",
+    "storybook": "start-storybook -p 6006",
     "test": "jest --config config/jest/jest.config.js --coverage=false",
     "test:travis": "jest --maxWorkers=4 --config config/jest/jest.config.js",
-    "test:watch": "jest --config config/jest/jest.config.js --watch --coverage=false",
-    "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook"
+    "test:watch": "jest --config config/jest/jest.config.js --watch --coverage=false"
   }
 }

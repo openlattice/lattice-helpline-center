@@ -11,6 +11,8 @@ import Portrait from './Portrait';
 import PROPERTY_TYPE_FQNS from '../../../../core/edm/constants/PropertyTypes';
 import { getPropertyValues } from '../../../../utils/EntityUtils';
 
+const EMPTY_VALUE = '---';
+
 const { formatAsDate } = DateTimeUtils;
 
 const {
@@ -31,8 +33,8 @@ const CardDetails = styled(CardSegment)`
 `;
 
 const PortraitSegment = styled(CardSegment)`
-  place-items: center;
   border-bottom: none;
+  place-items: center;
 `;
 
 type Props = {
@@ -56,9 +58,9 @@ const ProfileCard = ({ imageUrl, person } :Props) => {
       </PortraitSegment>
       <CardDetails>
         <Label subtle>Last Name</Label>
-        <div>{lastName || '---'}</div>
+        <div>{lastName || EMPTY_VALUE}</div>
         <Label subtle>First Name</Label>
-        <div>{firstName || '---'}</div>
+        <div>{firstName || EMPTY_VALUE}</div>
         <Label subtle>Date of Birth</Label>
         <div>{formattedDob}</div>
       </CardDetails>
