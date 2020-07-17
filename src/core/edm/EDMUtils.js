@@ -2,7 +2,11 @@
  * @flow
  */
 
-import { Map, Set, isCollection } from 'immutable';
+import {
+  Map,
+  Set,
+  isCollection
+} from 'immutable';
 import { Models } from 'lattice';
 import { LangUtils, ValidationUtils } from 'lattice-utils';
 import { useSelector } from 'react-redux';

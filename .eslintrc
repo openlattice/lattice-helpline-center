@@ -100,7 +100,8 @@
       {
         "devDependencies": [
           "config/**",
-          "src/utils/testing/**",
+          "**/stories/**",
+          "**/*.stories.@(js|mdx)",
           "**/*.test.js"
         ]
       }
