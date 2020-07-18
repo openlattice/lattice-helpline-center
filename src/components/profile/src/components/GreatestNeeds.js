@@ -25,7 +25,10 @@ const GreatestNeeds = ({ needs = [] } :Props) => (
     <Header>Greatest Needs</Header>
     <Caption>Below are the categories in which this person scored the lowest on in the most recent survey.</Caption>
     <ChipsWrapper>
-      { needs.map((need) => <StyledChip label={need} />) }
+      {
+        // eslint-disable-next-line react/no-array-index-key
+        needs.map((need, index) => <StyledChip key={index} label={need} />)
+      }
     </ChipsWrapper>
   </div>
 );
