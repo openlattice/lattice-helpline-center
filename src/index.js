@@ -33,7 +33,7 @@ const NormalizeCSS = createGlobalStyle`
 const GlobalStyle = createGlobalStyle`
   @supports (font-variation-settings: normal) {
     html {
-      font-family: 'Inter var', sans-serif;
+      font-family: 'Inter', sans-serif;
     }
   }
 

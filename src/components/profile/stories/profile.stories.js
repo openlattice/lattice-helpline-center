@@ -1,7 +1,7 @@
 import React from 'react';
 
-import ProfileCard from '..';
 import { PropertyTypes } from '../../../core/edm/constants';
+import { ProfileCard } from '..';
 
 const {
   GIVEN_NAME,
