@@ -46,37 +46,41 @@ const SelfSufficiencyMatrixRechart = ({ data } :Props) => {
   };
 
   return (
-    <div style={{ position: 'relative' }}>
+    <div>
       <Header>Self-Sufficiency Matrix</Header>
-      <ResponsiveContainer
-          height={350}
-          width="100%">
+      <ResponsiveContainer height={350} width="100%">
         <BarChart
             barCategoryGap="20%"
-            layout="horizontal"
-            data={data}>
+            data={data}
+            layout="horizontal">
           <CartesianGrid vertical={false} />
           <YAxis
-              minTickGap={10}
-              domain={[0, 80]}
-              width={30}
-              tickLine={false}
               axisLine={false}
-              tick={{ fill: NEUTRAL.N500, fontSize: '0.75rem' }} />
+              domain={[0, 80]}
+              minTickGap={10}
+              tick={{ fill: NEUTRAL.N500, fontSize: '0.75rem' }}
+              tickLine={false}
+              width={30} />
           <XAxis
               dataKey="x"
-              type="category"
+              tick={{ fill: NEUTRAL.N500, fontSize: '0.75rem' }}
               tickLine={false}
-              tick={{ fill: NEUTRAL.N500, fontSize: '0.75rem' }} />
+              type="category" />
           <Tooltip
-              position={tooltipPayload.position}
+              content={(
+                <CustomTooltip
+                    label={tooltipPayload.label}
+                    minWidth={tooltipPayload.minWidth}
+                    position={tooltipPayload.position}
+                    value={tooltipPayload.value} />
+              )}
               cursor={false}
-              content={<CustomTooltip {...tooltipPayload} />} />
+              position={tooltipPayload.position} />
           <Bar
-              maxBarSize={60}
-              onMouseOver={onMouseOver}
               dataKey="y"
-              fill={PURPLE.P200} />
+              fill={PURPLE.P200}
+              maxBarSize={60}
+              onMouseOver={onMouseOver} />
         </BarChart>
       </ResponsiveContainer>
     </div>
