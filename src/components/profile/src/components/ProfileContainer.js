@@ -3,22 +3,36 @@ import React from 'react';
 
 import styled from 'styled-components';
 import { List, Map } from 'immutable';
+import { StyleUtils } from 'lattice-ui-kit';
 
 import GreatestNeeds from './GreatestNeeds';
 import ProfileCard from './ProfileCard';
 import SelfSufficiencyMatrix from './SelfSufficiencyMatrix';
 import SurveyHistory from './SurveyHistory';
 
+const { media } = StyleUtils;
+
+const Centered = styled.div`
+  place-items: center;
+`;
+
 const ProfileGrid = styled.div`
   display: grid;
-  grid-gap: 48px;
+  grid-gap: 18px;
   grid-template-columns: auto 1fr;
+  ${media.phone`
+    grid-template-columns: auto;
+  `}
 `;
 
 const Body = styled.div`
   display: grid;
   grid-gap: 36px;
   grid-auto-flow: row;
+  padding: 0 30px;
+  ${media.phone`
+    padding: 0 15px;
+  `}
 `;
 
 type Props = {
@@ -39,9 +53,9 @@ const ProfileContainer = (props :Props) => {
   } = props;
   return (
     <ProfileGrid>
-      <div>
+      <Centered>
         <ProfileCard imageUrl={imageUrl} person={person} />
-      </div>
+      </Centered>
       <Body>
         <GreatestNeeds needs={needs} />
         <SelfSufficiencyMatrix data={data} />
