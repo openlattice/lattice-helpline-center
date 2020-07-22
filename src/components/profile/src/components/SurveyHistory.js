@@ -4,7 +4,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { faFileAlt } from '@fortawesome/pro-light-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { List as ImmutableList } from 'immutable';
+import { List as iList } from 'immutable';
 import {
   List,
   ListItem,
@@ -26,10 +26,10 @@ const SurveyName = styled.span`
 `;
 
 type Props = {
-  surveys :ImmutableList;
+  surveys :iList;
 }
 
-const SurveyHistory = ({ surveys } :Props) => (
+const SurveyHistory = ({ surveys = iList() } :Props) => (
   <div>
     <Header>
       Survey History
