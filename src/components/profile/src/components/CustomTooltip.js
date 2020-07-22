@@ -19,18 +19,16 @@ const StyledTooltip = styled.div`
   place-items: center;
 
   span {
-    overflow: hidden;
-    position: absolute;
-    width: 5px
-    height: 5px;
+    background-color: ${NEUTRAL.N800};
     box-sizing: border-box;
     content: '""';
-    margin: auto;
     display: block;
-    width: 10px;
     height: 10px;
-    background-color: ${NEUTRAL.N800};
+    margin: auto;
+    overflow: hidden;
+    position: absolute;
     transform: translateY(1rem) rotate(45deg);
+    width: 10px;
   }
 `;
 
