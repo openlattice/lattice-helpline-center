@@ -18,6 +18,11 @@ import { Header } from '../../../typography';
 
 const { PURPLE, NEUTRAL } = Colors;
 
+const TICK_STYLE = {
+  fill: NEUTRAL.N500,
+  fontSize: '0.75rem'
+};
+
 type Props = {
   data :any[];
 };
@@ -36,7 +41,9 @@ const SelfSufficiencyMatrixRechart = ({ data } :Props) => {
       width,
       payload
     } = bar;
-    const position = { x, y: y - 35 };
+
+    // translate up by 36px;
+    const position = { x, y: y - 36 };
     setTooltipCoordinate({
       label: payload.x,
       minWidth: width,
@@ -58,12 +65,12 @@ const SelfSufficiencyMatrixRechart = ({ data } :Props) => {
               axisLine={false}
               domain={[0, 80]}
               minTickGap={10}
-              tick={{ fill: NEUTRAL.N500, fontSize: '0.75rem' }}
+              tick={TICK_STYLE}
               tickLine={false}
               width={30} />
           <XAxis
               dataKey="x"
-              tick={{ fill: NEUTRAL.N500, fontSize: '0.75rem' }}
+              tick={TICK_STYLE}
               tickLine={false}
               type="category" />
           <Tooltip
