@@ -26,10 +26,10 @@ const SurveyName = styled.span`
 `;
 
 type Props = {
-  surveys :iList;
+  surveys :iList | Object[];
 }
 
-const SurveyHistory = ({ surveys = iList() } :Props) => (
+const SurveyHistory = ({ surveys } :Props) => (
   <div>
     <Header>
       Survey History
@@ -45,7 +45,10 @@ const SurveyHistory = ({ surveys = iList() } :Props) => (
 
           const formattedDateTime = formatAsDate(datetime);
 
-          const isLast = (index === surveys.size - 1) || (index === surveys.length - 1);
+          const isLast = iList.isList(surveys)
+            // $FlowFixMe
+            ? (index === surveys.size - 1)
+            : (index === surveys.length - 1);
 
           return (
             <ListItem key={id} divider={!isLast}>
@@ -60,5 +63,9 @@ const SurveyHistory = ({ surveys = iList() } :Props) => (
     </List>
   </div>
 );
+
+SurveyHistory.defaultProps = {
+  surveys: []
+};
 
 export default SurveyHistory;

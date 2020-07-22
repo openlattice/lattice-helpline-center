@@ -3,7 +3,7 @@ import React from 'react';
 import { ProfileCard } from '..';
 
 export default {
-  title: 'Profile',
+  title: 'Profile Card',
   component: ProfileCard,
 };
 

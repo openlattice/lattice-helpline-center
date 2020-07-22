@@ -24,10 +24,10 @@ const TICK_STYLE = {
 };
 
 type Props = {
-  data :any[];
+  data ?:Object[];
 };
 
-const SelfSufficiencyMatrixRechart = ({ data } :Props) => {
+const SelfSufficiencyMatrix = ({ data } :Props) => {
   const [tooltipPayload, setTooltipCoordinate] = useState({
     label: '',
     minWidth: 0,
@@ -94,4 +94,8 @@ const SelfSufficiencyMatrixRechart = ({ data } :Props) => {
   );
 };
 
-export default SelfSufficiencyMatrixRechart;
+SelfSufficiencyMatrix.defaultProps = {
+  data: []
+};
+
+export default SelfSufficiencyMatrix;

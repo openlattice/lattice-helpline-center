@@ -22,11 +22,11 @@ const Body = styled.div`
 `;
 
 type Props = {
-  data :any[];
-  imageUrl :string;
+  data ?:Object[];
+  imageUrl ?:string;
   needs :string[];
-  person :Map;
-  surveys :List;
+  person :Map | Object;
+  surveys :List | Object[];
 };
 
 const ProfileContainer = (props :Props) => {
@@ -49,6 +49,13 @@ const ProfileContainer = (props :Props) => {
       </Body>
     </ProfileGrid>
   );
+};
+
+ProfileContainer.defaultProps = {
+  imageUrl: '',
+  needs: [],
+  data: [],
+  surveys: [],
 };
 
 export default ProfileContainer;
