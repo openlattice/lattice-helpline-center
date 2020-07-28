@@ -17,7 +17,7 @@ module.exports = (env = {}) => {
   const ENV_DEV = 'development';
   const ENV_PROD = 'production';
   const LIB_FILE_NAME = 'index.js';
-  const LIB_NAMESPACE = 'LUK';
+  const LIB_NAMESPACE = 'helpline';
 
   /*
    * loaders
