@@ -1,27 +1,23 @@
-/* eslint-disable no-underscore-dangle, import/extensions */
+/* eslint-disable import/extensions */
 
 const path = require('path');
 const Webpack = require('webpack');
 
-const APP_CONFIG = require('../app/app.config.js');
-const APP_PATHS = require('../app/paths.config.js');
+const LIB_CONFIG = require('../lib/lib.config.js');
+const LIB_PATHS = require('../lib/paths.config.js');
 const PACKAGE = require('../../package.json');
-const {
-  AUTH0_CLIENT_ID_DEV,
-  AUTH0_CLIENT_ID_PROD,
-  AUTH0_DOMAIN,
-} = require('../auth/auth0.config.js');
 
-module.exports = (env) => {
+module.exports = (env = {}) => {
 
   /*
    * constants
    */
 
   const BABEL_CONFIG = path.resolve(__dirname, '../babel/babel.config.js');
-  const BASE_PATH = `/${env.basePath || 'app'}/`;
   const ENV_DEV = 'development';
   const ENV_PROD = 'production';
+  const LIB_FILE_NAME = 'index.js';
+  const LIB_NAMESPACE = 'LUK';
 
   /*
    * loaders
@@ -31,12 +27,11 @@ module.exports = (env) => {
     test: /\.js$/,
     exclude: /node_modules/,
     include: [
-      APP_PATHS.ABS.SOURCE,
+      LIB_PATHS.ABS.SOURCE,
     ],
     use: {
       loader: 'babel-loader',
       options: {
-        cacheDirectory: true,
         configFile: BABEL_CONFIG,
       },
     },
@@ -49,7 +44,7 @@ module.exports = (env) => {
       loader: 'file-loader',
       options: {
         name: '[name].[hash:8].[ext]',
-        outputPath: `${APP_PATHS.REL.STATIC_ASSETS}/`,
+        outputPath: `${LIB_PATHS.REL.STATIC_ASSETS_IMAGES}/`,
       }
     }]
   };
@@ -64,24 +59,16 @@ module.exports = (env) => {
    */
 
   const BANNER_PLUGIN = new Webpack.BannerPlugin({
-    banner: APP_CONFIG.BANNER,
+    banner: LIB_CONFIG.BANNER,
     entryOnly: true,
   });
 
   const DEFINE_PLUGIN = new Webpack.DefinePlugin({
-    __AUTH0_CLIENT_ID__: JSON.stringify(env.production ? AUTH0_CLIENT_ID_PROD : AUTH0_CLIENT_ID_DEV),
-    __AUTH0_DOMAIN__: JSON.stringify(AUTH0_DOMAIN),
-    __BASE_PATH__: JSON.stringify(BASE_PATH),
     __ENV_DEV__: JSON.stringify(!!env.development),
     __ENV_PROD__: JSON.stringify(!!env.production),
     __PACKAGE__: JSON.stringify(PACKAGE.name),
     __VERSION__: JSON.stringify(`v${PACKAGE.version}`),
   });
-
-  // https://github.com/moment/moment/issues/2373
-  // https://stackoverflow.com/a/25426019/196921
-  // https://github.com/facebookincubator/create-react-app/pull/2187
-  const IGNORE_MOMENT_LOCALES = new Webpack.IgnorePlugin(/^\.\/locale$/, /moment$/);
 
   /*
    * base webpack config
@@ -90,9 +77,27 @@ module.exports = (env) => {
   return {
     bail: true,
     entry: [
-      '@babel/polyfill',
-      APP_PATHS.ABS.APP,
+      LIB_PATHS.ABS.ENTRY,
     ],
+    externals: {
+      react: {
+        root: 'React',
+        commonjs2: 'react',
+        commonjs: 'react',
+        amd: 'react'
+      },
+      'react-dom': {
+        root: 'ReactDOM',
+        commonjs2: 'react-dom',
+        commonjs: 'react-dom',
+        amd: 'react-dom'
+      },
+      'styled-components': {
+        amd: 'styled-components',
+        commonjs: 'styled-components',
+        commonjs2: 'styled-components',
+      },
+    },
     mode: env.production ? ENV_PROD : ENV_DEV,
     module: {
       rules: [
@@ -101,15 +106,16 @@ module.exports = (env) => {
         CSS_LOADER,
       ],
     },
-    node: {
-      net: 'empty',
-    },
     optimization: {
-      minimize: !!env.production,
+      // minimize: !!env.production,
+      minimize: false,
     },
     output: {
-      path: APP_PATHS.ABS.BUILD,
-      publicPath: BASE_PATH,
+      library: LIB_NAMESPACE,
+      libraryTarget: 'umd',
+      path: LIB_PATHS.ABS.BUILD,
+      publicPath: '/',
+      filename: LIB_FILE_NAME,
     },
     performance: {
       hints: false, // disable performance hints for now
@@ -117,14 +123,14 @@ module.exports = (env) => {
     plugins: [
       DEFINE_PLUGIN,
       BANNER_PLUGIN,
-      IGNORE_MOMENT_LOCALES,
     ],
     resolve: {
-      extensions: ['.js', '.css'],
+      extensions: ['.js'],
       modules: [
-        APP_PATHS.ABS.SOURCE,
-        APP_PATHS.ABS.NODE,
+        LIB_PATHS.ABS.SOURCE,
+        'node_modules',
       ],
     },
+    target: 'web',
   };
 };
