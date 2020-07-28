@@ -53,6 +53,11 @@ module.exports = (env) => {
     }]
   };
 
+  const CSS_LOADER = {
+    test: /\.css$/i,
+    use: ['style-loader', 'css-loader'],
+  };
+
   /*
    * plugins
    */
@@ -92,6 +97,7 @@ module.exports = (env) => {
       rules: [
         BABEL_LOADER,
         FILE_LOADER_ASSETS_IMAGES,
+        CSS_LOADER,
       ],
     },
     node: {
