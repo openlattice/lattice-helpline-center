@@ -1,6 +1,6 @@
 {
   "name": "@lattice-works/lattice-helpline-center",
-  "version": "0.0.0",
+  "version": "0.0.1-alpha.0",
   "homepage": "https://github.com/Lattice-Works/lattice-helpline-center",
   "description": "",
   "author": {
@@ -114,7 +114,6 @@
     "webpack-hot-middleware": "~2.25.0"
   },
   "scripts": {
-    "app": "webpack-dev-server --config config/webpack/webpack.config.app.js --env.development",
     "build:dev": "webpack --config config/webpack/webpack.config.js --env.development",
     "build:prod": "webpack --config config/webpack/webpack.config.js --env.production",
     "build:storybook": "build-storybook",

@@ -21,7 +21,7 @@
     },
     "import/resolver": {
       "webpack": {
-        "config": "config/webpack/webpack.config.app.js"
+        "config": "config/webpack/webpack.config.js"
       }
     }
   },
