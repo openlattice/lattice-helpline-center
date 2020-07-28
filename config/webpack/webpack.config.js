@@ -37,21 +37,17 @@ module.exports = (env = {}) => {
     },
   };
 
-  const FILE_LOADER_ASSETS_IMAGES = {
-    test: /\.(gif|ico|jpg|jpeg|png|svg|webp)(\?.*)?$/,
-    exclude: /node_modules/,
-    use: [{
-      loader: 'file-loader',
-      options: {
-        name: '[name].[hash:8].[ext]',
-        outputPath: `${LIB_PATHS.REL.STATIC_ASSETS_IMAGES}/`,
-      }
-    }]
-  };
-
   const CSS_LOADER = {
     test: /\.css$/i,
     use: ['style-loader', 'css-loader'],
+  };
+
+  const URL_LOADER = {
+    test: /\.(jpg|png|svg)$/,
+    loader: 'url-loader',
+    options: {
+      limit: Infinity // everything
+    }
   };
 
   /*
@@ -102,7 +98,7 @@ module.exports = (env = {}) => {
     module: {
       rules: [
         BABEL_LOADER,
-        FILE_LOADER_ASSETS_IMAGES,
+        URL_LOADER,
         CSS_LOADER,
       ],
     },
