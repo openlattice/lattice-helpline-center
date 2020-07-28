@@ -13,13 +13,10 @@ const ROOT = path.resolve(__dirname, '../..');
 
 module.exports = {
   ABS: {
-    APP: path.resolve(ROOT, `${SOURCE}/index.js`),
     BUILD: path.resolve(ROOT, BUILD),
-    BUILD_STATIC_CSS: path.resolve(ROOT, `${BUILD}/${STATIC}/${CSS}`),
-    BUILD_STATIC_JS: path.resolve(ROOT, `${BUILD}/${STATIC}/${JS}`),
+    ENTRY: path.resolve(ROOT, `${SOURCE}/index.js`),
     NODE: path.resolve(ROOT, NODE),
     SOURCE: path.resolve(ROOT, SOURCE),
-    SOURCE_ASSETS_IMAGES: path.resolve(ROOT, `${SOURCE}/${ASSETS}/${IMAGES}`),
   },
   REL: {
     STATIC_ASSETS_IMAGES: path.join(STATIC, `${ASSETS}/${IMAGES}`),
