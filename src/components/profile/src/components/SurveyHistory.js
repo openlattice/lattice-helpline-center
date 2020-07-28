@@ -4,7 +4,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { faFileAlt } from '@fortawesome/pro-light-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { List as ImmutableList } from 'immutable';
+import { List as iList } from 'immutable';
 import {
   List,
   ListItem,
@@ -26,7 +26,7 @@ const SurveyName = styled.span`
 `;
 
 type Props = {
-  surveys :ImmutableList;
+  surveys :iList | Object[];
 }
 
 const SurveyHistory = ({ surveys } :Props) => (
@@ -45,7 +45,10 @@ const SurveyHistory = ({ surveys } :Props) => (
 
           const formattedDateTime = formatAsDate(datetime);
 
-          const isLast = (index === surveys.size - 1) || (index === surveys.length - 1);
+          const isLast = iList.isList(surveys)
+            // $FlowFixMe
+            ? (index === surveys.size - 1)
+            : (index === surveys.length - 1);
 
           return (
             <ListItem key={id} divider={!isLast}>
@@ -60,5 +63,9 @@ const SurveyHistory = ({ surveys } :Props) => (
     </List>
   </div>
 );
+
+SurveyHistory.defaultProps = {
+  surveys: []
+};
 
 export default SurveyHistory;

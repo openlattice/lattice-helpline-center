@@ -3,13 +3,20 @@ import React from 'react';
 
 import styled from 'styled-components';
 import { Map } from 'immutable';
-import { Card, CardSegment, Label } from 'lattice-ui-kit';
+import {
+  Card,
+  CardSegment,
+  Label,
+  StyleUtils,
+} from 'lattice-ui-kit';
 import { DateTimeUtils } from 'lattice-utils';
 
 import Portrait from './Portrait';
 
 import PROPERTY_TYPE_FQNS from '../../../../core/edm/constants/PropertyTypes';
 import { getPropertyValues } from '../../../../utils/EntityUtils';
+
+const { media } = StyleUtils;
 
 const EMPTY_VALUE = '---';
 
@@ -23,6 +30,9 @@ const {
 
 const InlineCard = styled(Card)`
   display: inline-block;
+  ${media.phone`
+    width: 100%;
+  `}
 `;
 
 const CardDetails = styled(CardSegment)`
