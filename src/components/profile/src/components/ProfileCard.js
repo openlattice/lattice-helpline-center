@@ -38,6 +38,7 @@ const InlineCard = styled(Card)`
 const CardDetails = styled(CardSegment)`
   padding-top: 0;
   word-break: word-wrap;
+
   label:not(:first-of-type) {
     margin-top: 30px;
   }
