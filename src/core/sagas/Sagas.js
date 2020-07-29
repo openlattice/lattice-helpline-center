@@ -20,7 +20,7 @@ export default function* sagas() :Generator<*, *, *> {
     fork(AuthSagas.watchLogout),
 
     // AppSagas
-    fork(AppSagas.initializeApplicationWatcher),
+    fork(AppSagas.initializeHelplineWatcher),
 
     // EDMSagas
     fork(EDMSagas.getEntityDataModelTypesWatcher),
