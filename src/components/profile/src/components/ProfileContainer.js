@@ -4,11 +4,18 @@ import React from 'react';
 import styled from 'styled-components';
 import { List, Map } from 'immutable';
 import { StyleUtils } from 'lattice-ui-kit';
+import { Provider } from 'react-redux';
 
 import GreatestNeeds from './GreatestNeeds';
 import ProfileCard from './ProfileCard';
 import SelfSufficiencyMatrix from './SelfSufficiencyMatrix';
 import SurveyHistory from './SurveyHistory';
+
+import initializeReduxStore from '../../../../core/redux/ReduxStore';
+import initializeRouterHistory from '../../../../core/router/RouterHistory';
+
+const routerHistory = initializeRouterHistory();
+const helplineStore = initializeReduxStore(routerHistory);
 
 const { media } = StyleUtils;
 
@@ -52,16 +59,18 @@ const ProfileContainer = (props :Props) => {
     surveys
   } = props;
   return (
-    <ProfileGrid>
-      <Centered>
-        <ProfileCard imageUrl={imageUrl} person={person} />
-      </Centered>
-      <Body>
-        <GreatestNeeds needs={needs} />
-        <SelfSufficiencyMatrix data={data} />
-        <SurveyHistory surveys={surveys} />
-      </Body>
-    </ProfileGrid>
+    <Provider store={helplineStore}>
+      <ProfileGrid>
+        <Centered>
+          <ProfileCard imageUrl={imageUrl} person={person} />
+        </Centered>
+        <Body>
+          <GreatestNeeds needs={needs} />
+          <SelfSufficiencyMatrix data={data} />
+          <SurveyHistory surveys={surveys} />
+        </Body>
+      </ProfileGrid>
+    </Provider>
   );
 };
 
