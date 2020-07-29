@@ -3,7 +3,6 @@
  */
 
 import { connectRouter } from 'connected-react-router/immutable';
-import { AuthReducer } from 'lattice-auth';
 import { combineReducers } from 'redux-immutable';
 
 import { REDUCERS } from './constants';
@@ -18,7 +17,6 @@ export default function reduxReducer(routerHistory :any) {
     [REDUCERS.APP]: AppReducer,
     [REDUCERS.DATA]: DataReducer,
     [REDUCERS.EDM]: EDMReducer,
-    auth: AuthReducer,
     router: connectRouter(routerHistory),
   });
 }
