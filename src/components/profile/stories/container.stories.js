@@ -1,4 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
+
+import { configure } from 'lattice';
+import {
+  Button,
+  Card,
+  CardSegment,
+  Input,
+  Label,
+} from 'lattice-ui-kit';
 
 import { createMockSufficiencyData, createMockSurveyHistoryData } from './utils';
 
@@ -39,4 +48,69 @@ export const ProfileContainerStory = () => (
 
 ProfileContainerStory.story = {
   name: 'Profile Container'
+};
+
+export const LiveProfileContainerStory = () => {
+
+  const [configData, setConfig] = useState({
+    jwtToken: '',
+    orgId: '',
+    personId: '',
+  });
+
+  const onConfigure = (e) => {
+    e.preventDefault();
+    const { jwtToken, orgId } = configData;
+    configure({
+      baseUrl: 'production',
+      authToken: jwtToken
+    });
+    console.log('lattice configuration set');
+    // initialize with orgId
+  };
+
+  const onFetchProfile = (e) => {
+    e.preventDefault();
+    const { personId } = configData;
+    console.log('fetching...', personId);
+    // fetch personId
+  };
+
+  const onChange = (e) => {
+    setConfig({
+      ...configData,
+      [e.target.name]: e.target.value.trim()
+    });
+  };
+
+  return (
+    <>
+      <Card>
+        <CardSegment>
+          <form onSubmit={onConfigure}>
+            <Label htmlFor="jwt-token" subtle>JWT</Label>
+            <Input id="jwt-token" name="jwtToken" onChange={onChange} />
+            <Label htmlFor="org-id" subtle>Org ID</Label>
+            <Input id="org-id" name="orgId" onChange={onChange} />
+            <Button color="primary" type="submit">Configure</Button>
+          </form>
+          <form onSubmit={onFetchProfile}>
+            <Label htmlFor="person-id" subtle>Person ID</Label>
+            <Input id="person-id" name="personId" onChange={onChange} />
+            <Button color="primary" type="submit">Fetch Profile</Button>
+          </form>
+        </CardSegment>
+      </Card>
+      <ProfileContainer
+          imageUrl={imageUrl}
+          data={data}
+          person={person}
+          needs={needs}
+          surveys={surveys} />
+    </>
+  );
+};
+
+LiveProfileContainerStory.story = {
+  name: 'Live Profile Container'
 };
