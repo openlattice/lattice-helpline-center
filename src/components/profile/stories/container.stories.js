@@ -8,13 +8,19 @@ import {
   Input,
   Label,
 } from 'lattice-ui-kit';
+import { Provider } from 'react-redux';
 
 import { createMockSufficiencyData, createMockSurveyHistoryData } from './utils';
 
+import initializeReduxStore from '../../../core/redux/ReduxStore';
+import initializeRouterHistory from '../../../core/router/RouterHistory';
 import { PropertyTypes } from '../../../core/edm/constants';
 import {
   ProfileContainer,
 } from '..';
+
+const routerHistory = initializeRouterHistory();
+const helplineStore = initializeReduxStore(routerHistory);
 
 const {
   DOB,
@@ -38,12 +44,14 @@ const person = {
 const surveys = createMockSurveyHistoryData();
 
 export const ProfileContainerStory = () => (
-  <ProfileContainer
-      imageUrl={imageUrl}
-      data={data}
-      person={person}
-      needs={needs}
-      surveys={surveys} />
+  <Provider store={helplineStore}>
+    <ProfileContainer
+        imageUrl={imageUrl}
+        data={data}
+        person={person}
+        needs={needs}
+        surveys={surveys} />
+  </Provider>
 );
 
 ProfileContainerStory.story = {
@@ -51,40 +59,39 @@ ProfileContainerStory.story = {
 };
 
 export const LiveProfileContainerStory = () => {
-
-  const [configData, setConfig] = useState({
+  const [inputData, setInputs] = useState({
     jwtToken: '',
     orgId: '',
     personId: '',
   });
+  const [organizationId, setOrganizationId] = useState('');
 
   const onConfigure = (e) => {
     e.preventDefault();
-    const { jwtToken, orgId } = configData;
+    const { jwtToken, orgId } = inputData;
     configure({
       baseUrl: 'production',
       authToken: jwtToken
     });
-    console.log('lattice configuration set');
-    // initialize with orgId
+    setOrganizationId(orgId);
   };
 
   const onFetchProfile = (e) => {
     e.preventDefault();
-    const { personId } = configData;
+    const { personId } = inputData;
     console.log('fetching...', personId);
     // fetch personId
   };
 
   const onChange = (e) => {
-    setConfig({
-      ...configData,
+    setInputs({
+      ...inputData,
       [e.target.name]: e.target.value.trim()
     });
   };
 
   return (
-    <>
+    <Provider store={helplineStore}>
       <Card>
         <CardSegment>
           <form onSubmit={onConfigure}>
@@ -102,12 +109,13 @@ export const LiveProfileContainerStory = () => {
         </CardSegment>
       </Card>
       <ProfileContainer
+          organizationId={organizationId}
           imageUrl={imageUrl}
           data={data}
           person={person}
           needs={needs}
           surveys={surveys} />
-    </>
+    </Provider>
   );
 };
 
