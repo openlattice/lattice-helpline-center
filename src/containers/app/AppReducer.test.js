@@ -25,6 +25,9 @@ describe('AppReducer', () => {
       [INITIALIZE_HELPLINE]: {
         requestState: RequestStates.STANDBY,
       },
+      appConfig: {},
+      appTypes: [],
+      edm: {}
     });
   });
 
