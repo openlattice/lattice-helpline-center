@@ -1,3 +1,5 @@
+// @flow
+/* eslint-disable quote-props */
 import { ReduxConstants } from 'lattice-utils';
 
 import { GET_PROFILE_SUMMARY } from './ProfileActions';
@@ -28,23 +30,23 @@ const SUBSTANCE_USE = 'Substance Use';
 const SAFETY = 'Safety';
 
 const CATEGORY_BY_QUESTION_NUMBER = Object.freeze({
-  1: SHELTER,
-  2: FOOD,
-  3: FOOD,
-  4: TRANSPORTATION,
-  5: EMPLOYMENT_INCOME,
-  6: EMPLOYMENT_INCOME,
-  7: FINANCIAL_STRAIN,
-  8: FINANCIAL_STRAIN,
-  9: CHILDCARE,
-  10: HEALTHCARE,
-  11: HEALTHCARE,
-  12: MENTAL_HEALTH,
-  13: MENTAL_HEALTH,
-  14: SUBSTANCE_USE,
-  15: SUBSTANCE_USE,
-  16: SUBSTANCE_USE,
-  17: SAFETY,
+  '1': SHELTER,
+  '2': FOOD,
+  '3': FOOD,
+  '4': TRANSPORTATION,
+  '5': EMPLOYMENT_INCOME,
+  '6': EMPLOYMENT_INCOME,
+  '7': FINANCIAL_STRAIN,
+  '8': FINANCIAL_STRAIN,
+  '9': CHILDCARE,
+  '10': HEALTHCARE,
+  '11': HEALTHCARE,
+  '12': MENTAL_HEALTH,
+  '13': MENTAL_HEALTH,
+  '14': SUBSTANCE_USE,
+  '15': SUBSTANCE_USE,
+  '16': SUBSTANCE_USE,
+  '17': SAFETY,
 });
 
 export {

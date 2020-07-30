@@ -1,3 +1,4 @@
+// @flow
 const STORE_PATHS = {
   APP_CONFIG: ['app', 'appConfig', 'config']
 };
