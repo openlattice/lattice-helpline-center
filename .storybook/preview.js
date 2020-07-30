@@ -1,6 +1,18 @@
 import React from 'react';
 
 import { addDecorator } from '@storybook/react';
-import { StylesProvider } from 'lattice-ui-kit';
+import {
+  LatticeLuxonUtils,
+  MuiPickersUtilsProvider,
+  StylesProvider,
+  ThemeProvider,
+  lightTheme
+} from 'lattice-ui-kit';
 
-addDecorator(storyFn => <StylesProvider injectFirst>{storyFn()}</StylesProvider>);
+addDecorator(storyFn => (
+  <ThemeProvider theme={lightTheme}>
+    <MuiPickersUtilsProvider utils={LatticeLuxonUtils}>
+      <StylesProvider injectFirst>{storyFn()}</StylesProvider>
+    </MuiPickersUtilsProvider>
+  </ThemeProvider>
+));

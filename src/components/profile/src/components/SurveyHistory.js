@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import { faFileAlt } from '@fortawesome/pro-light-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { List as iList } from 'immutable';
+import { Constants } from 'lattice';
 import {
   List,
   ListItem,
@@ -18,8 +19,8 @@ import { getPropertyValues } from '../../../../utils/EntityUtils';
 import { Header } from '../../../typography';
 
 const { formatAsDate } = DateTimeUtils;
-
-const { NAME, OL_DATE_TIME, OL_ID } = PropertyTypes;
+const { OPENLATTICE_ID_FQN } = Constants;
+const { NAME, DATE_TIME } = PropertyTypes;
 
 const SurveyName = styled.span`
   font-weight: 500;
@@ -37,10 +38,10 @@ const SurveyHistory = ({ surveys } :Props) => (
     <List>
       {
         surveys.map((survey, index) => {
-          const [name, datetime, id] = getPropertyValues(survey, [
+          const [name = 'Social Needs Survey', datetime, ekid] = getPropertyValues(survey, [
             NAME,
-            OL_DATE_TIME,
-            OL_ID
+            DATE_TIME,
+            OPENLATTICE_ID_FQN
           ]);
 
           const formattedDateTime = formatAsDate(datetime);
@@ -51,7 +52,7 @@ const SurveyHistory = ({ surveys } :Props) => (
             : (index === surveys.length - 1);
 
           return (
-            <ListItem key={id} divider={!isLast}>
+            <ListItem key={ekid} divider={!isLast}>
               <ListItemAvatar>
                 <FontAwesomeIcon icon={faFileAlt} />
               </ListItemAvatar>

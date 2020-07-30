@@ -1,14 +1,15 @@
 import { Set } from 'immutable';
 
 import * as AppActions from './AppActions';
+
 import { testShouldExportActionTypes, testShouldExportRequestSequences } from '../../utils/testing/TestUtils';
 
 const ACTION_TYPES = Set([
-  'INITIALIZE_APPLICATION',
+  'INITIALIZE_HELPLINE',
 ]).sort();
 
 const REQSEQ_NAMES = Set([
-  'initializeApplication',
+  'initializeHelpline',
 ]).sort();
 
 describe('AppActions', () => {

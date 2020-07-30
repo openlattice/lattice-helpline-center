@@ -3,8 +3,8 @@ import { RequestStates } from 'redux-reqseq';
 
 import reducer from './AppReducer';
 import {
-  INITIALIZE_APPLICATION,
-  initializeApplication,
+  INITIALIZE_HELPLINE,
+  initializeHelpline,
 } from './AppActions';
 
 const MOCK_APP_NAME = 'TestApp';
@@ -22,47 +22,47 @@ describe('AppReducer', () => {
   test('INITIAL_STATE', () => {
     expect(INITIAL_STATE).toBeInstanceOf(Map);
     expect(INITIAL_STATE.toJS()).toEqual({
-      [INITIALIZE_APPLICATION]: {
+      [INITIALIZE_HELPLINE]: {
         requestState: RequestStates.STANDBY,
       },
     });
   });
 
-  describe(INITIALIZE_APPLICATION, () => {
+  describe(INITIALIZE_HELPLINE, () => {
 
-    test(initializeApplication.REQUEST, () => {
+    test(initializeHelpline.REQUEST, () => {
 
-      const { id } = initializeApplication();
-      const requestAction = initializeApplication.request(id, MOCK_APP_NAME);
+      const { id } = initializeHelpline();
+      const requestAction = initializeHelpline.request(id, MOCK_APP_NAME);
       const state = reducer(INITIAL_STATE, requestAction);
-      expect(state.getIn([INITIALIZE_APPLICATION, 'requestState'])).toEqual(RequestStates.PENDING);
+      expect(state.getIn([INITIALIZE_HELPLINE, 'requestState'])).toEqual(RequestStates.PENDING);
     });
 
-    test(initializeApplication.SUCCESS, () => {
+    test(initializeHelpline.SUCCESS, () => {
 
-      const { id } = initializeApplication();
-      const requestAction = initializeApplication.request(id, MOCK_APP_NAME);
+      const { id } = initializeHelpline();
+      const requestAction = initializeHelpline.request(id, MOCK_APP_NAME);
       let state = reducer(INITIAL_STATE, requestAction);
-      state = reducer(state, initializeApplication.success(id));
-      expect(state.getIn([INITIALIZE_APPLICATION, 'requestState'])).toEqual(RequestStates.SUCCESS);
+      state = reducer(state, initializeHelpline.success(id));
+      expect(state.getIn([INITIALIZE_HELPLINE, 'requestState'])).toEqual(RequestStates.SUCCESS);
     });
 
-    test(initializeApplication.FAILURE, () => {
+    test(initializeHelpline.FAILURE, () => {
 
-      const { id } = initializeApplication();
-      const requestAction = initializeApplication.request(id, MOCK_APP_NAME);
+      const { id } = initializeHelpline();
+      const requestAction = initializeHelpline.request(id, MOCK_APP_NAME);
       let state = reducer(INITIAL_STATE, requestAction);
-      state = reducer(state, initializeApplication.failure(id, MOCK_ERR_RESPONSE));
-      expect(state.getIn([INITIALIZE_APPLICATION, 'requestState'])).toEqual(RequestStates.FAILURE);
+      state = reducer(state, initializeHelpline.failure(id, MOCK_ERR_RESPONSE));
+      expect(state.getIn([INITIALIZE_HELPLINE, 'requestState'])).toEqual(RequestStates.FAILURE);
     });
 
-    test(initializeApplication.FINALLY, () => {
+    test(initializeHelpline.FINALLY, () => {
 
-      const { id } = initializeApplication();
-      let state = reducer(INITIAL_STATE, initializeApplication.request(id, MOCK_APP_NAME));
-      state = reducer(state, initializeApplication.success(id));
-      state = reducer(state, initializeApplication.finally(id));
-      expect(state.getIn([INITIALIZE_APPLICATION, 'requestState'])).toEqual(RequestStates.SUCCESS);
+      const { id } = initializeHelpline();
+      let state = reducer(INITIAL_STATE, initializeHelpline.request(id, MOCK_APP_NAME));
+      state = reducer(state, initializeHelpline.success(id));
+      state = reducer(state, initializeHelpline.finally(id));
+      expect(state.getIn([INITIALIZE_HELPLINE, 'requestState'])).toEqual(RequestStates.SUCCESS);
     });
 
   });
