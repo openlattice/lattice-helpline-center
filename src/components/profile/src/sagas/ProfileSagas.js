@@ -25,9 +25,12 @@ import type { SequenceAction } from 'redux-reqseq';
 import {
   GET_PROFILE_SUMMARY,
   GET_SUBMISSIONS,
+  GET_SUMMARY_SETS,
   getProfileSummary,
   getSubmissions,
+  getSummarySets,
 } from './ProfileActions';
+import { GREATEST_NEEDS, SELF_SUFFICIENCY, SURVEY_HISTORY } from './constants';
 
 import { getESIDFromConfig } from '../../../../containers/app/AppUtils';
 import { STORE_PATHS } from '../../../../containers/app/constants';
@@ -54,12 +57,41 @@ function* getProfileSummaryWorker(action :SequenceAction) :Generator<any, any, a
     const config = yield select((store) => store.getIn(STORE_PATHS.APP_CONFIG));
     const personESID = getESIDFromConfig(config, AppTypes.PEOPLE);
     // may need to get person here?
-    const surveyHistory = yield call(getSubmissionsWorker, getSubmissions(personId));
-    if (surveyHistory.error) throw surveyHistory.error;
-    console.log(surveyHistory.data);
 
+    // get survey history
+    const submissionsResponse = yield call(getSubmissionsWorker, getSubmissions(personId));
+    if (submissionsResponse.error) throw submissionsResponse.error;
+    const surveyHistory = submissionsResponse.data;
 
-    yield put(getProfileSummary.success(action.id));
+    // get summary set for most recent 7 surveys
+    // generate m
+    const recentSurveyIds = surveyHistory
+      .slice(0, 7)
+      .map((survey) => survey.getIn([OPENLATTICE_ID_FQN, 0]));
+
+    const summarySetsResponse = yield call(getSummarySetsWorker, getSummarySets(recentSurveyIds.toJS()));
+    if (summarySetsResponse.error) throw summarySetsResponse.error;
+
+    const selfSufficiency = surveyHistory
+      .slice(0, 7)
+      .map((survey) => {
+        const surveyId = survey.getIn([OPENLATTICE_ID_FQN, 0]);
+        const surveyDate = survey.getIn([PropertyTypes.DATE_TIME, 0]);
+        const score = summarySetsResponse.data.getIn([surveyId, 0, 'neighborDetails', PropertyTypes.VALUES, 0]);
+        const parsedScore = parseInt(score, 10) || 0;
+
+        return {
+          x: DateTime.fromISO(surveyDate).toFormat('LL/dd'),
+          y: parsedScore
+        };
+      });
+
+    response.data = Map({
+      [SURVEY_HISTORY]: submissionsResponse.data,
+      [SELF_SUFFICIENCY]: selfSufficiency,
+    });
+
+    yield put(getProfileSummary.success(action.id, response.data));
   }
   catch (error) {
     LOG.error(action.type, error);
@@ -125,9 +157,53 @@ function* getSubmissionsWatcher() :Generator<any, any, any> {
   yield takeLatest(GET_SUBMISSIONS, getSubmissionsWorker);
 }
 
+function* getSummarySetsWorker(action :SequenceAction) :Generator<any, any, any> {
+  const response = {};
+  try {
+    const { value: submissionIds } = action;
+    yield put(getSummarySets.request(action.id));
+    const config = yield select((store) => store.getIn(STORE_PATHS.APP_CONFIG));
+    const summarySetESID = getESIDFromConfig(config, AppTypes.SUMMARY_SET);
+    const submissionsESID = getESIDFromConfig(config, AppTypes.SUBMISSION);
+    const registeredForESID = getESIDFromConfig(config, AppTypes.REGISTERED_FOR);
+
+    const summarySetsSearchParams = {
+      entitySetId: submissionsESID,
+      filter: {
+        entityKeyIds: submissionIds,
+        edgeEntitySetIds: [registeredForESID],
+        destinationEntitySetIds: [],
+        sourceEntitySetIds: [summarySetESID],
+      }
+    };
+
+    const summarySetsResponse = yield call(
+      searchEntityNeighborsWithFilterWorker,
+      searchEntityNeighborsWithFilter(summarySetsSearchParams)
+    );
+    if (summarySetsResponse.error) throw summarySetsResponse.error;
+
+    response.data = fromJS(summarySetsResponse.data);
+    yield put(getSummarySets.success(action.id, response.data));
+  }
+  catch (error) {
+    LOG.error(action.type, error);
+    response.error = error;
+    yield put(getSummarySets.failure(action.id, error));
+
+  }
+  return response;
+}
+
+function* getSummarySetWatcher() :Generator<any, any, any> {
+  yield takeLatest(GET_SUMMARY_SETS, getSummarySetsWorker);
+}
+
 export {
   getProfileSummaryWatcher,
   getProfileSummaryWorker,
   getSubmissionsWatcher,
   getSubmissionsWorker,
+  getSummarySetWatcher,
+  getSummarySetsWorker,
 };
