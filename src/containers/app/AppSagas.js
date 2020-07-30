@@ -7,20 +7,14 @@ import {
   all,
   call,
   put,
-  select,
-  takeEvery
+  takeEvery,
 } from '@redux-saga/core/effects';
-import { Map, fromJS } from 'immutable';
-import { Constants, Types } from 'lattice';
+import { Types } from 'lattice';
 import {
   AppApiActions,
   AppApiSagas,
-  DataApiActions,
-  DataApiSagas,
   EntityDataModelApiActions,
   EntityDataModelApiSagas,
-  SearchApiActions,
-  SearchApiSagas,
 } from 'lattice-sagas';
 import { Logger, ValidationUtils } from 'lattice-utils';
 import type { SequenceAction } from 'redux-reqseq';
@@ -30,20 +24,15 @@ import {
   initializeHelpline,
 } from './AppActions';
 
-import { ERR_ACTION_VALUE_TYPE, ERR_WORKER_SAGA } from '../../utils/Errors';
+import { ERR_ACTION_VALUE_TYPE } from '../../utils/Errors';
 
 const { isValidUUID } = ValidationUtils;
 
-const { OPENLATTICE_ID_FQN } = Constants;
 const { SecurableTypes } = Types;
 const { getApp, getAppConfigs, getAppTypes } = AppApiActions;
 const { getAppWorker, getAppConfigsWorker, getAppTypesWorker } = AppApiSagas;
 const { getEntityDataModelProjection } = EntityDataModelApiActions;
 const { getEntityDataModelProjectionWorker } = EntityDataModelApiSagas;
-const { getEntitySetData } = DataApiActions;
-const { getEntitySetDataWorker } = DataApiSagas;
-const { searchEntitySetData } = SearchApiActions;
-const { searchEntitySetDataWorker } = SearchApiSagas;
 
 const LOG = new Logger('AppSagas');
 
@@ -69,6 +58,7 @@ function* initializeHelplineWorker(action :SequenceAction) :Generator<*, *, *> {
   const workerResponse :Object = {};
   try {
     const { value: organizationId } = action;
+    if (!isValidUUID(organizationId)) throw ERR_ACTION_VALUE_TYPE;
     yield put(initializeHelpline.request(action.id));
 
     /*
@@ -78,7 +68,7 @@ function* initializeHelplineWorker(action :SequenceAction) :Generator<*, *, *> {
     if (response.error) throw response.error;
 
     /*
-     * 2. load AppConfigs, AppTypes
+     * 2. load AppConfig, AppTypes
      */
 
     const app = response.data;
