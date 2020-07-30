@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import { configure } from 'lattice';
+import { Constants, configure } from 'lattice';
 import {
   Button,
   Card,
@@ -15,9 +15,9 @@ import { createMockSufficiencyData, createMockSurveyHistoryData } from './utils'
 import initializeReduxStore from '../../../core/redux/ReduxStore';
 import initializeRouterHistory from '../../../core/router/RouterHistory';
 import { PropertyTypes } from '../../../core/edm/constants';
-import {
-  ProfileContainer,
-} from '..';
+import { ProfileContainer } from '..';
+
+const { OPENLATTICE_ID_FQN } = Constants;
 
 const routerHistory = initializeRouterHistory();
 const helplineStore = initializeReduxStore(routerHistory);
@@ -39,7 +39,8 @@ const needs = ['Food', 'Employment', 'Childcare'];
 const person = {
   [GIVEN_NAME]: ['Smitty'],
   [SURNAME]: ['Werbenjagermanjensen'],
-  [DOB]: ['2002-02-22']
+  [DOB]: ['2002-02-22'],
+  [OPENLATTICE_ID_FQN]: ['']
 };
 const surveys = createMockSurveyHistoryData();
 
@@ -60,27 +61,27 @@ ProfileContainerStory.story = {
 
 export const LiveProfileContainerStory = () => {
   const [inputData, setInputs] = useState({
-    jwtToken: '',
+    jwt: '',
     orgId: '',
     personId: '',
   });
+
   const [organizationId, setOrganizationId] = useState('');
+  const { jwt, orgId, personId } = inputData;
 
   const onConfigure = (e) => {
     e.preventDefault();
-    const { jwtToken, orgId } = inputData;
     configure({
-      baseUrl: 'production',
-      authToken: jwtToken
+      baseUrl: 'https://api.openlattice.com',
+      authToken: jwt
     });
     setOrganizationId(orgId);
   };
 
   const onFetchProfile = (e) => {
     e.preventDefault();
-    const { personId } = inputData;
     console.log('fetching...', personId);
-    // fetch personId
+    // dispatch(getProfile(personId));
   };
 
   const onChange = (e) => {
@@ -95,15 +96,15 @@ export const LiveProfileContainerStory = () => {
       <Card>
         <CardSegment>
           <form onSubmit={onConfigure}>
-            <Label htmlFor="jwt-token" subtle>JWT</Label>
-            <Input id="jwt-token" name="jwtToken" onChange={onChange} />
+            <Label htmlFor="jwt" subtle>JWT</Label>
+            <Input id="jwt" name="jwt" onChange={onChange} value={inputData.jwt} />
             <Label htmlFor="org-id" subtle>Org ID</Label>
-            <Input id="org-id" name="orgId" onChange={onChange} />
+            <Input id="org-id" name="orgId" onChange={onChange} value={inputData.orgId} />
             <Button color="primary" type="submit">Configure</Button>
           </form>
           <form onSubmit={onFetchProfile}>
             <Label htmlFor="person-id" subtle>Person ID</Label>
-            <Input id="person-id" name="personId" onChange={onChange} />
+            <Input id="person-id" name="personId" onChange={onChange} value={inputData.personId} />
             <Button color="primary" type="submit">Fetch Profile</Button>
           </form>
         </CardSegment>
