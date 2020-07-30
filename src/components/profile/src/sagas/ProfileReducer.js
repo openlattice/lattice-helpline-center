@@ -21,7 +21,10 @@ const { RESET_REQUEST_STATE } = ReduxActions;
 const INITIAL_STATE :Map = fromJS({
   [GREATEST_NEEDS]: List(),
   [SELF_SUFFICIENCY]: List(),
-  [SURVEY_HISTORY]: List()
+  [SURVEY_HISTORY]: List(),
+  [GET_PROFILE_SUMMARY]: {
+    [REQUEST_STATE]: RequestStates.STANDBY
+  },
 });
 
 export default function profileReducer(state :Map<*, *> = INITIAL_STATE, action :Object) {

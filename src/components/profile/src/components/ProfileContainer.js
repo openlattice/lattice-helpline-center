@@ -6,6 +6,7 @@ import { Map, getIn } from 'immutable';
 import { Constants } from 'lattice';
 import { StyleUtils } from 'lattice-ui-kit';
 
+import HelplineProvider from './HelplineProvider';
 import ProfileBody from './ProfileBody';
 import ProfileCard from './ProfileCard';
 
@@ -41,12 +42,14 @@ const ProfileContainer = (props :Props) => {
   const personId = getIn(person, [OPENLATTICE_ID_FQN, 0]);
 
   return (
-    <ProfileGrid>
-      <Centered>
-        <ProfileCard imageUrl={imageUrl} person={person} />
-      </Centered>
-      <ProfileBody organizationId={organizationId} personId={personId} />
-    </ProfileGrid>
+    <HelplineProvider>
+      <ProfileGrid>
+        <Centered>
+          <ProfileCard imageUrl={imageUrl} person={person} />
+        </Centered>
+        <ProfileBody organizationId={organizationId} personId={personId} />
+      </ProfileGrid>
+    </HelplineProvider>
   );
 };
 

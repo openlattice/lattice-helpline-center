@@ -8,17 +8,11 @@ import {
   Input,
   Label,
 } from 'lattice-ui-kit';
-import { Provider } from 'react-redux';
 
-import initializeReduxStore from '../../../core/redux/ReduxStore';
-import initializeRouterHistory from '../../../core/router/RouterHistory';
 import { PropertyTypes } from '../../../core/edm/constants';
 import { ProfileContainer } from '..';
 
 const { OPENLATTICE_ID_FQN } = Constants;
-
-const routerHistory = initializeRouterHistory();
-const helplineStore = initializeReduxStore(routerHistory);
 
 const {
   DOB,
@@ -36,15 +30,13 @@ const person = {
   [GIVEN_NAME]: ['Smitty'],
   [SURNAME]: ['Werbenjagermanjensen'],
   [DOB]: ['2002-02-22'],
-  [OPENLATTICE_ID_FQN]: ['']
+  [OPENLATTICE_ID_FQN]: ['9d010000-0000-0000-8000-00000001864d']
 };
 
 export const ProfileContainerStory = () => (
-  <Provider store={helplineStore}>
-    <ProfileContainer
-        imageUrl={imageUrl}
-        person={person} />
-  </Provider>
+  <ProfileContainer
+      imageUrl={imageUrl}
+      person={person} />
 );
 
 ProfileContainerStory.story = {
@@ -53,11 +45,11 @@ ProfileContainerStory.story = {
 
 export const LiveProfileContainerStory = () => {
   const [inputData, setInputs] = useState({
-    jwt: '',
-    orgId: '',
+    jwt: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNvbG9tb25Ab3BlbmxhdHRpY2UuY29tIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsInVzZXJfaWQiOiJnb29nbGUtb2F1dGgyfDExMTIxNzkwNTcyOTE4NzM3ODczNCIsInVzZXJfbWV0YWRhdGEiOnt9LCJhcHBfbWV0YWRhdGEiOnsicm9sZXMiOlsiQXV0aGVudGljYXRlZFVzZXIiLCJhZG1pbiJdLCJvcmdhbml6YXRpb25zIjpbIjAwMDAwMDAwLTAwMDAtMDAwMS0wMDAwLTAwMDAwMDAwMDAwMCJdLCJhY3RpdmF0ZWQiOiJhY3RpdmF0ZWQifSwibmlja25hbWUiOiJzb2xvbW9uIiwicm9sZXMiOlsiQXV0aGVudGljYXRlZFVzZXIiLCJhZG1pbiJdLCJpc3MiOiJodHRwczovL29wZW5sYXR0aWNlLmF1dGgwLmNvbS8iLCJzdWIiOiJnb29nbGUtb2F1dGgyfDExMTIxNzkwNTcyOTE4NzM3ODczNCIsImF1ZCI6Im84WTJVMnpiNUl3bzAxamR4TU4xVzJhaU44UHh3VmpoIiwiaWF0IjoxNTk2MTQyMDE2LCJleHAiOjE1OTYxNzgwMTZ9.ePkSDrPi6KNN7yOsGvNt07BwMwj3VORTnT5u_ZNMbME',
+    orgId: '3e39ec2c-fe8e-4302-84c0-501ee2c2fbfe',
   });
 
-  const [organizationId, setOrganizationId] = useState('');
+  const [organizationId, setOrganizationId] = useState('3e39ec2c-fe8e-4302-84c0-501ee2c2fbfe');
   const { jwt, orgId } = inputData;
 
   const onConfigure = (e) => {
@@ -77,7 +69,7 @@ export const LiveProfileContainerStory = () => {
   };
 
   return (
-    <Provider store={helplineStore}>
+    <>
       <Card>
         <CardSegment>
           <form onSubmit={onConfigure}>
@@ -93,7 +85,7 @@ export const LiveProfileContainerStory = () => {
           organizationId={organizationId}
           imageUrl={imageUrl}
           person={person} />
-    </Provider>
+    </>
   );
 };
 

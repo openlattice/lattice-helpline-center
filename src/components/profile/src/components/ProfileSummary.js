@@ -2,12 +2,12 @@
 import React, { useEffect } from 'react';
 
 import { Spinner } from 'lattice-ui-kit';
-import { useDispatch, useSelector } from 'react-redux';
 import { RequestStates } from 'redux-reqseq';
 
 import GreatestNeeds from './GreatestNeeds';
 import SelfSufficiencyMatrix from './SelfSufficiencyMatrix';
 import SurveyHistory from './SurveyHistory';
+import { useDispatch, useSelector } from './HelplineProvider';
 import { SpinnerWrapper } from './styled';
 
 import { getProfileSummary } from '../sagas/ProfileActions';
