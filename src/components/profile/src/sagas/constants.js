@@ -1,3 +1,9 @@
+import { ReduxConstants } from 'lattice-utils';
+
+import { GET_PROFILE_SUMMARY } from './ProfileActions';
+
+const { REQUEST_STATE } = ReduxConstants;
+
 const PROFILE = 'profile';
 const SURVEY_HISTORY = 'surveyHistory';
 const GREATEST_NEEDS = 'greatestNeeds';
@@ -7,6 +13,7 @@ const PROFILE_PATHS = {
   [SURVEY_HISTORY]: [PROFILE, SURVEY_HISTORY],
   [GREATEST_NEEDS]: [PROFILE, GREATEST_NEEDS],
   [SELF_SUFFICIENCY]: [PROFILE, SELF_SUFFICIENCY],
+  [REQUEST_STATE]: [PROFILE, GET_PROFILE_SUMMARY, REQUEST_STATE]
 };
 
 const SHELTER = 'Shelter';
