@@ -17,14 +17,29 @@ const getProfileSummary :RequestSequence = newRequestSequence(GET_PROFILE_SUMMAR
 const GET_SUMMARY_SETS :'GET_SUMMARY_SETS' = 'GET_SUMMARY_SETS';
 const getSummarySets :RequestSequence = newRequestSequence(GET_SUMMARY_SETS);
 
+const GET_SUBMISSION_ANSWERS :'GET_SUBMISSION_ANSWERS' = 'GET_SUBMISSION_ANSWERS';
+const getSubmissionAnswers :RequestSequence = newRequestSequence(GET_SUBMISSION_ANSWERS);
+
+const GET_QUESTIONS_FROM_ANSWERS :'GET_QUESTIONS_FROM_ANSWERS' = 'GET_QUESTIONS_FROM_ANSWERS';
+const getQuestionsFromAnswers :RequestSequence = newRequestSequence(GET_QUESTIONS_FROM_ANSWERS);
+
+const GET_GREATEST_NEEDS :'GET_GREATEST_NEEDS' = 'GET_GREATEST_NEEDS';
+const getGreatestNeeds :RequestSequence = newRequestSequence(GET_GREATEST_NEEDS);
+
 export {
+  GET_GREATEST_NEEDS,
   GET_PROFILE,
   GET_PROFILE_SUMMARY,
+  GET_QUESTIONS_FROM_ANSWERS,
   GET_SUBMISSIONS,
+  GET_SUBMISSION_ANSWERS,
   GET_SUMMARY_SETS,
   GET_SURVEYS,
+  getGreatestNeeds,
   getProfile,
   getProfileSummary,
+  getQuestionsFromAnswers,
+  getSubmissionAnswers,
   getSubmissions,
   getSummarySets,
   getSurveys,
