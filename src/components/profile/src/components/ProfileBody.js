@@ -3,10 +3,10 @@ import React, { useEffect } from 'react';
 
 import { Spinner } from 'lattice-ui-kit';
 import { ValidationUtils } from 'lattice-utils';
-import { useDispatch, useSelector } from 'react-redux';
 import { RequestStates } from 'redux-reqseq';
 
 import ProfileSummary from './ProfileSummary';
+import { useDispatch, useSelector } from './HelplineProvider';
 import { Body, SpinnerWrapper } from './styled';
 
 import { INITIALIZE_HELPLINE, initializeHelpline } from '../../../../containers/app/AppActions';
