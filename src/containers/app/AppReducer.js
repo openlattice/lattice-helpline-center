@@ -2,7 +2,7 @@
  * @flow
  */
 
-import { List, Map, fromJS } from 'immutable';
+import { Map, fromJS } from 'immutable';
 import { ReduxConstants } from 'lattice-utils';
 import { RequestStates } from 'redux-reqseq';
 import type { SequenceAction } from 'redux-reqseq';

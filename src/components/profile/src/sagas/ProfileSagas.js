@@ -64,8 +64,8 @@ function* getProfileSummaryWorker(action :SequenceAction) :Generator<any, any, a
     if (!isValidUUID(personId)) throw ERR_ACTION_VALUE_TYPE;
 
     yield put(getProfileSummary.request(action.id, personId));
-    const config = yield select((store) => store.getIn(STORE_PATHS.APP_CONFIG));
-    const personESID = getESIDFromConfig(config, AppTypes.PEOPLE);
+    // const config = yield select((store) => store.getIn(STORE_PATHS.APP_CONFIG));
+    // const personESID = getESIDFromConfig(config, AppTypes.PEOPLE);
     // may need to get person here?
 
     // get survey history

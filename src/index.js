@@ -6,5 +6,8 @@ export {
   ProfileContainer,
   SelfSufficiencyMatrix,
   SurveyHistory,
-  initializeHelplineStore,
 } from './components/profile';
+
+export {
+  initializeHelplineStore
+};

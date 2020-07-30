@@ -10,8 +10,6 @@ import {
 } from 'lattice-ui-kit';
 import { Provider } from 'react-redux';
 
-import { createMockSufficiencyData, createMockSurveyHistoryData } from './utils';
-
 import initializeReduxStore from '../../../core/redux/ReduxStore';
 import initializeRouterHistory from '../../../core/router/RouterHistory';
 import { PropertyTypes } from '../../../core/edm/constants';
@@ -33,7 +31,6 @@ export default {
   component: ProfileContainer,
 };
 
-const data = createMockSufficiencyData();
 const imageUrl = 'https://vignette.wikia.nocookie.net/spongebob/images/4/4f/One_Krabs_Trash_091.jpg/revision/latest?cb=20181228163723';
 const person = {
   [GIVEN_NAME]: ['Smitty'],
@@ -46,7 +43,6 @@ export const ProfileContainerStory = () => (
   <Provider store={helplineStore}>
     <ProfileContainer
         imageUrl={imageUrl}
-        data={data}
         person={person} />
   </Provider>
 );
