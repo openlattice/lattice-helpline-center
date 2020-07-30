@@ -11,6 +11,7 @@ import {
   GET_PROFILE_SUMMARY,
   getProfileSummary,
 } from './ProfileActions';
+import { GREATEST_NEEDS, SELF_SUFFICIENCY, SURVEY_HISTORY } from './constants';
 
 import { ReduxActions } from '../../../../core/redux';
 
@@ -18,9 +19,9 @@ const { REQUEST_STATE } = ReduxConstants;
 const { RESET_REQUEST_STATE } = ReduxActions;
 
 const INITIAL_STATE :Map = fromJS({
-  needs: List(),
-  selfSufficiency: List(),
-  surveyHistory: List()
+  [GREATEST_NEEDS]: List(),
+  [SELF_SUFFICIENCY]: List(),
+  [SURVEY_HISTORY]: List()
 });
 
 export default function profileReducer(state :Map<*, *> = INITIAL_STATE, action :Object) {
