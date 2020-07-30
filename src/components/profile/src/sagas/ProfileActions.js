@@ -14,13 +14,18 @@ const getSubmissions :RequestSequence = newRequestSequence(GET_SUBMISSIONS);
 const GET_PROFILE_SUMMARY :'GET_PROFILE_SUMMARY' = 'GET_PROFILE_SUMMARY';
 const getProfileSummary :RequestSequence = newRequestSequence(GET_PROFILE_SUMMARY);
 
+const GET_SUMMARY_SETS :'GET_SUMMARY_SETS' = 'GET_SUMMARY_SETS';
+const getSummarySets :RequestSequence = newRequestSequence(GET_SUMMARY_SETS);
+
 export {
   GET_PROFILE,
   GET_PROFILE_SUMMARY,
   GET_SUBMISSIONS,
+  GET_SUMMARY_SETS,
   GET_SURVEYS,
   getProfile,
   getProfileSummary,
   getSubmissions,
+  getSummarySets,
   getSurveys,
 };
