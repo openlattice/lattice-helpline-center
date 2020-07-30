@@ -8,6 +8,7 @@ import SelfSufficiencyMatrix from './SelfSufficiencyMatrix';
 import SurveyHistory from './SurveyHistory';
 
 import { getProfileSummary } from '../sagas/ProfileActions';
+import { PROFILE_PATHS } from '../sagas/constants';
 
 type Props = {
   personId :UUID;
@@ -15,9 +16,9 @@ type Props = {
 
 const ProfileSummary = ({ personId } :Props) => {
   const dispatch = useDispatch();
-  const needs = useSelector((state) => state.getIn(['profile', 'needs']));
-  const data = useSelector((state) => state.getIn(['profile', 'data']));
-  const surveys = useSelector((state) => state.getIn(['profile', 'surveys']));
+  const needs = useSelector((state) => state.getIn(PROFILE_PATHS.greatestNeeds));
+  const selfSufficiency = useSelector((state) => state.getIn(PROFILE_PATHS.selfSufficiency));
+  const surveys = useSelector((state) => state.getIn(PROFILE_PATHS.surveyHistory));
 
   useEffect(() => {
     dispatch(getProfileSummary(personId));
@@ -26,7 +27,7 @@ const ProfileSummary = ({ personId } :Props) => {
   return (
     <>
       <GreatestNeeds needs={needs} />
-      <SelfSufficiencyMatrix data={data} />
+      <SelfSufficiencyMatrix data={selfSufficiency.toJS()} />
       <SurveyHistory surveys={surveys} />
     </>
   );
