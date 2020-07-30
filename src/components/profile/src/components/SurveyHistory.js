@@ -19,7 +19,7 @@ import { Header } from '../../../typography';
 
 const { formatAsDate } = DateTimeUtils;
 
-const { NAME, OL_DATE_TIME, OL_ID } = PropertyTypes;
+const { NAME, DATE_TIME, ID } = PropertyTypes;
 
 const SurveyName = styled.span`
   font-weight: 500;
@@ -39,8 +39,8 @@ const SurveyHistory = ({ surveys } :Props) => (
         surveys.map((survey, index) => {
           const [name, datetime, id] = getPropertyValues(survey, [
             NAME,
-            OL_DATE_TIME,
-            OL_ID
+            DATE_TIME,
+            ID
           ]);
 
           const formattedDateTime = formatAsDate(datetime);

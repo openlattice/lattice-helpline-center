@@ -6,9 +6,9 @@ import { PropertyTypes } from '../../../core/edm/constants';
 import { SurveyHistory } from '..';
 
 const {
-  OL_DATE_TIME,
+  DATE_TIME,
   NAME,
-  OL_ID,
+  ID,
 } = PropertyTypes;
 
 export default {
@@ -19,13 +19,13 @@ export default {
 const surveys = [
   {
     [NAME]: ['Social Needs Survey'],
-    [OL_DATE_TIME]: [DateTime.local().toString()],
-    [OL_ID]: [0],
+    [DATE_TIME]: [DateTime.local().toString()],
+    [ID]: [0],
   },
   {
     [NAME]: ['Social Needs Survey'],
-    [OL_DATE_TIME]: [DateTime.local().plus({ days: 1 }).toString()],
-    [OL_ID]: [1],
+    [DATE_TIME]: [DateTime.local().plus({ days: 1 }).toString()],
+    [ID]: [1],
   }
 ];
 

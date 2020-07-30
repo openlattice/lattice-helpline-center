@@ -4,9 +4,9 @@ import { DateTime } from 'luxon';
 import { PropertyTypes } from '../../../core/edm/constants';
 
 const {
-  OL_DATE_TIME,
+  DATE_TIME,
   NAME,
-  OL_ID,
+  ID,
 } = PropertyTypes;
 
 const createMockSufficiencyData = (bars :number = 6) :any[] => {
@@ -27,9 +27,9 @@ const createMockSurveyHistoryData = (count :number = 6) :Object[] => {
       // $FlowFixMe invalid-computed-prop for FQN
       [NAME]: ['Social Needs Survey'],
       // $FlowFixMe invalid-computed-prop for FQN
-      [OL_DATE_TIME]: [DateTime.local().minus({ months: i }).toString()],
+      [DATE_TIME]: [DateTime.local().minus({ months: i }).toString()],
       // $FlowFixMe invalid-computed-prop for FQN
-      [OL_ID]: [i],
+      [ID]: [i],
     });
   }
 
