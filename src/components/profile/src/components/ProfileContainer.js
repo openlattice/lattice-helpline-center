@@ -2,7 +2,7 @@
 import React from 'react';
 
 import styled from 'styled-components';
-import { List, Map, getIn } from 'immutable';
+import { Map, getIn } from 'immutable';
 import { Constants } from 'lattice';
 import { StyleUtils } from 'lattice-ui-kit';
 
@@ -26,12 +26,9 @@ const ProfileGrid = styled.div`
 `;
 
 type Props = {
-  data ?:Object[];
   imageUrl ?:string;
-  needs :string[];
   organizationId :UUID;
   person :Map | Object;
-  surveys :List | Object[];
 };
 
 const ProfileContainer = (props :Props) => {
@@ -55,10 +52,6 @@ const ProfileContainer = (props :Props) => {
 
 ProfileContainer.defaultProps = {
   imageUrl: '',
-  needs: [],
-  data: [],
-  surveys: [],
-  organizationId: ''
 };
 
 export default ProfileContainer;
