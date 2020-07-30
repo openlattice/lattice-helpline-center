@@ -35,23 +35,19 @@ export default {
 
 const data = createMockSufficiencyData();
 const imageUrl = 'https://vignette.wikia.nocookie.net/spongebob/images/4/4f/One_Krabs_Trash_091.jpg/revision/latest?cb=20181228163723';
-const needs = ['Food', 'Employment', 'Childcare'];
 const person = {
   [GIVEN_NAME]: ['Smitty'],
   [SURNAME]: ['Werbenjagermanjensen'],
   [DOB]: ['2002-02-22'],
   [OPENLATTICE_ID_FQN]: ['']
 };
-const surveys = createMockSurveyHistoryData();
 
 export const ProfileContainerStory = () => (
   <Provider store={helplineStore}>
     <ProfileContainer
         imageUrl={imageUrl}
         data={data}
-        person={person}
-        needs={needs}
-        surveys={surveys} />
+        person={person} />
   </Provider>
 );
 
@@ -63,11 +59,10 @@ export const LiveProfileContainerStory = () => {
   const [inputData, setInputs] = useState({
     jwt: '',
     orgId: '',
-    personId: '',
   });
 
   const [organizationId, setOrganizationId] = useState('');
-  const { jwt, orgId, personId } = inputData;
+  const { jwt, orgId } = inputData;
 
   const onConfigure = (e) => {
     e.preventDefault();
@@ -76,12 +71,6 @@ export const LiveProfileContainerStory = () => {
       authToken: jwt
     });
     setOrganizationId(orgId);
-  };
-
-  const onFetchProfile = (e) => {
-    e.preventDefault();
-    console.log('fetching...', personId);
-    // dispatch(getProfile(personId));
   };
 
   const onChange = (e) => {
@@ -102,20 +91,12 @@ export const LiveProfileContainerStory = () => {
             <Input id="org-id" name="orgId" onChange={onChange} value={inputData.orgId} />
             <Button color="primary" type="submit">Configure</Button>
           </form>
-          <form onSubmit={onFetchProfile}>
-            <Label htmlFor="person-id" subtle>Person ID</Label>
-            <Input id="person-id" name="personId" onChange={onChange} value={inputData.personId} />
-            <Button color="primary" type="submit">Fetch Profile</Button>
-          </form>
         </CardSegment>
       </Card>
       <ProfileContainer
           organizationId={organizationId}
           imageUrl={imageUrl}
-          data={data}
-          person={person}
-          needs={needs}
-          surveys={surveys} />
+          person={person} />
     </Provider>
   );
 };
