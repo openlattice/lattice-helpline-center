@@ -27,7 +27,7 @@ type Props = {
 const ProfileContainer = (props :Props) => {
   const {
     organizationId,
-    personId
+    personId,
   } = props;
 
   return (
