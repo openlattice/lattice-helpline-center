@@ -6,28 +6,30 @@ import { GET_PROFILE_SUMMARY } from './ProfileActions';
 
 const { REQUEST_STATE } = ReduxConstants;
 
-const PROFILE = 'profile';
-const SURVEY_HISTORY = 'surveyHistory';
 const GREATEST_NEEDS = 'greatestNeeds';
+const PERSON = 'person';
+const PROFILE = 'profile';
 const SELF_SUFFICIENCY = 'selfSufficiency';
+const SURVEY_HISTORY = 'surveyHistory';
 
 const PROFILE_PATHS = {
-  [SURVEY_HISTORY]: [PROFILE, SURVEY_HISTORY],
   [GREATEST_NEEDS]: [PROFILE, GREATEST_NEEDS],
+  [PERSON]: [PROFILE, PERSON],
+  [REQUEST_STATE]: [PROFILE, GET_PROFILE_SUMMARY, REQUEST_STATE],
   [SELF_SUFFICIENCY]: [PROFILE, SELF_SUFFICIENCY],
-  [REQUEST_STATE]: [PROFILE, GET_PROFILE_SUMMARY, REQUEST_STATE]
+  [SURVEY_HISTORY]: [PROFILE, SURVEY_HISTORY],
 };
 
-const SHELTER = 'Shelter';
-const FOOD = 'Food';
-const TRANSPORTATION = 'Transportation';
+const CHILDCARE = 'Childcare';
 const EMPLOYMENT_INCOME = 'Employment & Income';
 const FINANCIAL_STRAIN = 'Financial Strain';
-const CHILDCARE = 'Childcare';
+const FOOD = 'Food';
 const HEALTHCARE = 'Healthcare';
 const MENTAL_HEALTH = 'Mental Health';
-const SUBSTANCE_USE = 'Substance Use';
 const SAFETY = 'Safety';
+const SHELTER = 'Shelter';
+const SUBSTANCE_USE = 'Substance Use';
+const TRANSPORTATION = 'Transportation';
 
 const CATEGORY_BY_QUESTION_NUMBER = Object.freeze({
   '1': SHELTER,
@@ -50,20 +52,21 @@ const CATEGORY_BY_QUESTION_NUMBER = Object.freeze({
 });
 
 export {
-  PROFILE,
-  SURVEY_HISTORY,
-  GREATEST_NEEDS,
-  SELF_SUFFICIENCY,
-  PROFILE_PATHS,
-  SHELTER,
-  FOOD,
-  TRANSPORTATION,
+  CATEGORY_BY_QUESTION_NUMBER,
+  CHILDCARE,
   EMPLOYMENT_INCOME,
   FINANCIAL_STRAIN,
-  CHILDCARE,
+  FOOD,
+  GREATEST_NEEDS,
   HEALTHCARE,
   MENTAL_HEALTH,
-  SUBSTANCE_USE,
+  PERSON,
+  PROFILE,
+  PROFILE_PATHS,
   SAFETY,
-  CATEGORY_BY_QUESTION_NUMBER,
+  SELF_SUFFICIENCY,
+  SHELTER,
+  SUBSTANCE_USE,
+  SURVEY_HISTORY,
+  TRANSPORTATION,
 };

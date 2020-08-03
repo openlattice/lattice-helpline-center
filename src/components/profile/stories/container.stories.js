@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import { Constants, configure } from 'lattice';
+import { configure } from 'lattice';
 import {
   Button,
   Card,
@@ -9,34 +9,15 @@ import {
   Label,
 } from 'lattice-ui-kit';
 
-import { PropertyTypes } from '../../../core/edm/constants';
 import { ProfileContainer } from '..';
-
-const { OPENLATTICE_ID_FQN } = Constants;
-
-const {
-  DOB,
-  GIVEN_NAME,
-  SURNAME,
-} = PropertyTypes;
 
 export default {
   title: 'Profile Container',
   component: ProfileContainer,
 };
 
-const imageUrl = 'https://vignette.wikia.nocookie.net/spongebob/images/4/4f/One_Krabs_Trash_091.jpg/revision/latest?cb=20181228163723';
-const person = {
-  [GIVEN_NAME]: ['Smitty'],
-  [SURNAME]: ['Werbenjagermanjensen'],
-  [DOB]: ['2002-02-22'],
-  [OPENLATTICE_ID_FQN]: ['']
-};
-
 export const ProfileContainerStory = () => (
-  <ProfileContainer
-      imageUrl={imageUrl}
-      person={person} />
+  <ProfileContainer />
 );
 
 ProfileContainerStory.story = {
@@ -47,18 +28,24 @@ export const LiveProfileContainerStory = () => {
   const [inputData, setInputs] = useState({
     jwt: '',
     orgId: '',
+    personId: ''
   });
-
-  const [organizationId, setOrganizationId] = useState('');
-  const { jwt, orgId } = inputData;
+  const { jwt, orgId, personId } = inputData;
+  const [organizationId, setOrganization] = useState(orgId);
+  const [personEKID, setPerson] = useState(personId);
 
   const onConfigure = (e) => {
     e.preventDefault();
     configure({
-      baseUrl: 'https://api.openlattice.com',
+      baseUrl: 'production',
       authToken: jwt
     });
-    setOrganizationId(orgId);
+    setOrganization(orgId);
+  };
+
+  const onFetch = (e) => {
+    e.preventDefault();
+    setPerson(personId);
   };
 
   const onChange = (e) => {
@@ -74,17 +61,21 @@ export const LiveProfileContainerStory = () => {
         <CardSegment>
           <form onSubmit={onConfigure}>
             <Label htmlFor="jwt" subtle>JWT</Label>
-            <Input id="jwt" name="jwt" onChange={onChange} value={inputData.jwt} />
+            <Input id="jwt" name="jwt" onChange={onChange} value={jwt} />
             <Label htmlFor="org-id" subtle>Org ID</Label>
-            <Input id="org-id" name="orgId" onChange={onChange} value={inputData.orgId} />
+            <Input id="org-id" name="orgId" onChange={onChange} value={orgId} />
             <Button color="primary" type="submit">Configure</Button>
+          </form>
+          <form onSubmit={onFetch}>
+            <Label htmlFor="person-id" subtle>Person ID</Label>
+            <Input id="person-id" name="personId" onChange={onChange} value={personId} />
+            <Button color="primary" type="submit">Fetch Person</Button>
           </form>
         </CardSegment>
       </Card>
       <ProfileContainer
           organizationId={organizationId}
-          imageUrl={imageUrl}
-          person={person} />
+          personId={personEKID} />
     </>
   );
 };

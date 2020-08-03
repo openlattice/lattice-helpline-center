@@ -16,6 +16,8 @@ import {
 } from 'immutable';
 import { Constants } from 'lattice';
 import {
+  DataApiActions,
+  DataApiSagas,
   SearchApiActions,
   SearchApiSagas,
 } from 'lattice-sagas';
@@ -40,6 +42,7 @@ import {
 import {
   CATEGORY_BY_QUESTION_NUMBER,
   GREATEST_NEEDS,
+  PERSON,
   SELF_SUFFICIENCY,
   SURVEY_HISTORY,
 } from './constants';
@@ -50,8 +53,9 @@ import { AppTypes, PropertyTypes } from '../../../../core/edm/constants';
 import { ERR_ACTION_VALUE_TYPE } from '../../../../utils/Errors';
 
 const { isValidUUID } = ValidationUtils;
-
 const { OPENLATTICE_ID_FQN } = Constants;
+const { getEntityData } = DataApiActions;
+const { getEntityDataWorker } = DataApiSagas;
 const { searchEntityNeighborsWithFilter } = SearchApiActions;
 const { searchEntityNeighborsWithFilterWorker } = SearchApiSagas;
 
@@ -64,9 +68,19 @@ function* getProfileSummaryWorker(action :SequenceAction) :Generator<any, any, a
     if (!isValidUUID(personId)) throw ERR_ACTION_VALUE_TYPE;
 
     yield put(getProfileSummary.request(action.id, personId));
-    // const config = yield select((store) => store.getIn(STORE_PATHS.APP_CONFIG));
-    // const personESID = getESIDFromConfig(config, AppTypes.PEOPLE);
-    // may need to get person here?
+    const config = yield select((store) => store.getIn(STORE_PATHS.APP_CONFIG));
+    const personESID = getESIDFromConfig(config, AppTypes.PEOPLE);
+
+    const personResponse = yield call(
+      getEntityDataWorker,
+      getEntityData({
+        entitySetId: personESID,
+        entityKeyId: personId
+      })
+    );
+
+    if (personResponse.error) throw personResponse.error;
+    const personData = fromJS(personResponse.data);
 
     // get survey history
     const submissionsResponse = yield call(getSubmissionsWorker, getSubmissions(personId));
@@ -99,6 +113,7 @@ function* getProfileSummaryWorker(action :SequenceAction) :Generator<any, any, a
     if (greatestNeedsResponse.error) throw greatestNeedsResponse.error;
 
     response.data = Map({
+      [PERSON]: personData,
       [SURVEY_HISTORY]: submissionsResponse.data,
       [SELF_SUFFICIENCY]: selfSufficiency,
       [GREATEST_NEEDS]: greatestNeedsResponse.data
