@@ -13,6 +13,7 @@ const SurveyContainer = () => {
   const dispatch = useDispatch();
   const person = useSelector((store) => store.getIn(PROFILE_PATHS.person));
   const { params: { submissionId } } = useRouteMatch();
+  console.log(person);
 
   useEffect(() => {
     dispatch(getSurvey(submissionId));

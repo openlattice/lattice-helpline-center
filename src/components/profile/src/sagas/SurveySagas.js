@@ -9,20 +9,7 @@ import {
   select,
   takeLatest,
 } from '@redux-saga/core/effects';
-import {
-  List,
-  Map,
-  fromJS,
-} from 'immutable';
-import { Constants } from 'lattice';
-import {
-  DataApiActions,
-  DataApiSagas,
-  SearchApiActions,
-  SearchApiSagas,
-} from 'lattice-sagas';
 import { Logger, ValidationUtils } from 'lattice-utils';
-import { DateTime } from 'luxon';
 import type { Saga } from '@redux-saga/core';
 import type { SequenceAction } from 'redux-reqseq';
 
@@ -32,22 +19,13 @@ import {
   GET_SURVEY,
   getSurvey,
 } from './SurveyActions';
-import {
-  CATEGORY_BY_QUESTION_NUMBER,
-  PERSON,
-} from './constants';
 
 import { getESIDFromConfig } from '../../../../containers/app/AppUtils';
 import { STORE_PATHS } from '../../../../containers/app/constants';
-import { AppTypes, PropertyTypes } from '../../../../core/edm/constants';
+import { AppTypes } from '../../../../core/edm/constants';
 import { ERR_ACTION_VALUE_TYPE } from '../../../../utils/Errors';
 
 const { isValidUUID } = ValidationUtils;
-const { OPENLATTICE_ID_FQN } = Constants;
-const { getEntityData } = DataApiActions;
-const { getEntityDataWorker } = DataApiSagas;
-const { searchEntityNeighborsWithFilter } = SearchApiActions;
-const { searchEntityNeighborsWithFilterWorker } = SearchApiSagas;
 
 const LOG = new Logger('SurveySagas');
 
@@ -70,6 +48,8 @@ function* getSurveyWorker(action :SequenceAction) :Saga<any> {
     // get question to each answer
     const questionsResponse = yield call(getQuestionsFromAnswersWorker, getQuestionsFromAnswers(answersIds.toJS()));
     const questions = questionsResponse.data;
+
+    console.log(personESID, questions);
 
     yield put(getSurvey.success(action.id));
   }
