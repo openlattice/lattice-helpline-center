@@ -2,7 +2,6 @@
 import React, { useEffect } from 'react';
 
 import { ValidationUtils } from 'lattice-utils';
-import { useRouteMatch } from 'react-router';
 import { Route, Switch } from 'react-router-dom';
 
 import ProfileContainer from './ProfileContainer';
@@ -16,11 +15,11 @@ const { isValidUUID } = ValidationUtils;
 type Props = {
   organizationId :UUID;
   personId :UUID;
+  root :string;
 };
 
-const HelplineSwitch = ({ organizationId, personId } :Props) => {
+const HelplineSwitch = ({ organizationId, personId, root } :Props) => {
   const dispatch = useDispatch();
-  const match = useRouteMatch();
 
   useEffect(() => {
     if (isValidUUID) {
@@ -30,7 +29,7 @@ const HelplineSwitch = ({ organizationId, personId } :Props) => {
 
   return (
     <Switch>
-      <Route path={`${match.url}/survey/:submissionId`} component={SurveyContainer} />
+      <Route path={`${root}/survey/:submissionId`} component={SurveyContainer} />
       <Route render={() => <ProfileContainer personId={personId} />} />
     </Switch>
   );

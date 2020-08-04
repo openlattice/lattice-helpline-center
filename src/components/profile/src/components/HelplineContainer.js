@@ -7,17 +7,22 @@ import HelplineSwitch from './HelplineSwitch';
 type Props = {
   organizationId :UUID;
   personId :UUID;
+  root :string;
 };
 
 const HelplineContainer = (props :Props) => {
   const {
     organizationId,
     personId,
+    root,
   } = props;
 
   return (
     <HelplineProvider>
-      <HelplineSwitch organizationId={organizationId} personId={personId} />
+      <HelplineSwitch
+          organizationId={organizationId}
+          personId={personId}
+          root={root} />
     </HelplineProvider>
   );
 };
