@@ -74,6 +74,7 @@ export const LiveHelplineContainerStory = () => {
         </CardSegment>
       </Card>
       <HelplineContainer
+          root="/"
           organizationId={organizationId}
           personId={personEKID} />
     </>
