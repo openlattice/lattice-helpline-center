@@ -4,6 +4,7 @@
 
 /* eslint-disable no-use-before-define */
 import {
+  all,
   call,
   put,
   select,
@@ -13,6 +14,7 @@ import {
   List,
   Map,
   fromJS,
+  getIn,
 } from 'immutable';
 import { Constants } from 'lattice';
 import {
@@ -23,6 +25,7 @@ import {
 } from 'lattice-sagas';
 import { Logger, ValidationUtils } from 'lattice-utils';
 import { DateTime } from 'luxon';
+import type { Saga } from '@redux-saga/core';
 import type { SequenceAction } from 'redux-reqseq';
 
 import {
@@ -32,18 +35,24 @@ import {
   GET_SUBMISSIONS,
   GET_SUBMISSION_ANSWERS,
   GET_SUMMARY_SETS,
+  GET_SURVEY,
   getGreatestNeeds,
   getProfileSummary,
   getQuestionsFromAnswers,
   getSubmissionAnswers,
   getSubmissions,
   getSummarySets,
+  getSurvey,
 } from './ProfileActions';
 import {
+  ANSWERS,
   CATEGORY_BY_QUESTION_NUMBER,
   GREATEST_NEEDS,
+  LAST_REQUEST,
   PERSON,
+  QUESTIONS,
   SELF_SUFFICIENCY,
+  SURVEY,
   SURVEY_HISTORY,
 } from './constants';
 
@@ -61,7 +70,7 @@ const { searchEntityNeighborsWithFilterWorker } = SearchApiSagas;
 
 const LOG = new Logger('ProfileSagas');
 
-function* getProfileSummaryWorker(action :SequenceAction) :Generator<any, any, any> {
+function* getProfileSummaryWorker(action :SequenceAction) :Saga<any> {
   const response = {};
   try {
     const { value: personId } = action;
@@ -112,11 +121,14 @@ function* getProfileSummaryWorker(action :SequenceAction) :Generator<any, any, a
     const greatestNeedsResponse = yield call(getGreatestNeedsWorker, getGreatestNeeds(recentSurveyIds.first()));
     if (greatestNeedsResponse.error) throw greatestNeedsResponse.error;
 
-    response.data = Map({
+    response.data = fromJS({
       [PERSON]: personData,
       [SURVEY_HISTORY]: submissionsResponse.data,
       [SELF_SUFFICIENCY]: selfSufficiency,
-      [GREATEST_NEEDS]: greatestNeedsResponse.data
+      [GREATEST_NEEDS]: greatestNeedsResponse.data,
+      [LAST_REQUEST]: {
+        [personId]: DateTime.local().valueOf
+      }
     });
 
     yield put(getProfileSummary.success(action.id, response.data));
@@ -128,11 +140,11 @@ function* getProfileSummaryWorker(action :SequenceAction) :Generator<any, any, a
   return response;
 }
 
-function* getProfileSummaryWatcher() :Generator<any, any, any> {
+function* getProfileSummaryWatcher() :Saga<any> {
   yield takeLatest(GET_PROFILE_SUMMARY, getProfileSummaryWorker);
 }
 
-function* getSubmissionsWorker(action :SequenceAction) :Generator<any, any, any> {
+function* getSubmissionsWorker(action :SequenceAction) :Saga<any> {
   const response = {};
   try {
     const { value: personId } = action;
@@ -181,11 +193,11 @@ function* getSubmissionsWorker(action :SequenceAction) :Generator<any, any, any>
   return response;
 }
 
-function* getSubmissionsWatcher() :Generator<any, any, any> {
+function* getSubmissionsWatcher() :Saga<any> {
   yield takeLatest(GET_SUBMISSIONS, getSubmissionsWorker);
 }
 
-function* getSummarySetsWorker(action :SequenceAction) :Generator<any, any, any> {
+function* getSummarySetsWorker(action :SequenceAction) :Saga<any> {
   const response = {};
   try {
     const { value: submissionIds } = action;
@@ -223,11 +235,11 @@ function* getSummarySetsWorker(action :SequenceAction) :Generator<any, any, any>
   return response;
 }
 
-function* getSummarySetWatcher() :Generator<any, any, any> {
+function* getSummarySetWatcher() :Saga<any> {
   yield takeLatest(GET_SUMMARY_SETS, getSummarySetsWorker);
 }
 
-function* getGreatestNeedsWorker(action :SequenceAction) :Generator<any, any, any> {
+function* getGreatestNeedsWorker(action :SequenceAction) :Saga<any> {
   const response = {};
   try {
     const { value: submissionId } = action;
@@ -277,11 +289,11 @@ function* getGreatestNeedsWorker(action :SequenceAction) :Generator<any, any, an
   return response;
 }
 
-function* getGreatestNeedsWatcher() :Generator<any, any, any> {
+function* getGreatestNeedsWatcher() :Saga<any> {
   yield takeLatest(GET_GREATEST_NEEDS, getGreatestNeedsWorker);
 }
 
-function* getSubmissionAnswersWorker(action :SequenceAction) :Generator<any, any, any> {
+function* getSubmissionAnswersWorker(action :SequenceAction) :Saga<any> {
   const response = {};
   try {
     const { value: submissionId } = action;
@@ -320,11 +332,11 @@ function* getSubmissionAnswersWorker(action :SequenceAction) :Generator<any, any
   return response;
 }
 
-function* getSubmissionAnswersWatcher() :Generator<any, any, any> {
+function* getSubmissionAnswersWatcher() :Saga<any> {
   yield takeLatest(GET_SUBMISSION_ANSWERS, getSubmissionAnswersWorker);
 }
 
-function* getQuestionsFromAnswersWorker(action :SequenceAction) :Generator<any, any, any> {
+function* getQuestionsFromAnswersWorker(action :SequenceAction) :Saga<any> {
   const response = {};
   try {
     const { value: answersIds } = action;
@@ -362,8 +374,88 @@ function* getQuestionsFromAnswersWorker(action :SequenceAction) :Generator<any, 
   return response;
 }
 
-function* getQuestionsFromAnswersWatcher() :Generator<any, any, any> {
+function* getQuestionsFromAnswersWatcher() :Saga<any> {
   yield takeLatest(GET_QUESTIONS_FROM_ANSWERS, getQuestionsFromAnswersWorker);
+}
+
+function* getSurveyWorker(action :SequenceAction) :Saga<any> {
+  const response = {};
+  try {
+    const { value: submissionId } = action;
+    if (!isValidUUID(submissionId)) throw ERR_ACTION_VALUE_TYPE;
+    yield put(getSurvey.request(action.id));
+
+    // get person
+    const config = yield select((store) => store.getIn(STORE_PATHS.APP_CONFIG));
+    const peopleESID = getESIDFromConfig(config, AppTypes.PEOPLE);
+    const submissionsESID = getESIDFromConfig(config, AppTypes.SUBMISSION);
+    const respondsWithESID = getESIDFromConfig(config, AppTypes.RESPONDS_WITH);
+
+    const personSearchParams = {
+      entitySetId: submissionsESID,
+      filter: {
+        entityKeyIds: [submissionId],
+        edgeEntitySetIds: [respondsWithESID],
+        destinationEntitySetIds: [],
+        sourceEntitySetIds: [peopleESID],
+      }
+    };
+
+    const personRequest = call(
+      searchEntityNeighborsWithFilterWorker,
+      searchEntityNeighborsWithFilter(personSearchParams)
+    );
+
+    // get submission
+    const submissionRequest = call(
+      getEntityDataWorker,
+      getEntityData({
+        entitySetId: submissionsESID,
+        entityKeyId: submissionId
+      })
+    );
+
+    // get all answers to submission
+    const answersRequest = call(getSubmissionAnswersWorker, getSubmissionAnswers(submissionId));
+
+    const [answersResponse, personResponse, submissionResponse] = yield all([
+      answersRequest,
+      personRequest,
+      submissionRequest
+    ]);
+    if (answersResponse.error) throw answersResponse.error;
+    if (personResponse.error) throw personResponse.error;
+    if (submissionResponse.error) throw submissionResponse.error;
+    const survey = fromJS(submissionResponse.data);
+
+    const person = getIn(personResponse, ['data', submissionId, '0', 'neighborDetails']);
+
+    const answers = answersResponse.data;
+    const answersIds = answers.map((answer) => answer.get('neighborId'));
+
+    // get question to each answer
+    const questionsResponse = yield call(getQuestionsFromAnswersWorker, getQuestionsFromAnswers(answersIds.toJS()));
+    const questions = questionsResponse.data;
+
+    response.data = fromJS({
+      [ANSWERS]: answers,
+      [PERSON]: person,
+      [QUESTIONS]: questions,
+      [SURVEY]: survey,
+    });
+
+    yield put(getSurvey.success(action.id, response.data));
+  }
+  catch (error) {
+    LOG.error(action.type, error);
+    response.error = error;
+    yield put(getSurvey.failure(action.id, error));
+  }
+  return response;
+}
+
+function* getSurveyWatcher() :Saga<any> {
+  yield takeLatest(GET_SURVEY, getSurveyWorker);
 }
 
 export {
@@ -379,4 +471,6 @@ export {
   getSubmissionsWorker,
   getSummarySetWatcher,
   getSummarySetsWorker,
+  getSurveyWatcher,
+  getSurveyWorker,
 };
