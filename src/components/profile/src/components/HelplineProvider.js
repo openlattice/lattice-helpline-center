@@ -1,5 +1,6 @@
 import React from 'react';
 
+import { ConnectedRouter } from 'connected-react-router/immutable';
 import {
   Provider,
   createDispatchHook,
@@ -10,7 +11,7 @@ import {
 import initializeReduxStore from '../../../../core/redux/ReduxStore';
 import initializeRouterHistory from '../../../../core/router/RouterHistory';
 
-const routerHistory = initializeRouterHistory();
+export const routerHistory = initializeRouterHistory();
 const helplineStore = initializeReduxStore(routerHistory);
 
 const helplineContext = React.createContext(null);
@@ -23,7 +24,9 @@ export const useSelector = createSelectorHook(helplineContext);
 export default function HelplineProvider({ children }) {
   return (
     <Provider context={helplineContext} store={helplineStore}>
-      {children}
+      <ConnectedRouter history={routerHistory} context={helplineContext}>
+        {children}
+      </ConnectedRouter>
     </Provider>
   );
 }

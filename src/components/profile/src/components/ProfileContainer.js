@@ -4,7 +4,6 @@ import React from 'react';
 import styled from 'styled-components';
 import { StyleUtils } from 'lattice-ui-kit';
 
-import HelplineProvider from './HelplineProvider';
 import ProfileAside from './ProfileAside';
 import ProfileBody from './ProfileBody';
 
@@ -20,24 +19,14 @@ const ProfileGrid = styled.div`
 `;
 
 type Props = {
-  organizationId :UUID;
   personId :UUID;
 };
 
-const ProfileContainer = (props :Props) => {
-  const {
-    organizationId,
-    personId,
-  } = props;
-
-  return (
-    <HelplineProvider>
-      <ProfileGrid>
-        <ProfileAside />
-        <ProfileBody organizationId={organizationId} personId={personId} />
-      </ProfileGrid>
-    </HelplineProvider>
-  );
-};
+const ProfileContainer = ({ personId } :Props) => (
+  <ProfileGrid>
+    <ProfileAside />
+    <ProfileBody personId={personId} />
+  </ProfileGrid>
+);
 
 export default ProfileContainer;

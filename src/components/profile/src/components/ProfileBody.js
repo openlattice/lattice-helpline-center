@@ -1,33 +1,22 @@
 // @flow
-import React, { useEffect } from 'react';
+import React from 'react';
 
 import { Spinner } from 'lattice-ui-kit';
-import { ValidationUtils } from 'lattice-utils';
 import { RequestStates } from 'redux-reqseq';
 
 import ProfileSummary from './ProfileSummary';
-import { useDispatch, useSelector } from './HelplineProvider';
+import { useSelector } from './HelplineProvider';
 import { Body, SpinnerWrapper } from './styled';
 
-import { INITIALIZE_HELPLINE, initializeHelpline } from '../../../../containers/app/AppActions';
-
-const { isValidUUID } = ValidationUtils;
+import { INITIALIZE_HELPLINE } from '../../../../containers/app/AppActions';
 
 type Props = {
-  organizationId :UUID;
   personId :UUID;
 };
 
-const ProfileBody = ({ organizationId, personId } :Props) => {
+const ProfileBody = ({ personId } :Props) => {
 
-  const dispatch = useDispatch();
   const initializeState = useSelector((state) => state.getIn(['app', INITIALIZE_HELPLINE, 'requestState']));
-
-  useEffect(() => {
-    if (isValidUUID) {
-      dispatch(initializeHelpline(organizationId));
-    }
-  }, [dispatch, organizationId]);
 
   return (
     <Body>

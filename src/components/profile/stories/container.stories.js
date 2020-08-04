@@ -9,22 +9,22 @@ import {
   Label,
 } from 'lattice-ui-kit';
 
-import { ProfileContainer } from '..';
+import { HelplineContainer } from '..';
 
 export default {
-  title: 'Profile Container',
-  component: ProfileContainer,
+  title: 'Helpline Container',
+  component: HelplineContainer,
 };
 
-export const ProfileContainerStory = () => (
-  <ProfileContainer />
+export const HelplineContainerStory = () => (
+  <HelplineContainer />
 );
 
-ProfileContainerStory.story = {
-  name: 'Profile Container'
+HelplineContainerStory.story = {
+  name: 'Helpline Container'
 };
 
-export const LiveProfileContainerStory = () => {
+export const LiveHelplineContainerStory = () => {
   const [inputData, setInputs] = useState({
     jwt: '',
     orgId: '',
@@ -73,13 +73,13 @@ export const LiveProfileContainerStory = () => {
           </form>
         </CardSegment>
       </Card>
-      <ProfileContainer
+      <HelplineContainer
           organizationId={organizationId}
           personId={personEKID} />
     </>
   );
 };
 
-LiveProfileContainerStory.story = {
-  name: 'Live Profile Container'
+LiveHelplineContainerStory.story = {
+  name: 'Live Helpline Container'
 };
