@@ -61,7 +61,7 @@ const SurveyHistory = ({ surveys } :Props) => {
                   button
                   component={Link}
                   divider={!isLast}
-                  to={`${pathname}survey/${ekid}`}
+                  to={`${pathname}/survey/${ekid}`}
                   key={ekid}>
                 <ListItemAvatar>
                   <FontAwesomeIcon icon={faFileAlt} />
