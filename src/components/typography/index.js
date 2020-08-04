@@ -14,7 +14,14 @@ const Caption = styled.span`
   margin: 0 0 24px;
 `;
 
+const Subheader = styled.h3`
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin: 24px 0;
+`;
+
 export {
   Caption,
   Header,
+  Subheader,
 };
