@@ -5,7 +5,7 @@ import { useRouteMatch } from 'react-router';
 import SocialNeedsSurvey from './SocialNeedsSurvey';
 import { useDispatch, useSelector } from './HelplineProvider';
 
-import { getSurvey } from '../sagas/SurveyActions';
+import { getSurvey } from '../sagas/ProfileActions';
 import { PROFILE_PATHS } from '../sagas/constants';
 
 const SurveyContainer = () => {
@@ -13,7 +13,6 @@ const SurveyContainer = () => {
   const dispatch = useDispatch();
   const person = useSelector((store) => store.getIn(PROFILE_PATHS.person));
   const { params: { submissionId } } = useRouteMatch();
-  console.log(person);
 
   useEffect(() => {
     dispatch(getSurvey(submissionId));
