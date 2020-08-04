@@ -11,7 +11,7 @@ import {
 import initializeReduxStore from '../../../../core/redux/ReduxStore';
 import initializeRouterHistory from '../../../../core/router/RouterHistory';
 
-export const routerHistory = initializeRouterHistory();
+const routerHistory = initializeRouterHistory();
 const helplineStore = initializeReduxStore(routerHistory);
 
 const helplineContext = React.createContext(null);
