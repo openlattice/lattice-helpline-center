@@ -13,6 +13,8 @@ import {
   ListItemText,
 } from 'lattice-ui-kit';
 import { DateTimeUtils } from 'lattice-utils';
+import { useLocation } from 'react-router';
+import { Link } from 'react-router-dom';
 
 import { PropertyTypes } from '../../../../core/edm/constants';
 import { getPropertyValues } from '../../../../utils/EntityUtils';
@@ -30,40 +32,49 @@ type Props = {
   surveys :iList | Object[];
 }
 
-const SurveyHistory = ({ surveys } :Props) => (
-  <div>
-    <Header>
-      Survey History
-    </Header>
-    <List>
-      {
-        surveys.map((survey, index) => {
-          const [name = 'Social Needs Survey', datetime, ekid] = getPropertyValues(survey, [
-            NAME,
-            DATE_TIME,
-            OPENLATTICE_ID_FQN
-          ]);
+const SurveyHistory = ({ surveys } :Props) => {
+  const location = useLocation();
+  const { pathname } = location;
+  return (
+    <div>
+      <Header>
+        Survey History
+      </Header>
+      <List>
+        {
+          surveys.map((survey, index) => {
+            const [name = 'Social Needs Survey', datetime, ekid] = getPropertyValues(survey, [
+              NAME,
+              DATE_TIME,
+              OPENLATTICE_ID_FQN
+            ]);
 
-          const formattedDateTime = formatAsDate(datetime);
+            const formattedDateTime = formatAsDate(datetime);
 
-          const isLast = iList.isList(surveys)
-            // $FlowFixMe
-            ? (index === surveys.size - 1)
-            : (index === surveys.length - 1);
+            const isLast = iList.isList(surveys)
+              // $FlowFixMe
+              ? (index === surveys.size - 1)
+              : (index === surveys.length - 1);
 
-          return (
-            <ListItem key={ekid} divider={!isLast}>
-              <ListItemAvatar>
-                <FontAwesomeIcon icon={faFileAlt} />
-              </ListItemAvatar>
-              <ListItemText primary={<SurveyName>{name}</SurveyName>} secondary={formattedDateTime} />
-            </ListItem>
-          );
-        })
-      }
-    </List>
-  </div>
-);
+            return (
+              <ListItem
+                  button
+                  component={Link}
+                  divider={!isLast}
+                  to={`${pathname}survey/${ekid}`}
+                  key={ekid}>
+                <ListItemAvatar>
+                  <FontAwesomeIcon icon={faFileAlt} />
+                </ListItemAvatar>
+                <ListItemText primary={<SurveyName>{name}</SurveyName>} secondary={formattedDateTime} />
+              </ListItem>
+            );
+          })
+        }
+      </List>
+    </div>
+  );
+};
 
 SurveyHistory.defaultProps = {
   surveys: []
