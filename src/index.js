@@ -3,8 +3,9 @@ import initializeHelplineStore from './core/redux/ReduxStore';
 export {
   GreatestNeeds,
   ProfileCard,
-  ProfileContainer,
+  HelplineContainer,
   SelfSufficiencyMatrix,
+  SocialNeedsSurvey,
   SurveyHistory,
 } from './components/profile';
 
