@@ -432,13 +432,14 @@ function* getSurveyWorker(action :SequenceAction) :Saga<any> {
 
     const answers = answersResponse.data;
     const answersIds = answers.map((answer) => answer.get('neighborId'));
+    const answersById = Map(answers.map((answer) => [answer.get('neighborId'), answer.get('neighborDetails')]));
 
     // get question to each answer
     const questionsResponse = yield call(getQuestionsFromAnswersWorker, getQuestionsFromAnswers(answersIds.toJS()));
-    const questions = questionsResponse.data;
+    const questions = questionsResponse.data.map((question) => question.getIn([0, 'neighborDetails']));
 
     response.data = fromJS({
-      [ANSWERS]: answers,
+      [ANSWERS]: answersById,
       [PERSON]: person,
       [QUESTIONS]: questions,
       [SURVEY]: survey,

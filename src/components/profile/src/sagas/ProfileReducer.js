@@ -14,9 +14,11 @@ import {
   getSurvey,
 } from './ProfileActions';
 import {
+  ANSWERS,
   GREATEST_NEEDS,
   LAST_REQUEST,
   PERSON,
+  QUESTIONS,
   SELF_SUFFICIENCY,
   SURVEY_HISTORY,
 } from './constants';
@@ -33,9 +35,11 @@ const INITIAL_STATE :Map = fromJS({
   [GET_SURVEY]: {
     [REQUEST_STATE]: RequestStates.STANDBY
   },
+  [ANSWERS]: Map(),
   [GREATEST_NEEDS]: List(),
   [LAST_REQUEST]: Map(),
   [PERSON]: Map(),
+  [QUESTIONS]: Map(),
   [SELF_SUFFICIENCY]: List(),
   [SURVEY_HISTORY]: List(),
 });
