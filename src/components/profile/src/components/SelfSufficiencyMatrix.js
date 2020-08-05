@@ -14,7 +14,7 @@ import {
 
 import CustomTooltip from './CustomTooltip';
 
-import { Header } from '../../../typography';
+import { Caption, Header } from '../../../typography';
 
 const { PURPLE, NEUTRAL } = Colors;
 
@@ -55,6 +55,9 @@ const SelfSufficiencyMatrix = ({ data } :Props) => {
   return (
     <div>
       <Header>Self-Sufficiency Matrix</Header>
+      <Caption>
+        {'The higher the score, the greater the need.\nLow: 0-25 / Moderate: 25-55 / High: 55 - 85 / Critical: 85+'}
+      </Caption>
       <ResponsiveContainer height={350} width="100%">
         <BarChart
             barCategoryGap="20%"
@@ -63,7 +66,7 @@ const SelfSufficiencyMatrix = ({ data } :Props) => {
           <CartesianGrid vertical={false} />
           <YAxis
               axisLine={false}
-              domain={[0, 80]}
+              domain={[0, 180]}
               minTickGap={10}
               tick={TICK_STYLE}
               tickLine={false}
