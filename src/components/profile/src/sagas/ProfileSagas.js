@@ -57,7 +57,7 @@ import {
 } from './constants';
 
 import { getESIDFromConfig } from '../../../../containers/app/AppUtils';
-import { STORE_PATHS } from '../../../../containers/app/constants';
+import { APP_PATHS } from '../../../../containers/app/constants';
 import { AppTypes, PropertyTypes } from '../../../../core/edm/constants';
 import { ERR_ACTION_VALUE_TYPE } from '../../../../utils/Errors';
 
@@ -77,7 +77,7 @@ function* getProfileSummaryWorker(action :SequenceAction) :Saga<any> {
     if (!isValidUUID(personId)) throw ERR_ACTION_VALUE_TYPE;
 
     yield put(getProfileSummary.request(action.id, personId));
-    const config = yield select((store) => store.getIn(STORE_PATHS.APP_CONFIG));
+    const config = yield select((store) => store.getIn(APP_PATHS.APP_CONFIG));
     const personESID = getESIDFromConfig(config, AppTypes.PEOPLE);
 
     const personResponse = yield call(
@@ -151,7 +151,7 @@ function* getSubmissionsWorker(action :SequenceAction) :Saga<any> {
     if (!isValidUUID(personId)) throw ERR_ACTION_VALUE_TYPE;
 
     yield put(getSubmissions.request(action.id, personId));
-    const config = yield select((store) => store.getIn(STORE_PATHS.APP_CONFIG));
+    const config = yield select((store) => store.getIn(APP_PATHS.APP_CONFIG));
     const peopleESID = getESIDFromConfig(config, AppTypes.PEOPLE);
     const submissionsESID = getESIDFromConfig(config, AppTypes.SUBMISSION);
     const respondsWithESID = getESIDFromConfig(config, AppTypes.RESPONDS_WITH);
@@ -202,7 +202,7 @@ function* getSummarySetsWorker(action :SequenceAction) :Saga<any> {
   try {
     const { value: submissionIds } = action;
     yield put(getSummarySets.request(action.id, submissionIds));
-    const config = yield select((store) => store.getIn(STORE_PATHS.APP_CONFIG));
+    const config = yield select((store) => store.getIn(APP_PATHS.APP_CONFIG));
     const summarySetESID = getESIDFromConfig(config, AppTypes.SUMMARY_SET);
     const submissionsESID = getESIDFromConfig(config, AppTypes.SUBMISSION);
     const registeredForESID = getESIDFromConfig(config, AppTypes.REGISTERED_FOR);
@@ -300,7 +300,7 @@ function* getSubmissionAnswersWorker(action :SequenceAction) :Saga<any> {
     if (!isValidUUID(submissionId)) throw ERR_ACTION_VALUE_TYPE;
     yield put(getSubmissionAnswers.request(action.id, submissionId));
 
-    const config = yield select((store) => store.getIn(STORE_PATHS.APP_CONFIG));
+    const config = yield select((store) => store.getIn(APP_PATHS.APP_CONFIG));
     const answerESID = getESIDFromConfig(config, AppTypes.ANSWER);
     const submissionsESID = getESIDFromConfig(config, AppTypes.SUBMISSION);
     const partOfESID = getESIDFromConfig(config, AppTypes.PART_OF);
@@ -342,7 +342,7 @@ function* getQuestionsFromAnswersWorker(action :SequenceAction) :Saga<any> {
     const { value: answersIds } = action;
     yield put(getQuestionsFromAnswers.request(action.id, answersIds));
 
-    const config = yield select((store) => store.getIn(STORE_PATHS.APP_CONFIG));
+    const config = yield select((store) => store.getIn(APP_PATHS.APP_CONFIG));
     const answerESID = getESIDFromConfig(config, AppTypes.ANSWER);
     const questionESID = getESIDFromConfig(config, AppTypes.QUESTION);
     const addressesESID = getESIDFromConfig(config, AppTypes.ADDRESSES);
@@ -386,7 +386,7 @@ function* getSurveyWorker(action :SequenceAction) :Saga<any> {
     yield put(getSurvey.request(action.id));
 
     // get person
-    const config = yield select((store) => store.getIn(STORE_PATHS.APP_CONFIG));
+    const config = yield select((store) => store.getIn(APP_PATHS.APP_CONFIG));
     const peopleESID = getESIDFromConfig(config, AppTypes.PEOPLE);
     const submissionsESID = getESIDFromConfig(config, AppTypes.SUBMISSION);
     const respondsWithESID = getESIDFromConfig(config, AppTypes.RESPONDS_WITH);

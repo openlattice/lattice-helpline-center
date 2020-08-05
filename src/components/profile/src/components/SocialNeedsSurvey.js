@@ -3,12 +3,12 @@ import React from 'react';
 
 import { Breadcrumbs } from 'lattice-ui-kit';
 import { DateTimeUtils } from 'lattice-utils';
-import type { Match } from 'react-router';
 
 import SurveySection from './SurveySection';
 import { useSelector } from './HelplineProvider';
 import { formatSurveyData, getFirstLastFromPerson, getRelativeRoot } from './utils';
 
+import { APP_PATHS } from '../../../../containers/app/constants';
 import { PropertyTypes } from '../../../../core/edm/constants';
 import { getPropertyValue } from '../../../../utils/EntityUtils';
 import { BreadcrumbItem, BreadcrumbLink, BreadcrumbWrapper } from '../../../breadcrumbs';
@@ -18,17 +18,15 @@ import { PROFILE_PATHS } from '../sagas/constants';
 const { formatAsDate, formatAsTime } = DateTimeUtils;
 
 const { DATE_TIME } = PropertyTypes;
-type Props = {
-  match :Match;
-  root :string;
-};
 
-const SocialNeedsSurvey = ({ match, root } :Props) => {
+const SocialNeedsSurvey = () => {
   // get person and pass to breadcrumb
   const person = useSelector((store) => store.getIn(PROFILE_PATHS.person));
   const survey = useSelector((store) => store.getIn(PROFILE_PATHS.survey));
   const questions = useSelector((store) => store.getIn(PROFILE_PATHS.questions));
   const answers = useSelector((store) => store.getIn(PROFILE_PATHS.answers));
+  const root = useSelector((store) => store.getIn(APP_PATHS.ROOT));
+  const match = useSelector((store) => store.getIn(APP_PATHS.MATCH));
   const datetime = getPropertyValue(survey, DATE_TIME);
   const name = getFirstLastFromPerson(person);
 

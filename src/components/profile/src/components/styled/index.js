@@ -9,8 +9,9 @@ const Body = styled.div`
 `;
 
 const SpinnerWrapper = styled.div`
-  display: flex;
   align-items: center;
+  display: flex;
+  height: 100%;
   justify-content: center;
 `;
 

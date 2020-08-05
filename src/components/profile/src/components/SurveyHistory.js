@@ -13,9 +13,12 @@ import {
   ListItemText,
 } from 'lattice-ui-kit';
 import { DateTimeUtils } from 'lattice-utils';
-import { useLocation } from 'react-router';
 import { Link } from 'react-router-dom';
 
+import { useSelector } from './HelplineProvider';
+import { getRelativeRoot } from './utils';
+
+import { APP_PATHS } from '../../../../containers/app/constants';
 import { PropertyTypes } from '../../../../core/edm/constants';
 import { getPropertyValues } from '../../../../utils/EntityUtils';
 import { Header } from '../../../typography';
@@ -33,8 +36,11 @@ type Props = {
 }
 
 const SurveyHistory = ({ surveys } :Props) => {
-  const location = useLocation();
-  const { pathname } = location;
+  const root = useSelector((store) => store.getIn(APP_PATHS.ROOT));
+  const match = useSelector((store) => store.getIn(APP_PATHS.MATCH));
+
+  const relRoot = getRelativeRoot(root, match);
+
   return (
     <div>
       <Header>
@@ -43,7 +49,7 @@ const SurveyHistory = ({ surveys } :Props) => {
       <List>
         {
           surveys.map((survey, index) => {
-            const [name = 'Social Needs Survey', datetime, ekid] = getPropertyValues(survey, [
+            const [name = 'Social Needs Survey', datetime, submissionId] = getPropertyValues(survey, [
               NAME,
               DATE_TIME,
               OPENLATTICE_ID_FQN
@@ -61,8 +67,8 @@ const SurveyHistory = ({ surveys } :Props) => {
                   button
                   component={Link}
                   divider={!isLast}
-                  to={`${pathname}/survey/${ekid}`}
-                  key={ekid}>
+                  to={`${relRoot}/survey/${submissionId}`}
+                  key={submissionId}>
                 <ListItemAvatar>
                   <FontAwesomeIcon icon={faFileAlt} />
                 </ListItemAvatar>

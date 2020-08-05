@@ -1,10 +1,5 @@
 // @flow
 /* eslint-disable quote-props */
-import { ReduxConstants } from 'lattice-utils';
-
-import { GET_PROFILE_SUMMARY } from './ProfileActions';
-
-const { REQUEST_STATE } = ReduxConstants;
 
 const GREATEST_NEEDS = 'greatestNeeds';
 const PERSON = 'person';
@@ -22,7 +17,6 @@ const PROFILE_PATHS = {
   [LAST_REQUEST]: [PROFILE, LAST_REQUEST],
   [PERSON]: [PROFILE, PERSON],
   [QUESTIONS]: [PROFILE, QUESTIONS],
-  [REQUEST_STATE]: [PROFILE, GET_PROFILE_SUMMARY, REQUEST_STATE],
   [SELF_SUFFICIENCY]: [PROFILE, SELF_SUFFICIENCY],
   [SURVEY]: [PROFILE, SURVEY],
   [SURVEY_HISTORY]: [PROFILE, SURVEY_HISTORY],

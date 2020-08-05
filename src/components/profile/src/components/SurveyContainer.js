@@ -2,19 +2,13 @@
 import React, { useEffect } from 'react';
 
 import { useRouteMatch } from 'react-router';
-import type { Match } from 'react-router';
 
 import SocialNeedsSurvey from './SocialNeedsSurvey';
 import { useDispatch } from './HelplineProvider';
 
 import { getSurvey } from '../sagas/ProfileActions';
 
-type Props = {
-  match :Match;
-  root :string;
-};
-
-const SurveyContainer = ({ match, root } :Props) => {
+const SurveyContainer = () => {
   // get person and pass to breadcrumb
   const dispatch = useDispatch();
   const { params: { submissionId } } = useRouteMatch();
@@ -23,7 +17,7 @@ const SurveyContainer = ({ match, root } :Props) => {
     dispatch(getSurvey(submissionId));
   }, [dispatch, submissionId]);
 
-  return <SocialNeedsSurvey root={root} match={match} />;
+  return <SocialNeedsSurvey />;
 };
 
 export default SurveyContainer;

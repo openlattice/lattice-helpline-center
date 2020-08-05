@@ -27,7 +27,9 @@ describe('AppReducer', () => {
       },
       appConfig: {},
       appTypes: [],
-      edm: {}
+      edm: {},
+      root: '',
+      match: {},
     });
   });
 

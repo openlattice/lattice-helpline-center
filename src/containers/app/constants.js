@@ -1,6 +1,8 @@
 // @flow
-const STORE_PATHS = {
-  APP_CONFIG: ['app', 'appConfig', 'config']
+const APP_PATHS = {
+  APP_CONFIG: ['app', 'appConfig', 'config'],
+  ROOT: ['app', 'root'],
+  MATCH: ['app', 'match'],
 };
 
-export { STORE_PATHS };
+export { APP_PATHS };

@@ -2,6 +2,7 @@
 import React, { useEffect } from 'react';
 
 import { Spinner } from 'lattice-ui-kit';
+import { ReduxConstants } from 'lattice-utils';
 import { DateTime } from 'luxon';
 import { RequestStates } from 'redux-reqseq';
 
@@ -11,8 +12,10 @@ import SurveyHistory from './SurveyHistory';
 import { useDispatch, useSelector } from './HelplineProvider';
 import { SpinnerWrapper } from './styled';
 
-import { getProfileSummary } from '../sagas/ProfileActions';
-import { PROFILE_PATHS } from '../sagas/constants';
+import { GET_PROFILE_SUMMARY, getProfileSummary } from '../sagas/ProfileActions';
+import { PROFILE, PROFILE_PATHS } from '../sagas/constants';
+
+const { REQUEST_STATE } = ReduxConstants;
 
 type Props = {
   personId :UUID;
@@ -23,7 +26,7 @@ const ProfileSummary = ({ personId } :Props) => {
   const needs = useSelector((state) => state.getIn(PROFILE_PATHS.greatestNeeds));
   const selfSufficiency = useSelector((state) => state.getIn(PROFILE_PATHS.selfSufficiency));
   const surveys = useSelector((state) => state.getIn(PROFILE_PATHS.surveyHistory));
-  const fetchState = useSelector((state) => state.getIn(PROFILE_PATHS.requestState));
+  const fetchState = useSelector((state) => state.getIn([PROFILE, GET_PROFILE_SUMMARY, REQUEST_STATE]));
   const lastRequest = useSelector((state) => state.getIn(PROFILE_PATHS.lastRequest));
 
   useEffect(() => {
