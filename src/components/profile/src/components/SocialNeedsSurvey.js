@@ -3,10 +3,11 @@ import React from 'react';
 
 import { Breadcrumbs } from 'lattice-ui-kit';
 import { DateTimeUtils } from 'lattice-utils';
+import type { Match } from 'react-router';
 
 import SurveySection from './SurveySection';
 import { useSelector } from './HelplineProvider';
-import { formatSurveyData, getFirstLastFromPerson } from './utils';
+import { formatSurveyData, getFirstLastFromPerson, getRelativeRoot } from './utils';
 
 import { PropertyTypes } from '../../../../core/edm/constants';
 import { getPropertyValue } from '../../../../utils/EntityUtils';
@@ -18,12 +19,12 @@ const { formatAsDate, formatAsTime } = DateTimeUtils;
 
 const { DATE_TIME } = PropertyTypes;
 type Props = {
+  match :Match;
   root :string;
 };
 
-const SocialNeedsSurvey = ({ root } :Props) => {
+const SocialNeedsSurvey = ({ match, root } :Props) => {
   // get person and pass to breadcrumb
-  console.log(root);
   const person = useSelector((store) => store.getIn(PROFILE_PATHS.person));
   const survey = useSelector((store) => store.getIn(PROFILE_PATHS.survey));
   const questions = useSelector((store) => store.getIn(PROFILE_PATHS.questions));
@@ -41,13 +42,14 @@ const SocialNeedsSurvey = ({ root } :Props) => {
   }
 
   const surveyData = formatSurveyData(questions, answers);
+  const relRoot = getRelativeRoot(root, match);
 
   return (
     <div>
       <BreadcrumbWrapper>
         <Breadcrumbs>
           <BreadcrumbLink to="/">Home</BreadcrumbLink>
-          <BreadcrumbLink to={root}>{name}</BreadcrumbLink>
+          <BreadcrumbLink to={relRoot}>{name}</BreadcrumbLink>
           <BreadcrumbItem>{`Social Needs Survey ${formattedDate}`}</BreadcrumbItem>
         </Breadcrumbs>
       </BreadcrumbWrapper>

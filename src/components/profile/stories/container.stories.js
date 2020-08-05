@@ -76,7 +76,8 @@ export const LiveHelplineContainerStory = () => {
       <HelplineContainer
           root="/"
           organizationId={organizationId}
-          personId={personEKID} />
+          personId={personEKID}
+          match={{}} />
     </>
   );
 };
