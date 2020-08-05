@@ -46,7 +46,6 @@ const SocialNeedsSurvey = () => {
     <div>
       <BreadcrumbWrapper>
         <Breadcrumbs>
-          <BreadcrumbLink to="/">Home</BreadcrumbLink>
           <BreadcrumbLink to={relRoot}>{name}</BreadcrumbLink>
           <BreadcrumbItem>{`Social Needs Survey ${formattedDate}`}</BreadcrumbItem>
         </Breadcrumbs>

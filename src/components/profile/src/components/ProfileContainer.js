@@ -35,7 +35,6 @@ const ProfileContainer = ({ personId } :Props) => {
     <div>
       <BreadcrumbWrapper>
         <Breadcrumbs>
-          <BreadcrumbLink to="/">Home</BreadcrumbLink>
           <BreadcrumbItem>{name}</BreadcrumbItem>
         </Breadcrumbs>
       </BreadcrumbWrapper>
