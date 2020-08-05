@@ -24,7 +24,12 @@ const BreadcrumbItem = styled.span`
   color: ${NEUTRAL.N500};
 `;
 
+const BreadcrumbWrapper = styled.div`
+  margin-bottom: 32px;
+`;
+
 export {
   BreadcrumbItem,
   BreadcrumbLink,
+  BreadcrumbWrapper,
 };
