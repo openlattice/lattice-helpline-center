@@ -39,10 +39,10 @@ const Answer = styled.div`
   align-items: center;
   border-radius: 3px;
   display: flex;
-  height: 60px;
+  min-height: 60px;
   justify-content: center;
   line-height: 1.2;
-  padding: 0 16px;
+  padding: 10px 16px;
   text-align: center;
   vertical-align: center;
   width: 100%;
