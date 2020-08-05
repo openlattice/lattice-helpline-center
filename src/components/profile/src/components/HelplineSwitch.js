@@ -29,7 +29,7 @@ const HelplineSwitch = ({ organizationId, personId, root } :Props) => {
 
   return (
     <Switch>
-      <Route path={`${root}/survey/:submissionId`} component={SurveyContainer} />
+      <Route path={`${root}/survey/:submissionId`} render={() => <SurveyContainer root={root} />} />
       <Route render={() => <ProfileContainer personId={personId} />} />
     </Switch>
   );
