@@ -1,6 +1,8 @@
 import styled from 'styled-components';
 import { StyleUtils } from 'lattice-ui-kit';
 
+import Answer from './Answer';
+
 const { media } = StyleUtils;
 
 const Body = styled.div`
@@ -20,6 +22,7 @@ const SpinnerWrapper = styled.div`
 `;
 
 export {
+  Answer,
   Body,
   SpinnerWrapper
 };
