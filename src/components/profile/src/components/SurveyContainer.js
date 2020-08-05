@@ -1,24 +1,27 @@
+// @flow
 import React, { useEffect } from 'react';
 
 import { useRouteMatch } from 'react-router';
 
 import SocialNeedsSurvey from './SocialNeedsSurvey';
-import { useDispatch, useSelector } from './HelplineProvider';
+import { useDispatch } from './HelplineProvider';
 
 import { getSurvey } from '../sagas/ProfileActions';
-import { PROFILE_PATHS } from '../sagas/constants';
 
-const SurveyContainer = () => {
+type Props = {
+  root :string;
+};
+
+const SurveyContainer = ({ root } :Props) => {
   // get person and pass to breadcrumb
   const dispatch = useDispatch();
-  const person = useSelector((store) => store.getIn(PROFILE_PATHS.person));
   const { params: { submissionId } } = useRouteMatch();
 
   useEffect(() => {
     dispatch(getSurvey(submissionId));
   }, [dispatch, submissionId]);
 
-  return <SocialNeedsSurvey />;
+  return <SocialNeedsSurvey root={root} />;
 };
 
 export default SurveyContainer;
