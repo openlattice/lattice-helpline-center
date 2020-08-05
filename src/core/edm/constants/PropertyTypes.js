@@ -13,6 +13,7 @@ const PROPERTY_TYPE_FQNS = {
   GIVEN_NAME: FQN.of('nc.PersonGivenName'),
   ID: FQN.of('ol.id'),
   NAME: FQN.of('ol.name'),
+  SCORE_CATEGORY: FQN.of('ol.scorecategory'),
   SCORE_VALUE: FQN.of('ol.scorevalue'),
   SURNAME: FQN.of('nc.PersonSurName'),
   TITLE: FQN.of('ol.title'),
