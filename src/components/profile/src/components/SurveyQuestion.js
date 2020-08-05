@@ -3,6 +3,7 @@ import React from 'react';
 
 import styled from 'styled-components';
 import { Map } from 'immutable';
+import { Constants } from 'lattice';
 import { Colors } from 'lattice-ui-kit';
 
 import { Answer } from './styled';
@@ -10,6 +11,7 @@ import { Answer } from './styled';
 import { PropertyTypes } from '../../../../core/edm/constants';
 import { getPropertyValues } from '../../../../utils/EntityUtils';
 
+const { OPENLATTICE_ID_FQN } = Constants;
 const { NEUTRAL } = Colors;
 
 const SCORE_CATEGORY_COLOR_MAP = {
@@ -32,8 +34,8 @@ const Title = styled.li`
 
 const AnswerWrapper = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(256px, 1fr));
-  grid-gap: 16px 24px;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  grid-gap: 16px;
   padding-bottom: 8px;
 `;
 
@@ -49,7 +51,7 @@ type Props = {
 };
 
 const SurveyQuestion = ({ question, answer } :Props) => {
-  const [title, options] = getPropertyValues(question, [TITLE, VALUES]);
+  const [title, options, questionId] = getPropertyValues(question, [TITLE, VALUES, OPENLATTICE_ID_FQN]);
   const [scoreCategory, value] = getPropertyValues(answer, [SCORE_CATEGORY, VALUES]);
 
   // Integration has options in a single string delimited by ; instead of multiplicity
@@ -68,6 +70,7 @@ const SurveyQuestion = ({ question, answer } :Props) => {
 
             return (
               <Answer
+                  key={`${questionId}-${label}`}
                   color={value === option ? color : 'default'}
                   disableFocusRipple>
                 {label}
