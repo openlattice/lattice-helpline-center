@@ -20,6 +20,7 @@ import {
   PERSON,
   QUESTIONS,
   SELF_SUFFICIENCY,
+  SURVEY,
   SURVEY_HISTORY,
 } from './constants';
 
@@ -41,6 +42,7 @@ const INITIAL_STATE :Map = fromJS({
   [PERSON]: Map(),
   [QUESTIONS]: Map(),
   [SELF_SUFFICIENCY]: List(),
+  [SURVEY]: Map(),
   [SURVEY_HISTORY]: List(),
 });
 
