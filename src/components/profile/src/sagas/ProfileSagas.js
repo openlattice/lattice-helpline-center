@@ -8,7 +8,6 @@ import {
   call,
   put,
   select,
-  takeEvery,
   takeLatest,
 } from '@redux-saga/core/effects';
 import {
@@ -30,6 +29,7 @@ import type { Saga } from '@redux-saga/core';
 import type { SequenceAction } from 'redux-reqseq';
 
 import {
+  GET_AGGREGATE_RESULTS,
   GET_GREATEST_NEEDS,
   GET_PERSON,
   GET_PROFILE_SUMMARY,
@@ -39,6 +39,7 @@ import {
   GET_SUMMARY_SETS,
   GET_SURVEY,
   GET_SURVEY_RESULTS,
+  getAggregateResults,
   getGreatestNeeds,
   getPerson,
   getProfileSummary,
@@ -559,7 +560,26 @@ function* getSurveyResultsWatcher() :Saga<any> {
   yield takeLatest(GET_SURVEY_RESULTS, getSurveyResultsWorker);
 }
 
+function* getAggregateResultsWorker(action :SequenceAction) :Saga<any> {
+  const response = {};
+  try {
+    yield put(getAggregateResults.request(action.id));
+    yield put(getAggregateResults.success(action.id));
+  }
+  catch (error) {
+    yield put(getAggregateResults.failure(action.id));
+
+  }
+  return response;
+}
+
+function* getAggregateResultsWatcher() :Saga<any> {
+  yield takeLatest(GET_AGGREGATE_RESULTS, getAggregateResultsWorker);
+}
+
 export {
+  getAggregateResultsWatcher,
+  getAggregateResultsWorker,
   getGreatestNeedsWatcher,
   getGreatestNeedsWorker,
   getPersonWatcher,

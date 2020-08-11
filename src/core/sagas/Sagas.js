@@ -30,6 +30,7 @@ export default function* sagas() :Generator<*, *, *> {
     fork(RoutingSagas.goToRootWatcher),
     fork(RoutingSagas.goToRouteWatcher),
 
+    fork(ProfileSagas.getAggregateResultsWatcher),
     fork(ProfileSagas.getPersonWatcher),
     fork(ProfileSagas.getProfileSummaryWatcher),
     fork(ProfileSagas.getSubmissionsWatcher),

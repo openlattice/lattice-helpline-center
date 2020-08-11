@@ -35,7 +35,11 @@ const getSurvey :RequestSequence = newRequestSequence(GET_SURVEY);
 const GET_SURVEY_RESULTS :'GET_SURVEY_RESULTS' = 'GET_SURVEY_RESULTS';
 const getSurveyResults :RequestSequence = newRequestSequence(GET_SURVEY_RESULTS);
 
+const GET_AGGREGATE_RESULTS :'GET_AGGREGATE_RESULTS' = 'GET_AGGREGATE_RESULTS';
+const getAggregateResults :RequestSequence = newRequestSequence(GET_AGGREGATE_RESULTS);
+
 export {
+  GET_AGGREGATE_RESULTS,
   GET_GREATEST_NEEDS,
   GET_PERSON,
   GET_PROFILE,
@@ -47,6 +51,7 @@ export {
   GET_SURVEY,
   GET_SURVEYS,
   GET_SURVEY_RESULTS,
+  getAggregateResults,
   getGreatestNeeds,
   getPerson,
   getProfile,
