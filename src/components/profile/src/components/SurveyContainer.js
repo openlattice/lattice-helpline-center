@@ -10,7 +10,10 @@ import SocialNeedsSurvey from './SocialNeedsSurvey';
 import { useDispatch, useSelector } from './HelplineProvider';
 import { SpinnerWrapper } from './styled';
 
-import { GET_SURVEY, getSurvey } from '../sagas/ProfileActions';
+import {
+  GET_SURVEY,
+  getSurvey,
+} from '../sagas/ProfileActions';
 import { PROFILE } from '../sagas/constants';
 
 const { REQUEST_STATE } = ReduxConstants;
@@ -18,18 +21,18 @@ const { REQUEST_STATE } = ReduxConstants;
 const SurveyContainer = () => {
   // get person and pass to breadcrumb
   const dispatch = useDispatch();
-  const { params: { submissionId } } = useRouteMatch();
+  const { params: { surveyId = '' } } = useRouteMatch();
   const fetchState = useSelector((state) => state.getIn([PROFILE, GET_SURVEY, REQUEST_STATE]));
 
   useEffect(() => {
-    dispatch(getSurvey(submissionId));
-  }, [dispatch, submissionId]);
+    dispatch(getSurvey(surveyId));
+  }, [dispatch, surveyId]);
 
   if (fetchState === RequestStates.PENDING) {
     return <SpinnerWrapper><Spinner size="3x" /></SpinnerWrapper>;
   }
 
-  return <SocialNeedsSurvey />;
+  return <SocialNeedsSurvey surveyId={surveyId} />;
 };
 
 export default SurveyContainer;

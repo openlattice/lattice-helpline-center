@@ -49,7 +49,7 @@ const SurveyHistory = ({ surveys } :Props) => {
       <List>
         {
           surveys.map((survey, index) => {
-            const [name = 'Social Needs Survey', datetime, submissionId] = getPropertyValues(survey, [
+            const [name = 'Social Needs Survey', datetime, surveyId] = getPropertyValues(survey, [
               NAME,
               DATE_TIME,
               OPENLATTICE_ID_FQN
@@ -67,8 +67,8 @@ const SurveyHistory = ({ surveys } :Props) => {
                   button
                   component={Link}
                   divider={!isLast}
-                  to={`${relRoot}/survey/${submissionId}`}
-                  key={submissionId}>
+                  to={`${relRoot}/survey/${surveyId}`}
+                  key={surveyId}>
                 <ListItemAvatar>
                   <FontAwesomeIcon icon={faFileAlt} />
                 </ListItemAvatar>
