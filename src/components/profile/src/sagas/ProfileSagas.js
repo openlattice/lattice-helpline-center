@@ -471,18 +471,24 @@ function* getSurveyResultsWorker(action :SequenceAction) :Saga<any> {
     const submissionsResponse = yield call(getSubmissionsWorker, getSubmissions(personId));
     if (submissionsResponse.error) throw submissionsResponse.error;
     const submissions = submissionsResponse.data;
-    const submissionsIds = submissions.map((submission) => submission.get('neighborId'));
+    const submissionsIds = submissions.map((submission) => submission.getIn([OPENLATTICE_ID_FQN, 0])).toJS();
 
     // get all answers to submission
     const answersResponse = yield call(getSubmissionAnswersWorker, getSubmissionAnswers(submissionsIds));
     if (answersResponse.error) throw answersResponse.error;
     const answersBySubmission = answersResponse.data;
-    const answersIds = answersBySubmission.map((answers) => answers.get('neighborId'));
-    const answersById = Map(answers.map((answer) => [answer.get('neighborId'), answer.get('neighborDetails')]));
+    const answersIds = answersBySubmission.reduce((ids, submission) => {
+      submission.forEach((answer) => {
+        ids.push(answer.get('neighborId'));
+      });
+      return ids;
+    }, []);
+    console.log(answersIds);
 
     // // get question to each answer
-    // const questionsResponse = yield call(getQuestionsFromAnswersWorker, getQuestionsFromAnswers(answersIds.toJS()));
-    // const questions = questionsResponse.data.map((question) => question.getIn([0, 'neighborDetails']));
+    const questionsResponse = yield call(getQuestionsFromAnswersWorker, getQuestionsFromAnswers(answersIds));
+    const questions = questionsResponse.data.map((question) => question.getIn([0, 'neighborDetails']));
+    console.log(questions);
 
     // get surveyHistory
     // get all answers from each submission
