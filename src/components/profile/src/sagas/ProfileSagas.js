@@ -247,9 +247,9 @@ function* getGreatestNeedsWorker(action :SequenceAction) :Saga<any> {
     yield put(getGreatestNeeds.request(action.id, submissionId));
 
     // get all answers to submission
-    const answersResponse = yield call(getSubmissionAnswersWorker, getSubmissionAnswers(submissionId));
+    const answersResponse = yield call(getSubmissionAnswersWorker, getSubmissionAnswers([submissionId]));
     if (answersResponse.error) throw answersResponse.error;
-    const answers = answersResponse.data;
+    const answers = answersResponse.data.get(submissionId);
     const answersIds = answers.map((answer) => answer.get('neighborId'));
 
     // get question to each answer
@@ -296,9 +296,9 @@ function* getGreatestNeedsWatcher() :Saga<any> {
 function* getSubmissionAnswersWorker(action :SequenceAction) :Saga<any> {
   const response = {};
   try {
-    const { value: submissionId } = action;
-    if (!isValidUUID(submissionId)) throw ERR_ACTION_VALUE_TYPE;
-    yield put(getSubmissionAnswers.request(action.id, submissionId));
+    const { value: submissionIds } = action;
+    if (!(Array.isArray(submissionIds) && submissionIds.every(isValidUUID))) throw ERR_ACTION_VALUE_TYPE;
+    yield put(getSubmissionAnswers.request(action.id, submissionIds));
 
     const config = yield select((store) => store.getIn(APP_PATHS.APP_CONFIG));
     const answerESID = getESIDFromConfig(config, AppTypes.ANSWER);
@@ -308,7 +308,7 @@ function* getSubmissionAnswersWorker(action :SequenceAction) :Saga<any> {
     const answersSearchParams = {
       entitySetId: submissionsESID,
       filter: {
-        entityKeyIds: [submissionId],
+        entityKeyIds: submissionIds,
         edgeEntitySetIds: [partOfESID],
         destinationEntitySetIds: [],
         sourceEntitySetIds: [answerESID],
@@ -321,7 +321,7 @@ function* getSubmissionAnswersWorker(action :SequenceAction) :Saga<any> {
     );
     if (answersResponse.error) throw answersResponse.error;
 
-    response.data = fromJS(answersResponse.data).get(submissionId);
+    response.data = fromJS(answersResponse.data);
     yield put(getSubmissionAnswers.success(action.id, response.data));
   }
   catch (error) {
@@ -347,7 +347,7 @@ function* getQuestionsFromAnswersWorker(action :SequenceAction) :Saga<any> {
     const questionESID = getESIDFromConfig(config, AppTypes.QUESTION);
     const addressesESID = getESIDFromConfig(config, AppTypes.ADDRESSES);
 
-    const answersSearchParams = {
+    const questionsSearchParams = {
       entitySetId: answerESID,
       filter: {
         entityKeyIds: answersIds,
@@ -357,13 +357,13 @@ function* getQuestionsFromAnswersWorker(action :SequenceAction) :Saga<any> {
       }
     };
 
-    const answersResponse = yield call(
+    const questionsResponse = yield call(
       searchEntityNeighborsWithFilterWorker,
-      searchEntityNeighborsWithFilter(answersSearchParams)
+      searchEntityNeighborsWithFilter(questionsSearchParams)
     );
-    if (answersResponse.error) throw answersResponse.error;
+    if (questionsResponse.error) throw questionsResponse.error;
 
-    response.data = fromJS(answersResponse.data);
+    response.data = fromJS(questionsResponse.data);
     yield put(getQuestionsFromAnswers.success(action.id, response.data));
   }
   catch (error) {
@@ -416,7 +416,7 @@ function* getSurveyWorker(action :SequenceAction) :Saga<any> {
     );
 
     // get all answers to submission
-    const answersRequest = call(getSubmissionAnswersWorker, getSubmissionAnswers(submissionId));
+    const answersRequest = call(getSubmissionAnswersWorker, getSubmissionAnswers([submissionId]));
 
     const [answersResponse, personResponse, submissionResponse] = yield all([
       answersRequest,
@@ -430,7 +430,7 @@ function* getSurveyWorker(action :SequenceAction) :Saga<any> {
 
     const person = getIn(personResponse, ['data', submissionId, '0', 'neighborDetails']);
 
-    const answers = answersResponse.data;
+    const answers = answersResponse.data.get(submissionId);
     const answersIds = answers.map((answer) => answer.get('neighborId'));
     const answersById = Map(answers.map((answer) => [answer.get('neighborId'), answer.get('neighborDetails')]));
 
