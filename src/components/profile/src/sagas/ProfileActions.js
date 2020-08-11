@@ -29,6 +29,9 @@ const getGreatestNeeds :RequestSequence = newRequestSequence(GET_GREATEST_NEEDS)
 const GET_SURVEY :'GET_SURVEY' = 'GET_SURVEY';
 const getSurvey :RequestSequence = newRequestSequence(GET_SURVEY);
 
+const GET_SURVEY_RESULTS :'GET_SURVEY_RESULTS' = 'GET_SURVEY_RESULTS';
+const getSurveyResults :RequestSequence = newRequestSequence(GET_SURVEY_RESULTS);
+
 export {
   GET_GREATEST_NEEDS,
   GET_PROFILE,
@@ -39,6 +42,7 @@ export {
   GET_SUMMARY_SETS,
   GET_SURVEY,
   GET_SURVEYS,
+  GET_SURVEY_RESULTS,
   getGreatestNeeds,
   getProfile,
   getProfileSummary,
@@ -47,5 +51,6 @@ export {
   getSubmissions,
   getSummarySets,
   getSurvey,
+  getSurveyResults,
   getSurveys,
 };
