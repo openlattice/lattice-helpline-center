@@ -2,8 +2,10 @@
 import React from 'react';
 
 import { Spinner } from 'lattice-ui-kit';
+import { Route, Switch } from 'react-router';
 import { RequestStates } from 'redux-reqseq';
 
+import AggregateResults from './AggregateResults';
 import ProfileSummary from './ProfileSummary';
 import { useSelector } from './HelplineProvider';
 import { Body, SpinnerWrapper } from './styled';
@@ -24,7 +26,10 @@ const ProfileBody = ({ personId } :Props) => {
         initializeState === RequestStates.PENDING
           ? <SpinnerWrapper><Spinner size="3x" /></SpinnerWrapper>
           : (
-            <ProfileSummary personId={personId} />
+            <Switch>
+              <Route path="/results" component={AggregateResults} />
+              <Route render={() => <ProfileSummary personId={personId} />} />
+            </Switch>
           )
       }
     </Body>
