@@ -23,6 +23,7 @@ import {
   QUESTIONS,
   SELF_SUFFICIENCY,
   SURVEY,
+  SURVEY_ANSWERS_BY_QUESTION,
   SURVEY_HISTORY,
 } from './constants';
 
@@ -49,6 +50,7 @@ const INITIAL_STATE :Map = fromJS({
   [SELF_SUFFICIENCY]: List(),
   [SURVEY]: Map(),
   [SURVEY_HISTORY]: List(),
+  [SURVEY_ANSWERS_BY_QUESTION]: Map(),
 });
 
 export default function profileReducer(state :Map<*, *> = INITIAL_STATE, action :Object) {
@@ -85,16 +87,16 @@ export default function profileReducer(state :Map<*, *> = INITIAL_STATE, action 
       });
     }
 
-    case getSurveyResults.case(action.type): {
-      const seqAction :SequenceAction = action;
-      return getSurveyResults.reducer(state, seqAction, {
-        REQUEST: () => state.setIn([GET_SURVEY_RESULTS, REQUEST_STATE], RequestStates.PENDING),
-        SUCCESS: () => state
-          .merge(action.value)
-          .setIn([GET_SURVEY_RESULTS, REQUEST_STATE], RequestStates.SUCCESS),
-        FAILURE: () => state.setIn([GET_SURVEY_RESULTS, REQUEST_STATE], RequestStates.FAILURE),
-      });
-    }
+    // case getSurveyResults.case(action.type): {
+    //   const seqAction :SequenceAction = action;
+    //   return getSurveyResults.reducer(state, seqAction, {
+    //     REQUEST: () => state.setIn([GET_SURVEY_RESULTS, REQUEST_STATE], RequestStates.PENDING),
+    //     SUCCESS: () => state
+    //       .merge(action.value)
+    //       .setIn([GET_SURVEY_RESULTS, REQUEST_STATE], RequestStates.SUCCESS),
+    //     FAILURE: () => state.setIn([GET_SURVEY_RESULTS, REQUEST_STATE], RequestStates.FAILURE),
+    //   });
+    // }
 
     default:
       return state;

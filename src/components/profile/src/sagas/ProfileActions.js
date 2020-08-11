@@ -2,6 +2,9 @@
 import { newRequestSequence } from 'redux-reqseq';
 import type { RequestSequence } from 'redux-reqseq';
 
+const GET_PERSON :'GET_PERSON' = 'GET_PERSON';
+const getPerson :RequestSequence = newRequestSequence(GET_PERSON);
+
 const GET_PROFILE :'GET_PROFILE' = 'GET_PROFILE';
 const getProfile :RequestSequence = newRequestSequence(GET_PROFILE);
 
@@ -34,6 +37,7 @@ const getSurveyResults :RequestSequence = newRequestSequence(GET_SURVEY_RESULTS)
 
 export {
   GET_GREATEST_NEEDS,
+  GET_PERSON,
   GET_PROFILE,
   GET_PROFILE_SUMMARY,
   GET_QUESTIONS_FROM_ANSWERS,
@@ -44,6 +48,7 @@ export {
   GET_SURVEYS,
   GET_SURVEY_RESULTS,
   getGreatestNeeds,
+  getPerson,
   getProfile,
   getProfileSummary,
   getQuestionsFromAnswers,

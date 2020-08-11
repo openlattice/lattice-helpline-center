@@ -7,9 +7,11 @@ const PROFILE = 'profile';
 const SELF_SUFFICIENCY = 'selfSufficiency';
 const SURVEY_HISTORY = 'surveyHistory';
 const SURVEY = 'survey';
+const SURVEYS = 'surveys';
 const QUESTIONS = 'questions';
 const ANSWERS = 'answers';
 const LAST_REQUEST = 'lastRequest';
+const SURVEY_ANSWERS_BY_QUESTION = 'surveyAnswersByQuestion';
 
 const PROFILE_PATHS = {
   [ANSWERS]: [PROFILE, ANSWERS],
@@ -19,7 +21,9 @@ const PROFILE_PATHS = {
   [QUESTIONS]: [PROFILE, QUESTIONS],
   [SELF_SUFFICIENCY]: [PROFILE, SELF_SUFFICIENCY],
   [SURVEY]: [PROFILE, SURVEY],
+  [SURVEYS]: [PROFILE, SURVEYS],
   [SURVEY_HISTORY]: [PROFILE, SURVEY_HISTORY],
+  [SURVEY_ANSWERS_BY_QUESTION]: [PROFILE, SURVEY_ANSWERS_BY_QUESTION]
 };
 
 const CHILDCARE = 'Childcare';
@@ -73,6 +77,8 @@ export {
   SHELTER,
   SUBSTANCE_USE,
   SURVEY,
+  SURVEYS,
+  SURVEY_ANSWERS_BY_QUESTION,
   SURVEY_HISTORY,
   TRANSPORTATION,
 };
