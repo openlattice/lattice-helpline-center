@@ -27,7 +27,7 @@ const ProfileBody = ({ personId } :Props) => {
           ? <SpinnerWrapper><Spinner size="3x" /></SpinnerWrapper>
           : (
             <Switch>
-              <Route path="/results" component={AggregateResults} />
+              <Route path="/results" render={() => <AggregateResults personId={personId} />} />
               <Route render={() => <ProfileSummary personId={personId} />} />
             </Switch>
           )

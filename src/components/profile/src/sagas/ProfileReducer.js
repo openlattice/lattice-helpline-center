@@ -10,8 +10,10 @@ import type { SequenceAction } from 'redux-reqseq';
 import {
   GET_PROFILE_SUMMARY,
   GET_SURVEY,
+  GET_SURVEY_RESULTS,
   getProfileSummary,
   getSurvey,
+  getSurveyResults,
 } from './ProfileActions';
 import {
   ANSWERS,
@@ -34,6 +36,9 @@ const INITIAL_STATE :Map = fromJS({
     [REQUEST_STATE]: RequestStates.STANDBY
   },
   [GET_SURVEY]: {
+    [REQUEST_STATE]: RequestStates.STANDBY
+  },
+  [GET_SURVEY_RESULTS]: {
     [REQUEST_STATE]: RequestStates.STANDBY
   },
   [ANSWERS]: Map(),
@@ -77,6 +82,17 @@ export default function profileReducer(state :Map<*, *> = INITIAL_STATE, action 
           .merge(action.value)
           .setIn([GET_SURVEY, REQUEST_STATE], RequestStates.SUCCESS),
         FAILURE: () => state.setIn([GET_SURVEY, REQUEST_STATE], RequestStates.FAILURE),
+      });
+    }
+
+    case getSurveyResults.case(action.type): {
+      const seqAction :SequenceAction = action;
+      return getSurveyResults.reducer(state, seqAction, {
+        REQUEST: () => state.setIn([GET_SURVEY_RESULTS, REQUEST_STATE], RequestStates.PENDING),
+        SUCCESS: () => state
+          .merge(action.value)
+          .setIn([GET_SURVEY_RESULTS, REQUEST_STATE], RequestStates.SUCCESS),
+        FAILURE: () => state.setIn([GET_SURVEY_RESULTS, REQUEST_STATE], RequestStates.FAILURE),
       });
     }
 

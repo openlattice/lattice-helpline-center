@@ -36,6 +36,7 @@ import {
   GET_SUBMISSION_ANSWERS,
   GET_SUMMARY_SETS,
   GET_SURVEY,
+  GET_SURVEY_RESULTS,
   getGreatestNeeds,
   getProfileSummary,
   getQuestionsFromAnswers,
@@ -43,6 +44,7 @@ import {
   getSubmissions,
   getSummarySets,
   getSurvey,
+  getSurveyResults,
 } from './ProfileActions';
 import {
   ANSWERS,
@@ -459,6 +461,51 @@ function* getSurveyWatcher() :Saga<any> {
   yield takeLatest(GET_SURVEY, getSurveyWorker);
 }
 
+function* getSurveyResultsWorker(action :SequenceAction) :Saga<any> {
+  const response = {};
+  try {
+    const { value: personId } = action;
+    if (!isValidUUID(personId)) throw ERR_ACTION_VALUE_TYPE;
+    yield put(getSurveyResults.request(action.id));
+
+    const submissionsResponse = yield call(getSubmissionsWorker, getSubmissions(personId));
+    if (submissionsResponse.error) throw submissionsResponse.error;
+    const submissions = submissionsResponse.data;
+    const submissionsIds = submissions.map((submission) => submission.get('neighborId'));
+
+    // get all answers to submission
+    const answersResponse = yield call(getSubmissionAnswersWorker, getSubmissionAnswers(submissionsIds));
+    if (answersResponse.error) throw answersResponse.error;
+    const answersBySubmission = answersResponse.data;
+    const answersIds = answersBySubmission.map((answers) => answers.get('neighborId'));
+    const answersById = Map(answers.map((answer) => [answer.get('neighborId'), answer.get('neighborDetails')]));
+
+    // // get question to each answer
+    // const questionsResponse = yield call(getQuestionsFromAnswersWorker, getQuestionsFromAnswers(answersIds.toJS()));
+    // const questions = questionsResponse.data.map((question) => question.getIn([0, 'neighborDetails']));
+
+    // get surveyHistory
+    // get all answers from each submission
+    // get all questions from each answer
+    // denormalize
+
+    // for each question
+      // for each survey
+        // get the answer that matches the question
+    yield put(getSurveyResults.success(action.id));
+  }
+  catch (error) {
+    LOG.error(action.type, error);
+    response.error = error;
+    yield put(getSurveyResults.failure(action.id, error));
+  }
+  return response;
+}
+
+function* getSurveyResultsWatcher() :Saga<any> {
+  yield takeLatest(GET_SURVEY_RESULTS, getSurveyResultsWorker);
+}
+
 export {
   getGreatestNeedsWatcher,
   getGreatestNeedsWorker,
@@ -472,6 +519,8 @@ export {
   getSubmissionsWorker,
   getSummarySetWatcher,
   getSummarySetsWorker,
+  getSurveyResultsWatcher,
+  getSurveyResultsWorker,
   getSurveyWatcher,
   getSurveyWorker,
 };
