@@ -28,14 +28,12 @@ const TICK_STYLE = {
   fontSize: '0.75rem'
 };
 
-/* eslint-disable quote-props */
-const SCORE_CATEGORY_COLORS = {
-  '0': NEUTRAL.N300,
-  '1': GREEN.G200,
-  '2': YELLOW.Y100,
-  '3': RED.R200,
-};
-/* eslint-enable quote-props */
+const SCORE_CATEGORY_COLORS = [
+  NEUTRAL.N300,
+  GREEN.G200,
+  YELLOW.Y100,
+  RED.R200,
+];
 
 const MarginCard = styled(Card)`
   margin-bottom: 24px;
