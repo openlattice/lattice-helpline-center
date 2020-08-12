@@ -1,17 +1,17 @@
 // @flow
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { Spinner } from 'lattice-ui-kit';
 import { ReduxConstants } from 'lattice-utils';
 import { DateTime } from 'luxon';
-import { Link } from 'react-router-dom';
 import { RequestStates } from 'redux-reqseq';
 
+import AggregateResults from './AggregateResults';
 import GreatestNeeds from './GreatestNeeds';
 import SelfSufficiencyMatrix from './SelfSufficiencyMatrix';
 import SurveyHistory from './SurveyHistory';
 import { useDispatch, useSelector } from './HelplineProvider';
-import { SpinnerWrapper } from './styled';
+import { Body, SpinnerWrapper } from './styled';
 import { getRelativeRoot } from './utils';
 
 import { APP_PATHS } from '../../../../containers/app/constants';
@@ -33,7 +33,6 @@ const ProfileSummary = ({ personId } :Props) => {
   const surveys = useSelector((state) => state.getIn(PROFILE_PATHS.surveyHistory));
   const fetchState = useSelector((state) => state.getIn([PROFILE, GET_PROFILE_SUMMARY, REQUEST_STATE]));
   const lastRequest = useSelector((state) => state.getIn(PROFILE_PATHS.lastRequest));
-  const relRoot = getRelativeRoot(root, match);
 
   useEffect(() => {
     // fetch if lastRequest.personId doesn't match, or if age is more than 5 minutes
@@ -48,12 +47,11 @@ const ProfileSummary = ({ personId } :Props) => {
   }
 
   return (
-    <>
-      <Link to={`${relRoot}/results`}>Results</Link>
+    <Body>
       <GreatestNeeds needs={needs} />
       <SelfSufficiencyMatrix data={selfSufficiency.toJS()} />
       <SurveyHistory surveys={surveys} />
-    </>
+    </Body>
   );
 };
 
