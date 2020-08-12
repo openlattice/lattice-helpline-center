@@ -56,7 +56,6 @@ const SelfSufficiencyMatrix = ({ data } :Props) => {
   return (
     <div>
       <Header>Self-Sufficiency Risk</Header>
-      <Caption>Low: 0-25 / Moderate: 25-55 / High: 55 - 85 / Critical: 85+</Caption>
       <ResponsiveContainer height={350} width="100%">
         <BarChart
             barCategoryGap="20%"
