@@ -105,6 +105,12 @@ module.exports = (env = {}) => {
         commonjs: 'lattice-sagas',
         amd: 'lattice-sagas'
       },
+      'lattice-ui-kit': {
+        root: 'lattice-ui-kit',
+        commonjs2: 'lattice-ui-kit',
+        commonjs: 'lattice-ui-kit',
+        amd: 'lattice-ui-kit'
+      },
     },
     mode: env.production ? ENV_PROD : ENV_DEV,
     module: {
