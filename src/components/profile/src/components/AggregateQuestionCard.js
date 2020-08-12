@@ -92,7 +92,7 @@ const AggregateQuestionCard = ({ questionData } :Props) => {
 
   return (
     <MarginCard>
-      <CardSegment>
+      <CardSegment padding="30px 30px 20px">
         <div>{title}</div>
         <ResponsiveContainer width="100%" height={containerHeight}>
           <BarChart
