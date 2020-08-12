@@ -25,7 +25,7 @@ type Props = {
 const SocialNeedsSurvey = ({ surveyId } :Props) => {
   // get person and pass to breadcrumb
   const person = useSelector((store) => store.getIn(PROFILE_PATHS.person));
-  const survey = useSelector((store) => store.getIn(PROFILE_PATHS.survey));
+  const survey = useSelector((store) => store.getIn([...PROFILE_PATHS.surveys, surveyId]));
   const questions = useSelector((store) => store.getIn(PROFILE_PATHS.questions));
   const answers = useSelector((store) => store.getIn(PROFILE_PATHS.answers));
   const answersByQuestion = useSelector(

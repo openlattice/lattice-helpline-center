@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 
 import { useDispatch } from './HelplineProvider';
 
-import { getSurveyResults } from '../sagas/ProfileActions';
+import { getAggregateResults } from '../sagas/ProfileActions';
 
 type Props = {
   personId :UUID;
@@ -13,7 +13,7 @@ const AggregateResults = ({ personId } :Props) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getSurveyResults(personId));
+    dispatch(getAggregateResults(personId));
   }, [dispatch, personId]);
 
   return <div>results</div>;

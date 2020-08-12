@@ -58,7 +58,7 @@ import {
   PERSON,
   QUESTIONS,
   SELF_SUFFICIENCY,
-  SURVEY,
+  SURVEYS,
   SURVEY_ANSWERS_BY_QUESTION,
   SURVEY_HISTORY,
 } from './constants';
@@ -168,7 +168,7 @@ function* getProfileSummaryWorker(action :SequenceAction) :Saga<any> {
       [SELF_SUFFICIENCY]: selfSufficiency,
       [GREATEST_NEEDS]: greatestNeedsResponse.data,
       [LAST_REQUEST]: {
-        [personId]: DateTime.local().valueOf
+        [personId]: DateTime.local().valueOf()
       }
     });
 
@@ -474,7 +474,9 @@ function* getSurveyWorker(action :SequenceAction) :Saga<any> {
 
     response.data = fromJS({
       [PERSON]: person,
-      [SURVEY]: submissionResponse.data,
+      [SURVEYS]: {
+        [submissionId]: submissionResponse.data
+      },
     }).merge(surveyResponse.data);
 
     yield put(getSurvey.success(action.id, response.data));
@@ -496,7 +498,7 @@ function* getSurveyResultsWorker(action :SequenceAction) :Saga<any> {
   try {
     const { value: submissionsIds } = action;
     if (!(Array.isArray(submissionsIds) && submissionsIds.every(isValidUUID))) throw ERR_ACTION_VALUE_TYPE;
-    yield put(getSurveyResults.request(action.id));
+    yield put(getSurveyResults.request(action.id, action.value));
 
     // get all answers to submission
     const answersResponse = yield call(getSubmissionAnswersWorker, getSubmissionAnswers(submissionsIds));
@@ -563,10 +565,34 @@ function* getSurveyResultsWatcher() :Saga<any> {
 function* getAggregateResultsWorker(action :SequenceAction) :Saga<any> {
   const response = {};
   try {
+    const { value: personId } = action;
+    if (!isValidUUID(personId)) throw ERR_ACTION_VALUE_TYPE;
     yield put(getAggregateResults.request(action.id));
-    yield put(getAggregateResults.success(action.id));
+
+    const submissionsResponse = yield call(getSubmissionsWorker, getSubmissions(personId));
+    if (submissionsResponse.error) throw submissionsResponse.error;
+    const submissionsData = submissionsResponse.data;
+    const submissionIds = submissionsData.map((submission) => submission.getIn([OPENLATTICE_ID_FQN, 0])).toJS();
+    const submissions = Map().withMutations((mutable) => {
+      submissionsData.forEach((submission) => {
+        mutable.set(submission.getIn([OPENLATTICE_ID_FQN, 0]), submission);
+      });
+    });
+
+    const surveyResultsResponse = yield call(getSurveyResultsWorker, getSurveyResults(submissionIds));
+    if (surveyResultsResponse.error) throw surveyResultsResponse.error;
+
+    const surveyResultsData = surveyResultsResponse.data;
+
+    response.data = fromJS({
+      [SURVEYS]: submissions
+    }).merge(surveyResultsData);
+
+    yield put(getAggregateResults.success(action.id, response.data));
   }
   catch (error) {
+    LOG.error(action.type, error);
+    response.error = error;
     yield put(getAggregateResults.failure(action.id));
 
   }

@@ -8,12 +8,12 @@ import { RequestStates } from 'redux-reqseq';
 import type { SequenceAction } from 'redux-reqseq';
 
 import {
+  GET_AGGREGATE_RESULTS,
   GET_PROFILE_SUMMARY,
   GET_SURVEY,
-  GET_SURVEY_RESULTS,
+  getAggregateResults,
   getProfileSummary,
   getSurvey,
-  getSurveyResults,
 } from './ProfileActions';
 import {
   ANSWERS,
@@ -22,7 +22,7 @@ import {
   PERSON,
   QUESTIONS,
   SELF_SUFFICIENCY,
-  SURVEY,
+  SURVEYS,
   SURVEY_ANSWERS_BY_QUESTION,
   SURVEY_HISTORY,
 } from './constants';
@@ -33,13 +33,13 @@ const { REQUEST_STATE } = ReduxConstants;
 const { RESET_REQUEST_STATE } = ReduxActions;
 
 const INITIAL_STATE :Map = fromJS({
+  [GET_AGGREGATE_RESULTS]: {
+    [REQUEST_STATE]: RequestStates.STANDBY
+  },
   [GET_PROFILE_SUMMARY]: {
     [REQUEST_STATE]: RequestStates.STANDBY
   },
   [GET_SURVEY]: {
-    [REQUEST_STATE]: RequestStates.STANDBY
-  },
-  [GET_SURVEY_RESULTS]: {
     [REQUEST_STATE]: RequestStates.STANDBY
   },
   [ANSWERS]: Map(),
@@ -48,7 +48,7 @@ const INITIAL_STATE :Map = fromJS({
   [PERSON]: Map(),
   [QUESTIONS]: Map(),
   [SELF_SUFFICIENCY]: List(),
-  [SURVEY]: Map(),
+  [SURVEYS]: Map(),
   [SURVEY_HISTORY]: List(),
   [SURVEY_ANSWERS_BY_QUESTION]: Map(),
 });
@@ -87,16 +87,16 @@ export default function profileReducer(state :Map<*, *> = INITIAL_STATE, action 
       });
     }
 
-    // case getSurveyResults.case(action.type): {
-    //   const seqAction :SequenceAction = action;
-    //   return getSurveyResults.reducer(state, seqAction, {
-    //     REQUEST: () => state.setIn([GET_SURVEY_RESULTS, REQUEST_STATE], RequestStates.PENDING),
-    //     SUCCESS: () => state
-    //       .merge(action.value)
-    //       .setIn([GET_SURVEY_RESULTS, REQUEST_STATE], RequestStates.SUCCESS),
-    //     FAILURE: () => state.setIn([GET_SURVEY_RESULTS, REQUEST_STATE], RequestStates.FAILURE),
-    //   });
-    // }
+    case getAggregateResults.case(action.type): {
+      const seqAction :SequenceAction = action;
+      return getAggregateResults.reducer(state, seqAction, {
+        REQUEST: () => state.setIn([GET_AGGREGATE_RESULTS, REQUEST_STATE], RequestStates.PENDING),
+        SUCCESS: () => state
+          .merge(action.value)
+          .setIn([GET_AGGREGATE_RESULTS, REQUEST_STATE], RequestStates.SUCCESS),
+        FAILURE: () => state.setIn([GET_AGGREGATE_RESULTS, REQUEST_STATE], RequestStates.FAILURE),
+      });
+    }
 
     default:
       return state;
