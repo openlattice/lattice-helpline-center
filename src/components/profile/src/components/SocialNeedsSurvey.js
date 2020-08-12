@@ -18,13 +18,19 @@ import { PROFILE_PATHS } from '../sagas/constants';
 const { formatAsDate, formatAsTime } = DateTimeUtils;
 
 const { DATE_TIME } = PropertyTypes;
+type Props = {
+  surveyId :any;
+}
 
-const SocialNeedsSurvey = () => {
+const SocialNeedsSurvey = ({ surveyId } :Props) => {
   // get person and pass to breadcrumb
   const person = useSelector((store) => store.getIn(PROFILE_PATHS.person));
-  const survey = useSelector((store) => store.getIn(PROFILE_PATHS.survey));
+  const survey = useSelector((store) => store.getIn([...PROFILE_PATHS.surveys, surveyId]));
   const questions = useSelector((store) => store.getIn(PROFILE_PATHS.questions));
   const answers = useSelector((store) => store.getIn(PROFILE_PATHS.answers));
+  const answersByQuestion = useSelector(
+    (store) => store.getIn([...PROFILE_PATHS.surveyAnswersByQuestion, surveyId])
+  );
   const root = useSelector((store) => store.getIn(APP_PATHS.ROOT));
   const match = useSelector((store) => store.getIn(APP_PATHS.MATCH));
   const datetime = getPropertyValue(survey, DATE_TIME);
@@ -39,7 +45,7 @@ const SocialNeedsSurvey = () => {
     formattedTime = formatAsTime(datetime, '');
   }
 
-  const surveyData = formatSurveyData(questions, answers);
+  const surveyData = formatSurveyData(questions, answers, answersByQuestion);
   const relRoot = getRelativeRoot(root, match);
 
   return (

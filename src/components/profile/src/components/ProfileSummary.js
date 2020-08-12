@@ -1,17 +1,20 @@
 // @flow
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { Spinner } from 'lattice-ui-kit';
 import { ReduxConstants } from 'lattice-utils';
 import { DateTime } from 'luxon';
 import { RequestStates } from 'redux-reqseq';
 
+import AggregateResults from './AggregateResults';
 import GreatestNeeds from './GreatestNeeds';
 import SelfSufficiencyMatrix from './SelfSufficiencyMatrix';
 import SurveyHistory from './SurveyHistory';
 import { useDispatch, useSelector } from './HelplineProvider';
-import { SpinnerWrapper } from './styled';
+import { Body, SpinnerWrapper } from './styled';
+import { getRelativeRoot } from './utils';
 
+import { APP_PATHS } from '../../../../containers/app/constants';
 import { GET_PROFILE_SUMMARY, getProfileSummary } from '../sagas/ProfileActions';
 import { PROFILE, PROFILE_PATHS } from '../sagas/constants';
 
@@ -23,6 +26,8 @@ type Props = {
 
 const ProfileSummary = ({ personId } :Props) => {
   const dispatch = useDispatch();
+  const root = useSelector((store) => store.getIn(APP_PATHS.ROOT));
+  const match = useSelector((store) => store.getIn(APP_PATHS.MATCH));
   const needs = useSelector((state) => state.getIn(PROFILE_PATHS.greatestNeeds));
   const selfSufficiency = useSelector((state) => state.getIn(PROFILE_PATHS.selfSufficiency));
   const surveys = useSelector((state) => state.getIn(PROFILE_PATHS.surveyHistory));
@@ -42,11 +47,11 @@ const ProfileSummary = ({ personId } :Props) => {
   }
 
   return (
-    <>
+    <Body>
       <GreatestNeeds needs={needs} />
       <SelfSufficiencyMatrix data={selfSufficiency.toJS()} />
       <SurveyHistory surveys={surveys} />
-    </>
+    </Body>
   );
 };
 

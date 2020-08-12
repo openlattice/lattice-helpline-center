@@ -29,20 +29,26 @@ import type { Saga } from '@redux-saga/core';
 import type { SequenceAction } from 'redux-reqseq';
 
 import {
+  GET_AGGREGATE_RESULTS,
   GET_GREATEST_NEEDS,
+  GET_PERSON,
   GET_PROFILE_SUMMARY,
   GET_QUESTIONS_FROM_ANSWERS,
   GET_SUBMISSIONS,
   GET_SUBMISSION_ANSWERS,
   GET_SUMMARY_SETS,
   GET_SURVEY,
+  GET_SURVEY_RESULTS,
+  getAggregateResults,
   getGreatestNeeds,
+  getPerson,
   getProfileSummary,
   getQuestionsFromAnswers,
   getSubmissionAnswers,
   getSubmissions,
   getSummarySets,
   getSurvey,
+  getSurveyResults,
 } from './ProfileActions';
 import {
   ANSWERS,
@@ -52,7 +58,8 @@ import {
   PERSON,
   QUESTIONS,
   SELF_SUFFICIENCY,
-  SURVEY,
+  SURVEYS,
+  SURVEY_ANSWERS_BY_QUESTION,
   SURVEY_HISTORY,
 } from './constants';
 
@@ -69,6 +76,40 @@ const { searchEntityNeighborsWithFilter } = SearchApiActions;
 const { searchEntityNeighborsWithFilterWorker } = SearchApiSagas;
 
 const LOG = new Logger('ProfileSagas');
+
+function* getPersonWorker(action :SequenceAction) :Saga<any> {
+  const response = {};
+  try {
+    const { value: personId } = action;
+    if (!isValidUUID(personId)) throw ERR_ACTION_VALUE_TYPE;
+    yield put(getPerson.request(action.id, personId));
+    const config = yield select((store) => store.getIn(APP_PATHS.APP_CONFIG));
+    const personESID = getESIDFromConfig(config, AppTypes.PEOPLE);
+
+    const personResponse = yield call(
+      getEntityDataWorker,
+      getEntityData({
+        entitySetId: personESID,
+        entityKeyId: personId
+      })
+    );
+
+    if (personResponse.error) throw personResponse.error;
+    const personData = fromJS(personResponse.data);
+    response.data = personData;
+
+    yield put(getPerson.success(action.id, response.data));
+  }
+  catch (error) {
+    yield put(getPerson.failure(action.id, error));
+  }
+
+  return response;
+}
+
+function* getPersonWatcher() :Saga<any> {
+  yield takeLatest(GET_PERSON, getPersonWorker);
+}
 
 function* getProfileSummaryWorker(action :SequenceAction) :Saga<any> {
   const response = {};
@@ -127,7 +168,7 @@ function* getProfileSummaryWorker(action :SequenceAction) :Saga<any> {
       [SELF_SUFFICIENCY]: selfSufficiency,
       [GREATEST_NEEDS]: greatestNeedsResponse.data,
       [LAST_REQUEST]: {
-        [personId]: DateTime.local().valueOf
+        [personId]: DateTime.local().valueOf()
       }
     });
 
@@ -247,9 +288,9 @@ function* getGreatestNeedsWorker(action :SequenceAction) :Saga<any> {
     yield put(getGreatestNeeds.request(action.id, submissionId));
 
     // get all answers to submission
-    const answersResponse = yield call(getSubmissionAnswersWorker, getSubmissionAnswers(submissionId));
+    const answersResponse = yield call(getSubmissionAnswersWorker, getSubmissionAnswers([submissionId]));
     if (answersResponse.error) throw answersResponse.error;
-    const answers = answersResponse.data;
+    const answers = answersResponse.data.get(submissionId);
     const answersIds = answers.map((answer) => answer.get('neighborId'));
 
     // get question to each answer
@@ -296,9 +337,9 @@ function* getGreatestNeedsWatcher() :Saga<any> {
 function* getSubmissionAnswersWorker(action :SequenceAction) :Saga<any> {
   const response = {};
   try {
-    const { value: submissionId } = action;
-    if (!isValidUUID(submissionId)) throw ERR_ACTION_VALUE_TYPE;
-    yield put(getSubmissionAnswers.request(action.id, submissionId));
+    const { value: submissionIds } = action;
+    if (!(Array.isArray(submissionIds) && submissionIds.every(isValidUUID))) throw ERR_ACTION_VALUE_TYPE;
+    yield put(getSubmissionAnswers.request(action.id, submissionIds));
 
     const config = yield select((store) => store.getIn(APP_PATHS.APP_CONFIG));
     const answerESID = getESIDFromConfig(config, AppTypes.ANSWER);
@@ -308,7 +349,7 @@ function* getSubmissionAnswersWorker(action :SequenceAction) :Saga<any> {
     const answersSearchParams = {
       entitySetId: submissionsESID,
       filter: {
-        entityKeyIds: [submissionId],
+        entityKeyIds: submissionIds,
         edgeEntitySetIds: [partOfESID],
         destinationEntitySetIds: [],
         sourceEntitySetIds: [answerESID],
@@ -321,7 +362,7 @@ function* getSubmissionAnswersWorker(action :SequenceAction) :Saga<any> {
     );
     if (answersResponse.error) throw answersResponse.error;
 
-    response.data = fromJS(answersResponse.data).get(submissionId);
+    response.data = fromJS(answersResponse.data);
     yield put(getSubmissionAnswers.success(action.id, response.data));
   }
   catch (error) {
@@ -347,7 +388,7 @@ function* getQuestionsFromAnswersWorker(action :SequenceAction) :Saga<any> {
     const questionESID = getESIDFromConfig(config, AppTypes.QUESTION);
     const addressesESID = getESIDFromConfig(config, AppTypes.ADDRESSES);
 
-    const answersSearchParams = {
+    const questionsSearchParams = {
       entitySetId: answerESID,
       filter: {
         entityKeyIds: answersIds,
@@ -357,13 +398,13 @@ function* getQuestionsFromAnswersWorker(action :SequenceAction) :Saga<any> {
       }
     };
 
-    const answersResponse = yield call(
+    const questionsResponse = yield call(
       searchEntityNeighborsWithFilterWorker,
-      searchEntityNeighborsWithFilter(answersSearchParams)
+      searchEntityNeighborsWithFilter(questionsSearchParams)
     );
-    if (answersResponse.error) throw answersResponse.error;
+    if (questionsResponse.error) throw questionsResponse.error;
 
-    response.data = fromJS(answersResponse.data);
+    response.data = fromJS(questionsResponse.data);
     yield put(getQuestionsFromAnswers.success(action.id, response.data));
   }
   catch (error) {
@@ -415,35 +456,28 @@ function* getSurveyWorker(action :SequenceAction) :Saga<any> {
       })
     );
 
-    // get all answers to submission
-    const answersRequest = call(getSubmissionAnswersWorker, getSubmissionAnswers(submissionId));
+    const surveyRequest = call(
+      getSurveyResultsWorker,
+      getSurveyResults([submissionId])
+    );
 
-    const [answersResponse, personResponse, submissionResponse] = yield all([
-      answersRequest,
+    const [personResponse, submissionResponse, surveyResponse] = yield all([
       personRequest,
-      submissionRequest
+      submissionRequest,
+      surveyRequest
     ]);
-    if (answersResponse.error) throw answersResponse.error;
+
     if (personResponse.error) throw personResponse.error;
     if (submissionResponse.error) throw submissionResponse.error;
-    const survey = fromJS(submissionResponse.data);
-
+    if (surveyResponse.error) throw surveyResponse.error;
     const person = getIn(personResponse, ['data', submissionId, '0', 'neighborDetails']);
 
-    const answers = answersResponse.data;
-    const answersIds = answers.map((answer) => answer.get('neighborId'));
-    const answersById = Map(answers.map((answer) => [answer.get('neighborId'), answer.get('neighborDetails')]));
-
-    // get question to each answer
-    const questionsResponse = yield call(getQuestionsFromAnswersWorker, getQuestionsFromAnswers(answersIds.toJS()));
-    const questions = questionsResponse.data.map((question) => question.getIn([0, 'neighborDetails']));
-
     response.data = fromJS({
-      [ANSWERS]: answersById,
       [PERSON]: person,
-      [QUESTIONS]: questions,
-      [SURVEY]: survey,
-    });
+      [SURVEYS]: {
+        [submissionId]: submissionResponse.data
+      },
+    }).merge(surveyResponse.data);
 
     yield put(getSurvey.success(action.id, response.data));
   }
@@ -459,9 +493,123 @@ function* getSurveyWatcher() :Saga<any> {
   yield takeLatest(GET_SURVEY, getSurveyWorker);
 }
 
+function* getSurveyResultsWorker(action :SequenceAction) :Saga<any> {
+  const response = {};
+  try {
+    const { value: submissionsIds } = action;
+    if (!(Array.isArray(submissionsIds) && submissionsIds.every(isValidUUID))) throw ERR_ACTION_VALUE_TYPE;
+    yield put(getSurveyResults.request(action.id, action.value));
+
+    // get all answers to submission
+    const answersResponse = yield call(getSubmissionAnswersWorker, getSubmissionAnswers(submissionsIds));
+    if (answersResponse.error) throw answersResponse.error;
+    const answersBySubmission :Map = answersResponse.data;
+    const answerIdsBySubmissionId = answersBySubmission
+      .map((submission) => submission.map((answer) => answer.get('neighborId')));
+    const answers = Map().withMutations((mutable) => {
+      answersBySubmission.forEach((submission) => {
+        submission.forEach((answer) => {
+          mutable.set(answer.get('neighborId'), answer.get('neighborDetails'));
+        });
+      });
+    });
+
+    const answersIds = answersBySubmission.reduce((ids, submission) => {
+      submission.forEach((answer) => {
+        ids.push(answer.get('neighborId'));
+      });
+      return ids;
+    }, []);
+
+    // // get question to each answer
+    const questionsResponse = yield call(getQuestionsFromAnswersWorker, getQuestionsFromAnswers(answersIds));
+    const questionsData = questionsResponse.data;
+    const questions = Map().withMutations((mutable) => {
+      questionsData.forEach((questionsForAnswer) => questionsForAnswer.forEach((question) => {
+        mutable.set(question.get('neighborId'), question.get('neighborDetails'));
+      }));
+    });
+    const questionsByAnswerId = questionsData.map((question) => question.getIn([0, 'neighborId']));
+
+    const surveyAnswersByQuestion = answerIdsBySubmissionId.mapEntries(([submissionId, answerIds]) => {
+      const questionsToAnswer = Map().withMutations((mutable) => {
+        answerIds.forEach((answerId) => {
+          const questionId = questionsByAnswerId.get(answerId);
+          if (isValidUUID(questionId)) {
+            mutable.set(questionId, answerId);
+          }
+        });
+      });
+      return [submissionId, questionsToAnswer];
+    });
+
+    response.data = fromJS({
+      [ANSWERS]: answers,
+      [QUESTIONS]: questions,
+      [SURVEY_ANSWERS_BY_QUESTION]: surveyAnswersByQuestion,
+    });
+    yield put(getSurveyResults.success(action.id, response.data));
+  }
+  catch (error) {
+    LOG.error(action.type, error);
+    response.error = error;
+    yield put(getSurveyResults.failure(action.id, error));
+  }
+  return response;
+}
+
+function* getSurveyResultsWatcher() :Saga<any> {
+  yield takeLatest(GET_SURVEY_RESULTS, getSurveyResultsWorker);
+}
+
+function* getAggregateResultsWorker(action :SequenceAction) :Saga<any> {
+  const response = {};
+  try {
+    const { value: personId } = action;
+    if (!isValidUUID(personId)) throw ERR_ACTION_VALUE_TYPE;
+    yield put(getAggregateResults.request(action.id));
+
+    const submissionsResponse = yield call(getSubmissionsWorker, getSubmissions(personId));
+    if (submissionsResponse.error) throw submissionsResponse.error;
+    const submissionsData = submissionsResponse.data;
+    const submissionIds = submissionsData.map((submission) => submission.getIn([OPENLATTICE_ID_FQN, 0])).toJS();
+    const submissions = Map().withMutations((mutable) => {
+      submissionsData.forEach((submission) => {
+        mutable.set(submission.getIn([OPENLATTICE_ID_FQN, 0]), submission);
+      });
+    });
+
+    const surveyResultsResponse = yield call(getSurveyResultsWorker, getSurveyResults(submissionIds));
+    if (surveyResultsResponse.error) throw surveyResultsResponse.error;
+
+    const surveyResultsData = surveyResultsResponse.data;
+
+    response.data = fromJS({
+      [SURVEYS]: submissions
+    }).merge(surveyResultsData);
+
+    yield put(getAggregateResults.success(action.id, response.data));
+  }
+  catch (error) {
+    LOG.error(action.type, error);
+    response.error = error;
+    yield put(getAggregateResults.failure(action.id));
+
+  }
+  return response;
+}
+
+function* getAggregateResultsWatcher() :Saga<any> {
+  yield takeLatest(GET_AGGREGATE_RESULTS, getAggregateResultsWorker);
+}
+
 export {
+  getAggregateResultsWatcher,
+  getAggregateResultsWorker,
   getGreatestNeedsWatcher,
   getGreatestNeedsWorker,
+  getPersonWatcher,
+  getPersonWorker,
   getProfileSummaryWatcher,
   getProfileSummaryWorker,
   getQuestionsFromAnswersWatcher,
@@ -472,6 +620,8 @@ export {
   getSubmissionsWorker,
   getSummarySetWatcher,
   getSummarySetsWorker,
+  getSurveyResultsWatcher,
+  getSurveyResultsWorker,
   getSurveyWatcher,
   getSurveyWorker,
 };
