@@ -5,10 +5,6 @@ import styled from 'styled-components';
 import {
   Spinner,
   StyleUtils,
-  Tab,
-  TabContext,
-  TabPanel,
-  Tabs
 } from 'lattice-ui-kit';
 import { RequestStates } from 'redux-reqseq';
 
@@ -19,6 +15,7 @@ import { SpinnerWrapper } from './styled';
 
 import { INITIALIZE_HELPLINE } from '../../../../containers/app/AppActions';
 import { APP_PATHS } from '../../../../containers/app/constants';
+import { TabButton, TabGroup, TabPanel } from '../../../tabs';
 
 const { media } = StyleUtils;
 
@@ -34,6 +31,10 @@ const BodyWrapper = styled.div`
   `}
 `;
 
+const TabWrapper = styled.div`
+  margin-bottom: 24px;
+`;
+
 type Props = {
   personId :UUID;
 };
@@ -43,33 +44,38 @@ const ProfileBody = ({ personId } :Props) => {
   const initializeState = useSelector((state) => state.getIn(['app', INITIALIZE_HELPLINE, 'requestState']));
   const root = useSelector((store) => store.getIn(APP_PATHS.ROOT));
 
-  const [value, setValue] = React.useState('summary');
-
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
+  const [tab, setTab] = React.useState('summary');
 
   if (initializeState === RequestStates.PENDING) {
-    return <SpinnerWrapper><Spinner size="3x" /></SpinnerWrapper>
+    return <SpinnerWrapper><Spinner size="3x" /></SpinnerWrapper>;
   }
 
   return (
     <BodyWrapper>
-      <TabContext value={value}>
-        <Tabs
-            value={value}
-            onChange={handleChange}
-            scrollButtons="auto">
-          <Tab label="Summary" value="summary" />
-          <Tab label="Scores" value="scores" />
-        </Tabs>
-        <TabPanel value="summary">
-          <ProfileSummary personId={personId} />
-        </TabPanel>
-        <TabPanel value="scores">
-          <AggregateResults personId={personId} />
-        </TabPanel>
-      </TabContext>
+      <TabWrapper>
+        <TabGroup>
+          <TabButton
+              active={tab === 'summary'}
+              name="summary-btn"
+              type="button"
+              onClick={() => setTab('summary')}>
+            Summary
+          </TabButton>
+          <TabButton
+              active={tab === 'scores'}
+              name="scores-btn"
+              type="button"
+              onClick={() => setTab('scores')}>
+            Scores
+          </TabButton>
+        </TabGroup>
+      </TabWrapper>
+      <TabPanel activeName={tab} name="summary">
+        <ProfileSummary personId={personId} />
+      </TabPanel>
+      <TabPanel activeName={tab} name="scores">
+        <AggregateResults personId={personId} />
+      </TabPanel>
     </BodyWrapper>
   );
 };
