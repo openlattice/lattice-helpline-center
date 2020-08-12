@@ -14,14 +14,12 @@ import { getPropertyValues } from '../../../../utils/EntityUtils';
 const { OPENLATTICE_ID_FQN } = Constants;
 const { NEUTRAL } = Colors;
 
-/* eslint-disable quote-props */
-const SCORE_CATEGORY_COLOR_MAP = {
-  '0': 'neutral',
-  '1': 'green',
-  '2': 'yellow',
-  '3': 'red'
-};
-/* eslint-enable quote-props */
+const SCORE_CATEGORY_COLOR_MAP = [
+  'neutral',
+  'green',
+  'yellow',
+  'red',
+];
 
 const TitleWrapper = styled.ul`
   list-style-position: inside;
