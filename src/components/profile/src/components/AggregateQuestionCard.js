@@ -131,7 +131,7 @@ const AggregateQuestionCard = ({ questionData } :Props) => {
                 shape={<MinBar />}>
               {
                 data.map((payload) => (
-                  <Cell fill={SCORE_CATEGORY_COLORS[payload.scoreCategory]} />
+                  <Cell key={`${payload.id}`} fill={SCORE_CATEGORY_COLORS[payload.scoreCategory]} />
                 ))
               }
             </Bar>

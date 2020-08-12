@@ -66,6 +66,7 @@ const formatAggregateResultsData = (questions :Map, answers :Map, surveyAnswersB
 
           data.push({
             date,
+            id: answerId,
             score,
             scoreCategory,
           });
