@@ -65,7 +65,7 @@ type Props = {
 
 const AggregateQuestionCard = ({ questionData } :Props) => {
   const title = questionData.get('title');
-  const data = questionData.get('data');
+  const data = questionData.get('data').reverse();
   const [tooltipPayload, setTooltip] = useState({
     active: false,
     position: undefined
