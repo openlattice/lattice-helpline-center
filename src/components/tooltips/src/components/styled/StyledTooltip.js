@@ -19,8 +19,6 @@ const StyledTooltip = styled.div`
   span {
     overflow: hidden;
     position: absolute;
-    width: 5px
-    height: 5px;
     box-sizing: border-box;
     content: '""';
     margin: auto;
