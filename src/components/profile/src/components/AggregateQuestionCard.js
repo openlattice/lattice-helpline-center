@@ -1,5 +1,5 @@
 // @flow
-import React, { useState } from 'react';
+import React from 'react';
 
 import styled from 'styled-components';
 import { Map } from 'immutable';
@@ -14,7 +14,7 @@ import {
   YAxis,
 } from 'recharts';
 
-import CustomTooltip from './CustomTooltip';
+import { AggregateQuestionTooltip } from '../../../tooltips';
 
 const {
   GREEN,
@@ -66,24 +66,6 @@ type Props = {
 const AggregateQuestionCard = ({ questionData } :Props) => {
   const title = questionData.get('title');
   const data = questionData.get('data');
-  const [tooltipPayload, setTooltip] = useState({
-    active: false,
-    position: undefined
-  });
-
-  const onMouseEnter = (bar) => {
-    const {
-      width,
-      x,
-      y,
-    } = bar;
-    const position = { x: x + width + 10, y };
-    setTooltip({ active: true, position });
-  };
-
-  const onMouseLeave = () => {
-    setTooltip({ active: false, position: undefined });
-  };
 
   // length * bar height + (length + 1) * gap
   const containerHeight = data.length * 30 + (data.length + 1) * 10;
@@ -113,19 +95,12 @@ const AggregateQuestionCard = ({ questionData } :Props) => {
                 tickCount={0}
                 tickLine={false}
                 type="number" />
-            {
-              tooltipPayload.active && (
-                <Tooltip
-                    content={<CustomTooltip orientation="right" />}
-                    cursor={false}
-                    position={tooltipPayload.position} />
-              )
-            }
+            <Tooltip
+                content={<AggregateQuestionTooltip />}
+                cursor={{ fill: NEUTRAL.N50 }} />
             <Bar
                 barSize={30}
                 dataKey="score"
-                onMouseEnter={onMouseEnter}
-                onMouseLeave={onMouseLeave}
                 shape={<MinBar />}>
               {
                 data.map((payload) => (
