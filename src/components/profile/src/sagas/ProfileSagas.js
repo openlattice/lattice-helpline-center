@@ -153,7 +153,7 @@ function* getProfileSummaryWorker(action :SequenceAction) :Saga<any> {
         const parsedScore = parseInt(score, 10) || 0;
 
         return {
-          x: DateTime.fromISO(surveyDate).toFormat('LL/dd'),
+          x: DateTime.fromISO(surveyDate).toLocaleString(DateTime.DATE_SHORT),
           y: parsedScore
         };
       }).reverse();
