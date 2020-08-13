@@ -7,9 +7,11 @@ const { NEUTRAL } = Colors;
 
 const TabGroup = styled.div`
   margin-right: auto;
+
   button:first-of-type {
     border-radius: 3px 0 0 3px;
   }
+
   button:last-of-type {
     border-radius: 0 3px 3px 0;
   }
@@ -21,12 +23,6 @@ const getActiveStyles = ({ active }) => {
       background-color: ${NEUTRAL.N400};
       border-color: ${NEUTRAL.N400};
       color: white;
-
-      :hover {
-        background-color: ${NEUTRAL.N400};
-        border-color: ${NEUTRAL.N400};
-        color: white;
-      }
     `;
   }
   return null;

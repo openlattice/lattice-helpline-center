@@ -23,7 +23,7 @@ const BodyWrapper = styled.div`
 
   .MuiTabPanel-root {
     padding: 16px 0;
-  };
+  }
 
   ${media.phone`
     padding: 0;

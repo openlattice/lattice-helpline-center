@@ -14,7 +14,7 @@ import {
 
 import CustomTooltip from './CustomTooltip';
 
-import { Caption, Header } from '../../../typography';
+import { Header } from '../../../typography';
 
 const { PURPLE, NEUTRAL } = Colors;
 
