@@ -11,7 +11,7 @@ import { RequestStates } from 'redux-reqseq';
 import AggregateResults from './AggregateResults';
 import ProfileSummary from './ProfileSummary';
 import { useSelector } from './HelplineProvider';
-import { SpinnerWrapper } from './styled';
+import { CenterWrapper } from './styled';
 
 import { INITIALIZE_HELPLINE } from '../../../../containers/app/AppActions';
 import { TabButton, TabGroup, TabPanel } from '../../../tabs';
@@ -45,7 +45,7 @@ const ProfileBody = ({ personId } :Props) => {
   const [tab, setTab] = React.useState('summary');
 
   if (initializeState === RequestStates.PENDING) {
-    return <SpinnerWrapper><Spinner size="3x" /></SpinnerWrapper>;
+    return <CenterWrapper><Spinner size="3x" /></CenterWrapper>;
   }
 
   return (

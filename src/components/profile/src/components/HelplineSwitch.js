@@ -10,7 +10,7 @@ import type { Match } from 'react-router';
 import ProfileContainer from './ProfileContainer';
 import SurveyContainer from './SurveyContainer';
 import { useDispatch, useSelector } from './HelplineProvider';
-import { SpinnerWrapper } from './styled';
+import { CenterWrapper } from './styled';
 
 import { INITIALIZE_HELPLINE, initializeHelpline } from '../../../../containers/app/AppActions';
 
@@ -41,7 +41,7 @@ const HelplineSwitch = ({
 
   const initializeState = useSelector((state) => state.getIn(['app', INITIALIZE_HELPLINE, 'requestState']));
   if (initializeState === RequestStates.PENDING || initializeState === RequestStates.STANDBY) {
-    return <SpinnerWrapper><Spinner size="3x" /></SpinnerWrapper>;
+    return <CenterWrapper><Spinner size="3x" /></CenterWrapper>;
   }
 
   return (

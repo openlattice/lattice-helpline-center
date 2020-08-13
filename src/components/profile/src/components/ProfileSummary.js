@@ -11,7 +11,7 @@ import GreatestNeeds from './GreatestNeeds';
 import SelfSufficiencyMatrix from './SelfSufficiencyMatrix';
 import SurveyHistory from './SurveyHistory';
 import { useDispatch, useSelector } from './HelplineProvider';
-import { Body, SpinnerWrapper } from './styled';
+import { Body, CenterWrapper } from './styled';
 import { getRelativeRoot } from './utils';
 
 import { APP_PATHS } from '../../../../containers/app/constants';
@@ -43,7 +43,7 @@ const ProfileSummary = ({ personId } :Props) => {
   }, [dispatch, lastRequest, personId]);
 
   if (fetchState === RequestStates.PENDING) {
-    return <SpinnerWrapper><Spinner size="3x" /></SpinnerWrapper>;
+    return <CenterWrapper><Spinner size="3x" /></CenterWrapper>;
   }
 
   return (
