@@ -31,8 +31,8 @@ const SurveySection = ({ sectionData, title } :Props) => (
         return (
           <SurveyQuestion
               answer={answer}
-              question={question}
-              key={questionId} />
+              key={questionId}
+              question={question} />
         );
       })
     }

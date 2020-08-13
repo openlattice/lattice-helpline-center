@@ -97,22 +97,22 @@ const AggregateQuestionCard = ({ questionData } :Props) => {
               data={data}
               layout="vertical">
             <YAxis
-                dataKey="date"
-                type="category"
                 axisLine={false}
+                dataKey="date"
                 minTickGap={10}
                 tick={TICK_STYLE}
                 tickLine={false}
+                type="category"
                 width={70} />
             <XAxis
-                dataKey="score"
                 axisLine={false}
+                dataKey="score"
                 domain={[0, 25]}
-                tickCount={0}
                 height={0}
                 tick={TICK_STYLE}
-                type="number"
-                tickLine={false} />
+                tickCount={0}
+                tickLine={false}
+                type="number" />
             {
               tooltipPayload.active && (
                 <Tooltip
@@ -129,7 +129,7 @@ const AggregateQuestionCard = ({ questionData } :Props) => {
                 shape={<MinBar />}>
               {
                 data.map((payload) => (
-                  <Cell key={`${payload.id}`} fill={SCORE_CATEGORY_COLORS[payload.scoreCategory]} />
+                  <Cell fill={SCORE_CATEGORY_COLORS[payload.scoreCategory]} key={`${payload.id}`} />
                 ))
               }
             </Bar>

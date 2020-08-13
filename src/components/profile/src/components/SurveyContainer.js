@@ -10,10 +10,7 @@ import SocialNeedsSurvey from './SocialNeedsSurvey';
 import { useDispatch, useSelector } from './HelplineProvider';
 import { SpinnerWrapper } from './styled';
 
-import {
-  GET_SURVEY,
-  getSurvey,
-} from '../sagas/ProfileActions';
+import { GET_SURVEY, getSurvey } from '../sagas/ProfileActions';
 import { PROFILE } from '../sagas/constants';
 
 const { REQUEST_STATE } = ReduxConstants;

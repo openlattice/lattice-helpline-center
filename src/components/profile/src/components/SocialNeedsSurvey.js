@@ -37,11 +37,9 @@ const SocialNeedsSurvey = ({ surveyId } :Props) => {
   const name = getFirstLastFromPerson(person);
 
   let formattedDate = '';
-  if (typeof datetime === 'string') {
-    formattedDate = formatAsDate(datetime, '');
-  }
   let formattedTime = '';
   if (typeof datetime === 'string') {
+    formattedDate = formatAsDate(datetime, '');
     formattedTime = formatAsTime(datetime, '');
   }
 
@@ -62,10 +60,9 @@ const SocialNeedsSurvey = ({ surveyId } :Props) => {
         {
           surveyData.entrySeq().map(([sectionTitle, sectionData]) => (
             <SurveySection
-                // eslint-disable-next-line react/no-array-index-key
                 key={sectionTitle}
-                title={sectionTitle}
-                sectionData={sectionData} />
+                sectionData={sectionData}
+                title={sectionTitle} />
           ))
         }
       </div>

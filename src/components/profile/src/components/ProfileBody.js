@@ -14,7 +14,6 @@ import { useSelector } from './HelplineProvider';
 import { SpinnerWrapper } from './styled';
 
 import { INITIALIZE_HELPLINE } from '../../../../containers/app/AppActions';
-import { APP_PATHS } from '../../../../containers/app/constants';
 import { TabButton, TabGroup, TabPanel } from '../../../tabs';
 
 const { media } = StyleUtils;
@@ -42,7 +41,6 @@ type Props = {
 const ProfileBody = ({ personId } :Props) => {
 
   const initializeState = useSelector((state) => state.getIn(['app', INITIALIZE_HELPLINE, 'requestState']));
-  const root = useSelector((store) => store.getIn(APP_PATHS.ROOT));
 
   const [tab, setTab] = React.useState('summary');
 
@@ -57,15 +55,15 @@ const ProfileBody = ({ personId } :Props) => {
           <TabButton
               active={tab === 'summary'}
               name="summary-btn"
-              type="button"
-              onClick={() => setTab('summary')}>
+              onClick={() => setTab('summary')}
+              type="button">
             Summary
           </TabButton>
           <TabButton
               active={tab === 'scores'}
               name="scores-btn"
-              type="button"
-              onClick={() => setTab('scores')}>
+              onClick={() => setTab('scores')}
+              type="button">
             Scores
           </TabButton>
         </TabGroup>
