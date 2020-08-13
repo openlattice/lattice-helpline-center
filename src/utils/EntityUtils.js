@@ -13,11 +13,12 @@ const { FQN } = Models;
 const getPropertyValue = (
   entity :Map | Object,
   fqn :FQN | string,
-  multiplicity :boolean = false
-) :any | any[] => {
-  if (!multiplicity) {
-    return getIn(entity, [fqn, 0]);
-  }
+) :any => getIn(entity, [fqn, 0]);
+
+const getPropertyMultiValue = (
+  entity :Map | Object,
+  fqn :FQN | string,
+) :any[] => {
   const values = get(entity, fqn) || [];
   return isCollection(values) ? values.toJS() : values;
 };
@@ -28,6 +29,7 @@ const getPropertyValues = (
 ) :any[] => fqns.map((fqn :FQN | string) => getPropertyValue(entity, fqn));
 
 export {
+  getPropertyMultiValue,
   getPropertyValue,
   getPropertyValues,
 };

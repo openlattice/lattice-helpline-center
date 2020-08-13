@@ -28,33 +28,34 @@ type Props = {
 };
 
 const SelfSufficiencyMatrix = ({ data } :Props) => {
-  const [tooltipPayload, setTooltipCoordinate] = useState({
-    label: '',
+  const [tooltipPayload, setTooltip] = useState({
     minWidth: 0,
     position: undefined,
-    value: undefined,
   });
-  const onMouseOver = (bar) => {
+
+  const onMouseEnter = (bar) => {
     const {
       x,
       y,
       width,
-      payload
     } = bar;
 
     // translate up by 36px;
     const position = { x, y: y - 36 };
-    setTooltipCoordinate({
-      label: payload.x,
+    setTooltip({
       minWidth: width,
       position,
-      value: payload.y,
+      active: true
     });
+  };
+
+  const onMouseLeave = () => {
+    setTooltip({ active: false, position: undefined, minWidth: 0 });
   };
 
   return (
     <div>
-      <Header>Self-Sufficiency Matrix</Header>
+      <Header>Self-Sufficiency Risk</Header>
       <ResponsiveContainer height={350} width="100%">
         <BarChart
             barCategoryGap="20%"
@@ -63,7 +64,7 @@ const SelfSufficiencyMatrix = ({ data } :Props) => {
           <CartesianGrid vertical={false} />
           <YAxis
               axisLine={false}
-              domain={[0, 80]}
+              domain={[0, 180]}
               minTickGap={10}
               tick={TICK_STYLE}
               tickLine={false}
@@ -73,21 +74,20 @@ const SelfSufficiencyMatrix = ({ data } :Props) => {
               tick={TICK_STYLE}
               tickLine={false}
               type="category" />
-          <Tooltip
-              content={(
-                <CustomTooltip
-                    label={tooltipPayload.label}
-                    minWidth={tooltipPayload.minWidth}
-                    position={tooltipPayload.position}
-                    value={tooltipPayload.value} />
-              )}
-              cursor={false}
-              position={tooltipPayload.position} />
+          {
+            tooltipPayload.active && (
+              <Tooltip
+                  content={<CustomTooltip minWidth={tooltipPayload.minWidth} />}
+                  cursor={false}
+                  position={tooltipPayload.position} />
+            )
+          }
           <Bar
               dataKey="y"
               fill={PURPLE.P200}
               maxBarSize={60}
-              onMouseOver={onMouseOver} />
+              onMouseEnter={onMouseEnter}
+              onMouseLeave={onMouseLeave} />
         </BarChart>
       </ResponsiveContainer>
     </div>

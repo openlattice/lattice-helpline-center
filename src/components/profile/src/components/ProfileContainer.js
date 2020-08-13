@@ -2,19 +2,17 @@
 import React from 'react';
 
 import styled from 'styled-components';
-import { List, Map } from 'immutable';
-import { StyleUtils } from 'lattice-ui-kit';
+import { Breadcrumbs, StyleUtils } from 'lattice-ui-kit';
 
-import GreatestNeeds from './GreatestNeeds';
-import ProfileCard from './ProfileCard';
-import SelfSufficiencyMatrix from './SelfSufficiencyMatrix';
-import SurveyHistory from './SurveyHistory';
+import ProfileAside from './ProfileAside';
+import ProfileBody from './ProfileBody';
+import { useSelector } from './HelplineProvider';
+import { getFirstLastFromPerson } from './utils';
+
+import { BreadcrumbItem, BreadcrumbWrapper } from '../../../breadcrumbs';
+import { PROFILE_PATHS } from '../sagas/constants';
 
 const { media } = StyleUtils;
-
-const Centered = styled.div`
-  place-items: center;
-`;
 
 const ProfileGrid = styled.div`
   display: grid;
@@ -25,51 +23,27 @@ const ProfileGrid = styled.div`
   `}
 `;
 
-const Body = styled.div`
-  display: grid;
-  grid-gap: 36px;
-  grid-auto-flow: row;
-  padding: 0 30px;
-  ${media.phone`
-    padding: 0 15px;
-  `}
-`;
-
 type Props = {
-  data ?:Object[];
-  imageUrl ?:string;
-  needs :string[];
-  person :Map | Object;
-  surveys :List | Object[];
+  personId :UUID;
 };
 
-const ProfileContainer = (props :Props) => {
-  const {
-    data,
-    imageUrl,
-    needs,
-    person,
-    surveys
-  } = props;
+const ProfileContainer = ({ personId } :Props) => {
+  const person = useSelector((store) => store.getIn(PROFILE_PATHS.person));
+  const name = getFirstLastFromPerson(person);
+
   return (
-    <ProfileGrid>
-      <Centered>
-        <ProfileCard imageUrl={imageUrl} person={person} />
-      </Centered>
-      <Body>
-        <GreatestNeeds needs={needs} />
-        <SelfSufficiencyMatrix data={data} />
-        <SurveyHistory surveys={surveys} />
-      </Body>
-    </ProfileGrid>
+    <div>
+      <BreadcrumbWrapper>
+        <Breadcrumbs>
+          <BreadcrumbItem>{name}</BreadcrumbItem>
+        </Breadcrumbs>
+      </BreadcrumbWrapper>
+      <ProfileGrid>
+        <ProfileAside />
+        <ProfileBody personId={personId} />
+      </ProfileGrid>
+    </div>
   );
-};
-
-ProfileContainer.defaultProps = {
-  imageUrl: '',
-  needs: [],
-  data: [],
-  surveys: [],
 };
 
 export default ProfileContainer;
