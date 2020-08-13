@@ -14,7 +14,7 @@ const createMockSufficiencyData = (bars :number = 6) :any[] => {
   for (let i = 0; i < bars; i += 1) {
     data.push({
       y: Math.round(Math.random() * 75),
-      x: DateTime.local().minus({ months: bars - i - 1 }).toFormat('LL/dd')
+      x: DateTime.local().minus({ months: bars - i - 1 }).toLocaleString(DateTime.DATE_SHORT)
     });
   }
   return data;
