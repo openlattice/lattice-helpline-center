@@ -71,7 +71,7 @@ const formatAggregateResultsData = (
           const surveyDate :string = getPropertyValue(survey, PropertyTypes.DATE_TIME);
           const score :number = getPropertyValue(answer, PropertyTypes.SCORE_VALUE);
           const scoreCategory :string = getPropertyValue(answer, PropertyTypes.SCORE_CATEGORY);
-          const value :string = getPropertyValue(answer, PropertyTypes.VALUES);
+          const text :string = getPropertyValue(answer, PropertyTypes.VALUES);
           const date = DateTime.fromISO(surveyDate).toLocaleString(DateTime.DATE_SHORT);
 
           data.push({
@@ -79,7 +79,7 @@ const formatAggregateResultsData = (
             id: answerId,
             score,
             scoreCategory,
-            value,
+            text,
           });
         });
 
