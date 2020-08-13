@@ -12,8 +12,7 @@ import {
   YAxis,
 } from 'recharts';
 
-import CustomTooltip from './CustomTooltip';
-
+import { SelfSufficiencyTooltip } from '../../../tooltips';
 import { Header } from '../../../typography';
 
 const { PURPLE, NEUTRAL } = Colors;
@@ -77,7 +76,7 @@ const SelfSufficiencyMatrix = ({ data } :Props) => {
           {
             tooltipPayload.active && (
               <Tooltip
-                  content={<CustomTooltip minWidth={tooltipPayload.minWidth} />}
+                  content={<SelfSufficiencyTooltip minWidth={tooltipPayload.minWidth} />}
                   cursor={false}
                   position={tooltipPayload.position} />
             )

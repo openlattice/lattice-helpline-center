@@ -137,16 +137,15 @@ function* getProfileSummaryWorker(action :SequenceAction) :Saga<any> {
     if (submissionsResponse.error) throw submissionsResponse.error;
     const surveyHistory = submissionsResponse.data;
 
-    // get summary set for most recent 7 surveys
+    // get summary set for all surveys
     const recentSurveyIds = surveyHistory
-      .slice(0, 7)
       .map((survey) => survey.getIn([OPENLATTICE_ID_FQN, 0]));
 
     const summarySetsResponse = yield call(getSummarySetsWorker, getSummarySets(recentSurveyIds.toJS()));
     if (summarySetsResponse.error) throw summarySetsResponse.error;
 
+    // self sufficiency data in ascending order
     const selfSufficiency = surveyHistory
-      .slice(0, 7)
       .map((survey) => {
         const surveyId = survey.getIn([OPENLATTICE_ID_FQN, 0]);
         const surveyDate = survey.getIn([PropertyTypes.DATE_TIME, 0]);
@@ -154,10 +153,10 @@ function* getProfileSummaryWorker(action :SequenceAction) :Saga<any> {
         const parsedScore = parseInt(score, 10) || 0;
 
         return {
-          x: DateTime.fromISO(surveyDate).toFormat('LL/dd'),
+          x: DateTime.fromISO(surveyDate).toLocaleString(DateTime.DATE_SHORT),
           y: parsedScore
         };
-      });
+      }).reverse();
 
     const greatestNeedsResponse = yield call(getGreatestNeedsWorker, getGreatestNeeds(recentSurveyIds.first()));
     if (greatestNeedsResponse.error) throw greatestNeedsResponse.error;
