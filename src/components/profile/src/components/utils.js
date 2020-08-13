@@ -23,7 +23,11 @@ const getFirstLastFromPerson = (person :Map | Object) => {
   return `${firstName} ${last}`;
 };
 
-const formatSurveyData = (questions :Map, answers :Map, answersByQuestion :Map) :OrderedMap => {
+const formatSurveyData = (
+  questions :Map = Map(),
+  answers :Map = Map(),
+  answersByQuestion :Map = Map()
+) :OrderedMap => {
   const surveyData = fromJS(CATEGORY_BY_QUESTION_NUMBER)
     .sortBy((category, number) => parseInt(number, 10))
     .reduce((grouped, category, number) => {
@@ -43,7 +47,12 @@ const formatSurveyData = (questions :Map, answers :Map, answersByQuestion :Map) 
   return surveyData;
 };
 
-const formatAggregateResultsData = (questions :Map, answers :Map, surveyAnswersByQuestion :Map, surveys :Map) :List => {
+const formatAggregateResultsData = (
+  questions :Map = Map(),
+  answers :Map = Map(),
+  surveyAnswersByQuestion :Map = Map(),
+  surveys :Map = Map()
+) :List => {
   const aggregateResults :List = fromJS(CATEGORY_BY_QUESTION_NUMBER)
     .sortBy((category, number) => parseInt(number, 10))
     .reduce((grouped, category, number) => {
@@ -62,6 +71,7 @@ const formatAggregateResultsData = (questions :Map, answers :Map, surveyAnswersB
           const surveyDate :string = getPropertyValue(survey, PropertyTypes.DATE_TIME);
           const score :number = getPropertyValue(answer, PropertyTypes.SCORE_VALUE);
           const scoreCategory :string = getPropertyValue(answer, PropertyTypes.SCORE_CATEGORY);
+          const value :string = getPropertyValue(answer, PropertyTypes.VALUES);
           const date = DateTime.fromISO(surveyDate).toLocaleString(DateTime.DATE_SHORT);
 
           data.push({
@@ -69,10 +79,12 @@ const formatAggregateResultsData = (questions :Map, answers :Map, surveyAnswersB
             id: answerId,
             score,
             scoreCategory,
+            value,
           });
         });
+
         const aggregateQuestion = Map({
-          data,
+          data: data.reverse(),
           id: questionId,
           title,
         });
