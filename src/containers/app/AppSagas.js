@@ -16,7 +16,7 @@ import {
   EntityDataModelApiActions,
   EntityDataModelApiSagas,
 } from 'lattice-sagas';
-import { Logger, ValidationUtils } from 'lattice-utils';
+import { LangUtils, Logger, ValidationUtils } from 'lattice-utils';
 import type { SequenceAction } from 'redux-reqseq';
 
 import {
@@ -27,6 +27,7 @@ import {
 import { ERR_ACTION_VALUE_TYPE } from '../../utils/Errors';
 
 const { isValidUUID } = ValidationUtils;
+const { isDefined } = LangUtils;
 
 const { SecurableTypes } = Types;
 const { getApp, getAppConfigs, getAppTypes } = AppApiActions;
@@ -57,8 +58,10 @@ function* initializeHelplineWorker(action :SequenceAction) :Generator<*, *, *> {
 
   const workerResponse :Object = {};
   try {
-    const { value: organizationId } = action;
+    const { value: { match, organizationId, root } } = action;
     if (!isValidUUID(organizationId)) throw ERR_ACTION_VALUE_TYPE;
+    if (typeof root !== 'string') throw ERR_ACTION_VALUE_TYPE;
+    if (!isDefined(match)) throw ERR_ACTION_VALUE_TYPE;
     yield put(initializeHelpline.request(action.id));
 
     /*
@@ -104,7 +107,9 @@ function* initializeHelplineWorker(action :SequenceAction) :Generator<*, *, *> {
     workerResponse.data = {
       appConfig,
       appTypes,
-      edm
+      edm,
+      root,
+      match,
     };
 
     yield put(initializeHelpline.success(action.id, workerResponse.data));

@@ -2,7 +2,14 @@
 import React from 'react';
 
 import styled from 'styled-components';
-import { Colors } from 'lattice-ui-kit';
+import { Colors, StyleUtils } from 'lattice-ui-kit';
+
+const { getStyleVariation } = StyleUtils;
+
+const getAlignment = getStyleVariation('orientation', {
+  top: 'center',
+  right: 'start',
+}, 'center');
 
 const { NEUTRAL } = Colors;
 
@@ -16,37 +23,39 @@ const StyledTooltip = styled.div`
   font-weight: 600;
   min-width: ${({ minWidth }) => (minWidth ? `${minWidth}px` : 0)};
   padding: 5px 10px;
-  place-items: center;
-
-  span {
-    background-color: ${NEUTRAL.N800};
-    box-sizing: border-box;
-    content: '""';
-    display: block;
-    height: 10px;
-    margin: auto;
-    overflow: hidden;
-    position: absolute;
-    transform: translateY(1rem) rotate(45deg);
-    width: 10px;
-  }
+  align-items: ${getAlignment};
+  justify-content: center;
 `;
 
 type Props = {
   minWidth ?:number;
-  value ?:any;
+  orientation ?:'top' | 'right';
+  payload :any[];
 };
 
-const CustomTooltip = ({ minWidth, value } :Props) => (
-  <StyledTooltip minWidth={minWidth}>
-    {value}
-    <span />
-  </StyledTooltip>
-);
+const CustomTooltip = ({
+  minWidth,
+  orientation,
+  payload,
+} :Props) => {
+
+  let display = '';
+  if (payload[0]) {
+    display = payload[0].value;
+  }
+
+  return (
+    <StyledTooltip minWidth={minWidth} orientation={orientation}>
+      {display}
+      <span />
+    </StyledTooltip>
+  );
+};
 
 CustomTooltip.defaultProps = {
   minWidth: 0,
-  value: '',
+  orientation: 'top',
+  payload: [],
 };
 
 export default CustomTooltip;

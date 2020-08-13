@@ -9,6 +9,7 @@ import type { SequenceAction } from 'redux-reqseq';
 
 import {
   INITIALIZE_HELPLINE,
+  SET_ROOT,
   initializeHelpline,
 } from './AppActions';
 
@@ -21,7 +22,9 @@ const INITIAL_STATE :Map = fromJS({
   [INITIALIZE_HELPLINE]: { [REQUEST_STATE]: RequestStates.STANDBY },
   appConfig: {},
   appTypes: [],
-  edm: {}
+  edm: {},
+  root: '',
+  match: {},
 });
 
 export default function reducer(state :Map<*, *> = INITIAL_STATE, action :Object) {
@@ -34,6 +37,11 @@ export default function reducer(state :Map<*, *> = INITIAL_STATE, action :Object
         return state.setIn([...path, REQUEST_STATE], RequestStates.STANDBY);
       }
       return state;
+    }
+
+    case SET_ROOT: {
+      const { value } = action;
+      return state.set('root', value);
     }
 
     case initializeHelpline.case(action.type): {

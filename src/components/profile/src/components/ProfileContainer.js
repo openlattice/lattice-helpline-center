@@ -2,11 +2,15 @@
 import React from 'react';
 
 import styled from 'styled-components';
-import { StyleUtils } from 'lattice-ui-kit';
+import { Breadcrumbs, StyleUtils } from 'lattice-ui-kit';
 
-import HelplineProvider from './HelplineProvider';
 import ProfileAside from './ProfileAside';
 import ProfileBody from './ProfileBody';
+import { useSelector } from './HelplineProvider';
+import { getFirstLastFromPerson } from './utils';
+
+import { BreadcrumbItem, BreadcrumbWrapper } from '../../../breadcrumbs';
+import { PROFILE_PATHS } from '../sagas/constants';
 
 const { media } = StyleUtils;
 
@@ -20,23 +24,25 @@ const ProfileGrid = styled.div`
 `;
 
 type Props = {
-  organizationId :UUID;
   personId :UUID;
 };
 
-const ProfileContainer = (props :Props) => {
-  const {
-    organizationId,
-    personId,
-  } = props;
+const ProfileContainer = ({ personId } :Props) => {
+  const person = useSelector((store) => store.getIn(PROFILE_PATHS.person));
+  const name = getFirstLastFromPerson(person);
 
   return (
-    <HelplineProvider>
+    <div>
+      <BreadcrumbWrapper>
+        <Breadcrumbs>
+          <BreadcrumbItem>{name}</BreadcrumbItem>
+        </Breadcrumbs>
+      </BreadcrumbWrapper>
       <ProfileGrid>
         <ProfileAside />
-        <ProfileBody organizationId={organizationId} personId={personId} />
+        <ProfileBody personId={personId} />
       </ProfileGrid>
-    </HelplineProvider>
+    </div>
   );
 };
 

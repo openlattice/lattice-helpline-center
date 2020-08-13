@@ -1,23 +1,27 @@
 // @flow
 /* eslint-disable quote-props */
-import { ReduxConstants } from 'lattice-utils';
-
-import { GET_PROFILE_SUMMARY } from './ProfileActions';
-
-const { REQUEST_STATE } = ReduxConstants;
 
 const GREATEST_NEEDS = 'greatestNeeds';
 const PERSON = 'person';
 const PROFILE = 'profile';
 const SELF_SUFFICIENCY = 'selfSufficiency';
 const SURVEY_HISTORY = 'surveyHistory';
+const SURVEYS = 'surveys';
+const QUESTIONS = 'questions';
+const ANSWERS = 'answers';
+const LAST_REQUEST = 'lastRequest';
+const SURVEY_ANSWERS_BY_QUESTION = 'surveyAnswersByQuestion';
 
 const PROFILE_PATHS = {
+  [ANSWERS]: [PROFILE, ANSWERS],
   [GREATEST_NEEDS]: [PROFILE, GREATEST_NEEDS],
+  [LAST_REQUEST]: [PROFILE, LAST_REQUEST],
   [PERSON]: [PROFILE, PERSON],
-  [REQUEST_STATE]: [PROFILE, GET_PROFILE_SUMMARY, REQUEST_STATE],
+  [QUESTIONS]: [PROFILE, QUESTIONS],
   [SELF_SUFFICIENCY]: [PROFILE, SELF_SUFFICIENCY],
+  [SURVEYS]: [PROFILE, SURVEYS],
   [SURVEY_HISTORY]: [PROFILE, SURVEY_HISTORY],
+  [SURVEY_ANSWERS_BY_QUESTION]: [PROFILE, SURVEY_ANSWERS_BY_QUESTION]
 };
 
 const CHILDCARE = 'Childcare';
@@ -52,6 +56,7 @@ const CATEGORY_BY_QUESTION_NUMBER = Object.freeze({
 });
 
 export {
+  ANSWERS,
   CATEGORY_BY_QUESTION_NUMBER,
   CHILDCARE,
   EMPLOYMENT_INCOME,
@@ -59,14 +64,18 @@ export {
   FOOD,
   GREATEST_NEEDS,
   HEALTHCARE,
+  LAST_REQUEST,
   MENTAL_HEALTH,
   PERSON,
   PROFILE,
   PROFILE_PATHS,
+  QUESTIONS,
   SAFETY,
   SELF_SUFFICIENCY,
   SHELTER,
   SUBSTANCE_USE,
+  SURVEYS,
+  SURVEY_ANSWERS_BY_QUESTION,
   SURVEY_HISTORY,
   TRANSPORTATION,
 };
