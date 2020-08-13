@@ -8,7 +8,7 @@ const Body = styled.div`
   grid-auto-flow: row;
 `;
 
-const SpinnerWrapper = styled.div`
+const CenterWrapper = styled.div`
   align-items: center;
   display: flex;
   height: 100%;
@@ -18,5 +18,5 @@ const SpinnerWrapper = styled.div`
 export {
   Answer,
   Body,
-  SpinnerWrapper
+  CenterWrapper
 };

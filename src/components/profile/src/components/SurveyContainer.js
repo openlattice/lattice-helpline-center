@@ -8,12 +8,9 @@ import { RequestStates } from 'redux-reqseq';
 
 import SocialNeedsSurvey from './SocialNeedsSurvey';
 import { useDispatch, useSelector } from './HelplineProvider';
-import { SpinnerWrapper } from './styled';
+import { CenterWrapper } from './styled';
 
-import {
-  GET_SURVEY,
-  getSurvey,
-} from '../sagas/ProfileActions';
+import { GET_SURVEY, getSurvey } from '../sagas/ProfileActions';
 import { PROFILE } from '../sagas/constants';
 
 const { REQUEST_STATE } = ReduxConstants;
@@ -29,7 +26,7 @@ const SurveyContainer = () => {
   }, [dispatch, surveyId]);
 
   if (fetchState === RequestStates.PENDING) {
-    return <SpinnerWrapper><Spinner size="3x" /></SpinnerWrapper>;
+    return <CenterWrapper><Spinner size="3x" /></CenterWrapper>;
   }
 
   return <SocialNeedsSurvey surveyId={surveyId} />;

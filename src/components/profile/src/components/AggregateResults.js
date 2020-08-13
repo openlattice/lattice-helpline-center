@@ -7,7 +7,7 @@ import { RequestStates } from 'redux-reqseq';
 
 import AggregateQuestionCard from './AggregateQuestionCard';
 import { useDispatch, useSelector } from './HelplineProvider';
-import { SpinnerWrapper } from './styled';
+import { CenterWrapper } from './styled';
 import { formatAggregateResultsData } from './utils';
 
 import { Caption, Header } from '../../../typography';
@@ -33,7 +33,7 @@ const AggregateResults = ({ personId } :Props) => {
   }, [dispatch, personId]);
 
   if (fetchState === RequestStates.PENDING) {
-    return <SpinnerWrapper><Spinner size="3x" /></SpinnerWrapper>;
+    return <CenterWrapper><Spinner size="3x" /></CenterWrapper>;
   }
 
   const aggregateResults = formatAggregateResultsData(questions, answers, surveyAnswersByQuestion, surveys);
