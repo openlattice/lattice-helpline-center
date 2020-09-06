@@ -30,7 +30,7 @@
   },
   "main": "build/index.js",
   "dependencies": {
-    "@babel/polyfill": "~7.10.4",
+    "@babel/polyfill": "~7.11.5",
     "@babel/runtime": "~7.11.2",
     "@fortawesome/fontawesome-svg-core": "~1.2.30",
     "@fortawesome/pro-duotone-svg-icons": "~5.14.0",
