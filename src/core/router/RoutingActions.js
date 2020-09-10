@@ -32,7 +32,7 @@ function goToRoute(route :string, state ?:Object = {}) :RoutingAction {
 }
 
 const ROUTING_FAILURE :'ROUTING_FAILURE' = 'ROUTING_FAILURE';
-function routingFailure(errorMessage :string, route :any) :Object {
+function routingFailure(errorMessage :string | Error, route :any) :Object {
   return {
     route,
     error: errorMessage,
