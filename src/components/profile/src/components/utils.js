@@ -84,7 +84,7 @@ const formatAggregateResultsData = (
         });
 
         const aggregateQuestion = Map({
-          data: data.reverse(),
+          data,
           id: questionId,
           title,
         });
