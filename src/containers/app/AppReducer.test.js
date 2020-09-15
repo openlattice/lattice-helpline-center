@@ -26,8 +26,6 @@ describe('AppReducer', () => {
         requestState: RequestStates.STANDBY,
       },
       appConfig: {},
-      appTypes: [],
-      edm: {},
       root: '',
       match: {},
     });
