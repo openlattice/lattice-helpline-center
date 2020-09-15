@@ -4,7 +4,6 @@
 
 /* eslint-disable no-use-before-define */
 import {
-  all,
   call,
   put,
   takeEvery,
