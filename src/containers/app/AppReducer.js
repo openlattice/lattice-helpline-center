@@ -21,8 +21,6 @@ const { RESET_REQUEST_STATE } = ReduxActions;
 const INITIAL_STATE :Map = fromJS({
   [INITIALIZE_HELPLINE]: { [REQUEST_STATE]: RequestStates.STANDBY },
   appConfig: {},
-  appTypes: [],
-  edm: {},
   root: '',
   match: {},
 });
