@@ -9,12 +9,9 @@ import {
   put,
   takeEvery,
 } from '@redux-saga/core/effects';
-import { Types } from 'lattice';
 import {
   AppApiActions,
   AppApiSagas,
-  EntityDataModelApiActions,
-  EntityDataModelApiSagas,
 } from 'lattice-sagas';
 import { LangUtils, Logger, ValidationUtils } from 'lattice-utils';
 import type { SequenceAction } from 'redux-reqseq';
@@ -29,11 +26,8 @@ import { ERR_ACTION_VALUE_TYPE } from '../../utils/Errors';
 const { isValidUUID } = ValidationUtils;
 const { isDefined } = LangUtils;
 
-const { SecurableTypes } = Types;
-const { getApp, getAppConfigs, getAppTypes } = AppApiActions;
-const { getAppWorker, getAppConfigsWorker, getAppTypesWorker } = AppApiSagas;
-const { getEntityDataModelProjection } = EntityDataModelApiActions;
-const { getEntityDataModelProjectionWorker } = EntityDataModelApiSagas;
+const { getApp, getAppConfigs } = AppApiActions;
+const { getAppWorker, getAppConfigsWorker } = AppApiSagas;
 
 const LOG = new Logger('AppSagas');
 
@@ -67,7 +61,7 @@ function* initializeHelplineWorker(action :SequenceAction) :Generator<*, *, *> {
     /*
      * 1. load App
      */
-    let response :any = yield call(getAppWorker, getApp(APP_NAME));
+    const response :any = yield call(getAppWorker, getApp(APP_NAME));
     if (response.error) throw response.error;
 
     /*
@@ -75,12 +69,8 @@ function* initializeHelplineWorker(action :SequenceAction) :Generator<*, *, *> {
      */
 
     const app = response.data;
-    const [appConfigsResponse, appTypesResponse] = yield all([
-      call(getAppConfigsWorker, getAppConfigs(app.id)),
-      call(getAppTypesWorker, getAppTypes(app.appTypeIds)),
-    ]);
+    const appConfigsResponse = yield call(getAppConfigsWorker, getAppConfigs(app.id));
     if (appConfigsResponse.error) throw appConfigsResponse.error;
-    if (appTypesResponse.error) throw appTypesResponse.error;
     const appConfig = appConfigsResponse.data.reduce((acc, config) => {
       let selectedConfig = acc;
       if (config.organization.id === organizationId) {
@@ -89,25 +79,8 @@ function* initializeHelplineWorker(action :SequenceAction) :Generator<*, *, *> {
       return selectedConfig;
     }, {});
 
-    /*
-     * 3. load EntityTypes and PropertyTypes
-     */
-
-    const appTypesMap :Object = appTypesResponse.data;
-    const appTypes :Object[] = (Object.values(appTypesMap) :any);
-    const projection :Object[] = appTypes.map((appType :Object) => ({
-      id: appType.entityTypeId,
-      include: [SecurableTypes.EntityType, SecurableTypes.PropertyTypeInEntitySet],
-      type: SecurableTypes.EntityType,
-    }));
-    response = yield call(getEntityDataModelProjectionWorker, getEntityDataModelProjection(projection));
-    if (response.error) throw response.error;
-
-    const edm :Object = response.data;
     workerResponse.data = {
       appConfig,
-      appTypes,
-      edm,
       root,
       match,
     };
