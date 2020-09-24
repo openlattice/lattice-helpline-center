@@ -20,6 +20,7 @@ import {
   GREATEST_NEEDS,
   LAST_REQUEST,
   PERSON,
+  PROVIDER,
   QUESTIONS,
   SELF_SUFFICIENCY,
   SURVEYS,
@@ -46,11 +47,12 @@ const INITIAL_STATE :Map = fromJS({
   [GREATEST_NEEDS]: List(),
   [LAST_REQUEST]: Map(),
   [PERSON]: Map(),
+  [PROVIDER]: Map(),
   [QUESTIONS]: Map(),
   [SELF_SUFFICIENCY]: List(),
   [SURVEYS]: Map(),
-  [SURVEY_HISTORY]: List(),
   [SURVEY_ANSWERS_BY_QUESTION]: Map(),
+  [SURVEY_HISTORY]: List(),
 });
 
 export default function profileReducer(state :Map<*, *> = INITIAL_STATE, action :Object) {

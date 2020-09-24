@@ -17,7 +17,7 @@ import { PROFILE_PATHS } from '../sagas/constants';
 
 const { formatAsDate, formatAsTime } = DateTimeUtils;
 
-const { DATE_TIME } = PropertyTypes;
+const { DATE_TIME, FULL_NAME } = PropertyTypes;
 type Props = {
   surveyId :any;
 }
@@ -25,6 +25,7 @@ type Props = {
 const SocialNeedsSurvey = ({ surveyId } :Props) => {
   // get person and pass to breadcrumb
   const person = useSelector((store) => store.getIn(PROFILE_PATHS.person));
+  const provider = useSelector((store) => store.getIn(PROFILE_PATHS.provider));
   const survey = useSelector((store) => store.getIn([...PROFILE_PATHS.surveys, surveyId]));
   const questions = useSelector((store) => store.getIn(PROFILE_PATHS.questions));
   const answers = useSelector((store) => store.getIn(PROFILE_PATHS.answers));
@@ -34,7 +35,8 @@ const SocialNeedsSurvey = ({ surveyId } :Props) => {
   const root = useSelector((store) => store.getIn(APP_PATHS.ROOT));
   const match = useSelector((store) => store.getIn(APP_PATHS.MATCH));
   const datetime = getPropertyValue(survey, DATE_TIME);
-  const name = getFirstLastFromPerson(person);
+  const name = getFirstLastFromPerson(person).trim();
+  const providerName = getPropertyValue(provider, FULL_NAME);
 
   let formattedDate = '';
   let formattedTime = '';
@@ -46,6 +48,11 @@ const SocialNeedsSurvey = ({ surveyId } :Props) => {
   const surveyData = formatSurveyData(questions, answers, answersByQuestion);
   const relRoot = getRelativeRoot(root, match);
 
+  let caption = 'Submitted ';
+  if (providerName) caption += `by ${providerName} `;
+  if (name) caption += `for participant ${name} `;
+  if (formattedDate && formattedTime) caption += `at ${formattedTime} on ${formattedDate}`;
+
   return (
     <div>
       <BreadcrumbWrapper>
@@ -56,7 +63,9 @@ const SocialNeedsSurvey = ({ surveyId } :Props) => {
       </BreadcrumbWrapper>
       <div>
         <Header>Social Needs</Header>
-        <Caption>{`This survey was submitted for participant ${name} at ${formattedTime} on ${formattedDate}`}</Caption>
+        <Caption>
+          {caption}
+        </Caption>
         {
           surveyData.entrySeq().map(([sectionTitle, sectionData]) => (
             <SurveySection
