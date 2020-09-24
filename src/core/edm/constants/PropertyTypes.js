@@ -10,6 +10,7 @@ const PROPERTY_TYPE_FQNS = {
   CODE: FQN.of('ol.code'),
   DATE_TIME: FQN.of('ol.datetime'),
   DOB: FQN.of('nc.PersonBirthDate'),
+  FULL_NAME: FQN.of('general.fullname'),
   GIVEN_NAME: FQN.of('nc.PersonGivenName'),
   ID: FQN.of('ol.id'),
   NAME: FQN.of('ol.name'),
