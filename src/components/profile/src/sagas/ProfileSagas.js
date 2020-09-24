@@ -56,6 +56,7 @@ import {
   GREATEST_NEEDS,
   LAST_REQUEST,
   PERSON,
+  PROVIDER,
   QUESTIONS,
   SELF_SUFFICIENCY,
   SURVEYS,
@@ -427,9 +428,11 @@ function* getSurveyWorker(action :SequenceAction) :Saga<any> {
 
     // get person
     const config = yield select((store) => store.getIn(APP_PATHS.APP_CONFIG));
+    const assessedWithESID = getESIDFromConfig(config, AppTypes.ASSESSED_BY);
     const peopleESID = getESIDFromConfig(config, AppTypes.PEOPLE);
-    const submissionsESID = getESIDFromConfig(config, AppTypes.SUBMISSION);
+    const providerESID = getESIDFromConfig(config, AppTypes.PROVIDER);
     const respondsWithESID = getESIDFromConfig(config, AppTypes.RESPONDS_WITH);
+    const submissionsESID = getESIDFromConfig(config, AppTypes.SUBMISSION);
 
     const personSearchParams = {
       entitySetId: submissionsESID,
@@ -471,8 +474,27 @@ function* getSurveyWorker(action :SequenceAction) :Saga<any> {
     if (surveyResponse.error) throw surveyResponse.error;
     const person = getIn(personResponse, ['data', submissionId, '0', 'neighborDetails']);
 
+    const personEKID = getIn(person, [OPENLATTICE_ID_FQN, 0]);
+
+    const providerResponse = yield call(
+      searchEntityNeighborsWithFilterWorker,
+      searchEntityNeighborsWithFilter({
+        entitySetId: peopleESID,
+        filter: {
+          entityKeyIds: [personEKID],
+          edgeEntitySetIds: [assessedWithESID],
+          destinationEntitySetIds: [providerESID],
+          sourceEntitySetIds: [],
+        }
+      })
+    );
+    if (providerResponse.error) throw providerResponse.error;
+    const provider = fromJS(providerResponse.data)
+      .getIn([personEKID, 0, 'neighborDetails']);
+
     response.data = fromJS({
       [PERSON]: person,
+      [PROVIDER]: provider,
       [SURVEYS]: {
         [submissionId]: submissionResponse.data
       },
