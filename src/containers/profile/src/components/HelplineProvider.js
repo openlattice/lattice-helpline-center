@@ -1,20 +1,18 @@
+// @flow
 import React from 'react';
+import type { Node } from 'react';
 
 import { ConnectedRouter } from 'connected-react-router/immutable';
-import {
-  Provider,
-} from 'react-redux';
+import { Provider } from 'react-redux';
 
-import {
-  helplineContext,
-  helplineStore,
-  useDispatch,
-  useSelector,
-  useStore,
-} from '../../../../core/redux';
+import { helplineContext, helplineStore } from '../../../../core/redux';
 import { routerHistory } from '../../../../core/router';
 
-export default function HelplineProvider({ children }) {
+type Props = {
+  children :Node;
+}
+
+export default function HelplineProvider({ children } :Props) {
   return (
     <Provider context={helplineContext} store={helplineStore}>
       <ConnectedRouter history={routerHistory} context={helplineContext}>
@@ -23,9 +21,3 @@ export default function HelplineProvider({ children }) {
     </Provider>
   );
 }
-
-export {
-  useDispatch,
-  useStore,
-  useSelector,
-};

@@ -5,12 +5,12 @@ import { Breadcrumbs } from 'lattice-ui-kit';
 import { DateTimeUtils } from 'lattice-utils';
 
 import SurveySection from './SurveySection';
-import { useSelector } from './HelplineProvider';
 import { formatSurveyData, getFirstLastFromPerson, getRelativeRoot } from './utils';
 
 import { BreadcrumbItem, BreadcrumbLink, BreadcrumbWrapper } from '../../../../components/breadcrumbs';
 import { Caption, Header } from '../../../../components/typography';
 import { PropertyTypes } from '../../../../core/edm/constants';
+import { useSelector } from '../../../../core/redux';
 import { getPropertyValue } from '../../../../utils/EntityUtils';
 import { APP_PATHS } from '../../../app/constants';
 import { PROFILE_PATHS } from '../sagas/constants';

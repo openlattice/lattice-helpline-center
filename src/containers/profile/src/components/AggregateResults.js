@@ -6,11 +6,11 @@ import { ReduxConstants } from 'lattice-utils';
 import { RequestStates } from 'redux-reqseq';
 
 import AggregateQuestionCard from './AggregateQuestionCard';
-import { useDispatch, useSelector } from './HelplineProvider';
 import { CenterWrapper } from './styled';
 import { formatAggregateResultsData } from './utils';
 
 import { Caption, Header } from '../../../../components/typography';
+import { useDispatch, useSelector } from '../../../../core/redux';
 import { GET_AGGREGATE_RESULTS, getAggregateResults } from '../sagas/ProfileActions';
 import { PROFILE, PROFILE_PATHS } from '../sagas/constants';
 

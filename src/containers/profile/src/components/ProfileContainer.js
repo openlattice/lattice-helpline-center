@@ -6,10 +6,10 @@ import { Breadcrumbs, StyleUtils } from 'lattice-ui-kit';
 
 import ProfileAside from './ProfileAside';
 import ProfileBody from './ProfileBody';
-import { useSelector } from './HelplineProvider';
 import { getFirstLastFromPerson } from './utils';
 
 import { BreadcrumbItem, BreadcrumbWrapper } from '../../../../components/breadcrumbs';
+import { useSelector } from '../../../../core/redux';
 import { PROFILE_PATHS } from '../sagas/constants';
 
 const { media } = StyleUtils;

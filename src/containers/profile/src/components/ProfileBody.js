@@ -10,10 +10,10 @@ import { RequestStates } from 'redux-reqseq';
 
 import AggregateResults from './AggregateResults';
 import ProfileSummary from './ProfileSummary';
-import { useSelector } from './HelplineProvider';
 import { CenterWrapper } from './styled';
 
 import { TabButton, TabGroup, TabPanel } from '../../../../components/tabs';
+import { useSelector } from '../../../../core/redux';
 import { INITIALIZE_HELPLINE } from '../../../app/AppActions';
 
 const { media } = StyleUtils;

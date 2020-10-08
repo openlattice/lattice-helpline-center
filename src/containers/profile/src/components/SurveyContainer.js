@@ -7,9 +7,9 @@ import { useRouteMatch } from 'react-router';
 import { RequestStates } from 'redux-reqseq';
 
 import SocialNeedsSurvey from './SocialNeedsSurvey';
-import { useDispatch, useSelector } from './HelplineProvider';
 import { CenterWrapper } from './styled';
 
+import { useDispatch, useSelector } from '../../../../core/redux';
 import { GET_SURVEY, getSurvey } from '../sagas/ProfileActions';
 import { PROFILE } from '../sagas/constants';
 
