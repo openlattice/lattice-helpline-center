@@ -18,10 +18,10 @@ import { Link } from 'react-router-dom';
 import { useSelector } from './HelplineProvider';
 import { getRelativeRoot } from './utils';
 
-import { APP_PATHS } from '../../../../containers/app/constants';
+import { Header } from '../../../../components/typography';
 import { PropertyTypes } from '../../../../core/edm/constants';
 import { getPropertyValues } from '../../../../utils/EntityUtils';
-import { Header } from '../../../typography';
+import { APP_PATHS } from '../../../app/constants';
 
 const { formatAsDate } = DateTimeUtils;
 const { OPENLATTICE_ID_FQN } = Constants;

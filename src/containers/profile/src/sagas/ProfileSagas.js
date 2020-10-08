@@ -64,10 +64,10 @@ import {
   SURVEY_HISTORY,
 } from './constants';
 
-import { getESIDFromConfig } from '../../../../containers/app/AppUtils';
-import { APP_PATHS } from '../../../../containers/app/constants';
 import { AppTypes, PropertyTypes } from '../../../../core/edm/constants';
 import { ERR_ACTION_VALUE_TYPE } from '../../../../utils/Errors';
+import { getESIDFromConfig } from '../../../app/AppUtils';
+import { APP_PATHS } from '../../../app/constants';
 
 const { isValidUUID } = ValidationUtils;
 const { OPENLATTICE_ID_FQN } = Constants;

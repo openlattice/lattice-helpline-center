@@ -9,7 +9,7 @@ import ProfileBody from './ProfileBody';
 import { useSelector } from './HelplineProvider';
 import { getFirstLastFromPerson } from './utils';
 
-import { BreadcrumbItem, BreadcrumbWrapper } from '../../../breadcrumbs';
+import { BreadcrumbItem, BreadcrumbWrapper } from '../../../../components/breadcrumbs';
 import { PROFILE_PATHS } from '../sagas/constants';
 
 const { media } = StyleUtils;

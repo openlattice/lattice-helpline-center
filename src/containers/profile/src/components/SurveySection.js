@@ -7,7 +7,7 @@ import { Constants } from 'lattice';
 
 import SurveyQuestion from './SurveyQuestion';
 
-import { Subheader } from '../../../typography';
+import { Subheader } from '../../../../components/typography';
 
 const { OPENLATTICE_ID_FQN } = Constants;
 

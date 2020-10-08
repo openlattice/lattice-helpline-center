@@ -10,7 +10,7 @@ import { useDispatch, useSelector } from './HelplineProvider';
 import { CenterWrapper } from './styled';
 import { formatAggregateResultsData } from './utils';
 
-import { Caption, Header } from '../../../typography';
+import { Caption, Header } from '../../../../components/typography';
 import { GET_AGGREGATE_RESULTS, getAggregateResults } from '../sagas/ProfileActions';
 import { PROFILE, PROFILE_PATHS } from '../sagas/constants';
 

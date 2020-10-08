@@ -13,8 +13,8 @@ import ProfileSummary from './ProfileSummary';
 import { useSelector } from './HelplineProvider';
 import { CenterWrapper } from './styled';
 
-import { INITIALIZE_HELPLINE } from '../../../../containers/app/AppActions';
-import { TabButton, TabGroup, TabPanel } from '../../../tabs';
+import { TabButton, TabGroup, TabPanel } from '../../../../components/tabs';
+import { INITIALIZE_HELPLINE } from '../../../app/AppActions';
 
 const { media } = StyleUtils;
 

@@ -8,11 +8,11 @@ import SurveySection from './SurveySection';
 import { useSelector } from './HelplineProvider';
 import { formatSurveyData, getFirstLastFromPerson, getRelativeRoot } from './utils';
 
-import { APP_PATHS } from '../../../../containers/app/constants';
+import { BreadcrumbItem, BreadcrumbLink, BreadcrumbWrapper } from '../../../../components/breadcrumbs';
+import { Caption, Header } from '../../../../components/typography';
 import { PropertyTypes } from '../../../../core/edm/constants';
 import { getPropertyValue } from '../../../../utils/EntityUtils';
-import { BreadcrumbItem, BreadcrumbLink, BreadcrumbWrapper } from '../../../breadcrumbs';
-import { Caption, Header } from '../../../typography';
+import { APP_PATHS } from '../../../app/constants';
 import { PROFILE_PATHS } from '../sagas/constants';
 
 const { formatAsDate, formatAsTime } = DateTimeUtils;

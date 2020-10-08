@@ -12,7 +12,7 @@ import SurveyContainer from './SurveyContainer';
 import { useDispatch, useSelector } from './HelplineProvider';
 import { CenterWrapper } from './styled';
 
-import { INITIALIZE_HELPLINE, initializeHelpline } from '../../../../containers/app/AppActions';
+import { INITIALIZE_HELPLINE, initializeHelpline } from '../../../app/AppActions';
 
 const { isValidUUID } = ValidationUtils;
 

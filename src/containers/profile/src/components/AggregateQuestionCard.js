@@ -14,7 +14,7 @@ import {
   YAxis,
 } from 'recharts';
 
-import { AggregateQuestionTooltip } from '../../../tooltips';
+import { AggregateQuestionTooltip } from '../../../../components/tooltips';
 
 const {
   GREEN,
