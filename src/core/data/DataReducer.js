@@ -9,10 +9,9 @@ import type { SequenceAction } from 'redux-reqseq';
 
 import { FETCH_ENTITY_SET_DATA, fetchEntitySetData } from './DataActions';
 
-import { ReduxActions } from '../redux';
+import { RESET_REQUEST_STATE } from '../redux/ReduxActions';
 
 const { REQUEST_STATE } = ReduxConstants;
-const { RESET_REQUEST_STATE } = ReduxActions;
 const { getEntityKeyId } = DataUtils;
 
 const INITIAL_STATE :Map = fromJS({

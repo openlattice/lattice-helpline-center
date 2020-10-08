@@ -13,10 +13,9 @@ import {
   initializeHelpline,
 } from './AppActions';
 
-import { ReduxActions } from '../../core/redux';
+import { RESET_REQUEST_STATE } from '../../core/redux/ReduxActions';
 
 const { REQUEST_STATE } = ReduxConstants;
-const { RESET_REQUEST_STATE } = ReduxActions;
 
 const INITIAL_STATE :Map = fromJS({
   [INITIALIZE_HELPLINE]: { [REQUEST_STATE]: RequestStates.STANDBY },

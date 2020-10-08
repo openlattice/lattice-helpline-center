@@ -28,10 +28,9 @@ import {
   SURVEY_HISTORY,
 } from './constants';
 
-import { ReduxActions } from '../../../../core/redux';
+import { RESET_REQUEST_STATE } from '../../../../core/redux/ReduxActions';
 
 const { REQUEST_STATE } = ReduxConstants;
-const { RESET_REQUEST_STATE } = ReduxActions;
 
 const INITIAL_STATE :Map = fromJS({
   [GET_AGGREGATE_RESULTS]: {
