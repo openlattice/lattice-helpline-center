@@ -28,11 +28,9 @@ export const LiveDownloadsContainerStory = () => {
   const [inputData, setInputs] = useState({
     jwt: '',
     orgId: '',
-    // personId: ''
   });
   const { jwt, orgId } = inputData;
   const [organizationId, setOrganization] = useState(orgId);
-  // const [personEKID, setPerson] = useState(personId);
 
   const onConfigure = (e) => {
     e.preventDefault();
@@ -42,11 +40,6 @@ export const LiveDownloadsContainerStory = () => {
     });
     setOrganization(orgId);
   };
-
-  // const onFetch = (e) => {
-  //   e.preventDefault();
-  //   setPerson(personId);
-  // };
 
   const onChange = (e) => {
     setInputs({
@@ -66,11 +59,6 @@ export const LiveDownloadsContainerStory = () => {
             <Input id="org-id" name="orgId" onChange={onChange} value={orgId} />
             <Button color="primary" type="submit">Configure</Button>
           </form>
-          {/* <form onSubmit={onFetch}>
-            <Label htmlFor="person-id" subtle>Person ID</Label>
-            <Input id="person-id" name="personId" onChange={onChange} value={personId} />
-            <Button color="primary" type="submit">Fetch Person</Button>
-          </form> */}
         </CardSegment>
       </Card>
       <DownloadsContainer
