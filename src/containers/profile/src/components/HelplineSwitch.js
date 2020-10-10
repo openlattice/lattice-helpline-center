@@ -32,7 +32,7 @@ const HelplineSwitch = ({
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (isValidUUID) {
+    if (isValidUUID(organizationId)) {
       dispatch(initializeHelpline({ match, organizationId, root }));
     }
     // do NOT reinitialize whenever match updates
