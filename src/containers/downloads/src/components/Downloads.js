@@ -29,7 +29,6 @@ const InputGrid = styled.div`
   grid-template-columns: 1fr 1fr min-content;
   grid-gap: 10px;
   align-items: flex-end;
-
   ${media.phone`
     grid-auto-flow: row;
     grid-template-columns: none;
