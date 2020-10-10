@@ -428,7 +428,7 @@ function* getSurveyWorker(action :SequenceAction) :Saga<any> {
 
     // get person
     const config = yield select((store) => store.getIn(APP_PATHS.APP_CONFIG));
-    const assessedWithESID = getESIDFromConfig(config, AppTypes.ASSESSED_BY);
+    const assessedByESID = getESIDFromConfig(config, AppTypes.ASSESSED_BY);
     const peopleESID = getESIDFromConfig(config, AppTypes.PEOPLE);
     const providerESID = getESIDFromConfig(config, AppTypes.PROVIDER);
     const respondsWithESID = getESIDFromConfig(config, AppTypes.RESPONDS_WITH);
@@ -482,7 +482,7 @@ function* getSurveyWorker(action :SequenceAction) :Saga<any> {
         entitySetId: peopleESID,
         filter: {
           entityKeyIds: [personEKID],
-          edgeEntitySetIds: [assessedWithESID],
+          edgeEntitySetIds: [assessedByESID],
           destinationEntitySetIds: [providerESID],
           sourceEntitySetIds: [],
         }
