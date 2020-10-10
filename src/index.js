@@ -7,7 +7,8 @@ export {
   SelfSufficiencyMatrix,
   SocialNeedsSurvey,
   SurveyHistory,
-} from './components/profile';
+} from './containers/profile';
+export { DownloadsContainer } from './containers/downloads';
 
 export {
   initializeHelplineStore
