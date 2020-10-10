@@ -8,7 +8,7 @@ export {
   SocialNeedsSurvey,
   SurveyHistory,
 } from './containers/profile';
-export { DownloadsContainer } from './containers/downloads';
+export { default as DownloadsContainer } from './containers/downloads';
 
 export {
   initializeHelplineStore
