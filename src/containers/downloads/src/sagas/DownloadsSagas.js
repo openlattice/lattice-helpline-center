@@ -41,8 +41,8 @@ import { ERR_ACTION_VALUE_TYPE } from '../../../../utils/Errors';
 import { getSearchTerm } from '../../../../utils/QueryUtils';
 import { getESIDFromConfig } from '../../../app/AppUtils';
 import { APP_PATHS } from '../../../app/constants';
-import { getSurveyResults } from '../../../profile/src/sagas/ProfileActions';
-import { getSurveyResultsWorker } from '../../../profile/src/sagas/ProfileSagas';
+import { getSubmissionResults } from '../../../profile/src/sagas/ProfileActions';
+import { getSubmissionResultsWorker } from '../../../profile/src/sagas/ProfileSagas';
 
 const { getEntityKeyId } = DataUtils;
 const { isValidUUID } = ValidationUtils;
@@ -208,11 +208,10 @@ function* downloadSurveysByDateRangeWorker(action :SequenceAction) :Saga<WorkerR
     });
 
     const submissionIds = submissions?.map(getEntityKeyId) || [];
-    console.log(submissionIds);
 
     // find submission results and people
     if (submissionIds.length) {
-      const submissionResultsRequest = call(getSurveyResultsWorker, getSurveyResults(submissionIds));
+      const submissionResultsRequest = call(getSubmissionResultsWorker, getSubmissionResults(submissionIds));
       const submissionPeopleRequest = call(getSurveyPeopleWorker, getSurveyPeople(submissionIds));
       const submissionProvidersRequest = yield call(
         getSubmissionProvidersWorker, getSubmissionProviders(submissionIds)

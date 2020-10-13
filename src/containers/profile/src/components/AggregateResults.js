@@ -22,10 +22,10 @@ type Props = {
 
 const AggregateResults = ({ personId } :Props) => {
   const dispatch = useDispatch();
-  const surveys = useSelector((store) => store.getIn(PROFILE_PATHS.surveys));
+  const submissions = useSelector((store) => store.getIn(PROFILE_PATHS.submissions));
   const questions = useSelector((store) => store.getIn(PROFILE_PATHS.questions));
   const answers = useSelector((store) => store.getIn(PROFILE_PATHS.answers));
-  const surveyAnswersByQuestion = useSelector((store) => store.getIn(PROFILE_PATHS.surveyAnswersByQuestion));
+  const surveyAnswersByQuestion = useSelector((store) => store.getIn(PROFILE_PATHS.submissionAnswersByQuestion));
   const fetchState = useSelector((state) => state.getIn([PROFILE, GET_AGGREGATE_RESULTS, REQUEST_STATE]));
 
   useEffect(() => {
@@ -36,7 +36,7 @@ const AggregateResults = ({ personId } :Props) => {
     return <CenterWrapper><Spinner size="3x" /></CenterWrapper>;
   }
 
-  const aggregateResults = formatAggregateResultsData(questions, answers, surveyAnswersByQuestion, surveys);
+  const aggregateResults = formatAggregateResultsData(questions, answers, surveyAnswersByQuestion, submissions);
 
   return (
     <div>

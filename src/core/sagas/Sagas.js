@@ -35,7 +35,7 @@ export default function* sagas() :Generator<*, *, *> {
     fork(ProfileSagas.getPersonWatcher),
     fork(ProfileSagas.getProfileSummaryWatcher),
     fork(ProfileSagas.getSubmissionsWatcher),
-    fork(ProfileSagas.getSurveyResultsWatcher),
+    fork(ProfileSagas.getSubmissionResultsWatcher),
     fork(ProfileSagas.getSurveyWatcher),
 
     fork(DownloadsSagas.downloadSurveysByDateRangeWatcher),
