@@ -9,17 +9,20 @@ import {
   Label,
   Spinner,
   StyleUtils,
-  Typography
+  Typography,
 } from 'lattice-ui-kit';
 import { ValidationUtils } from 'lattice-utils';
 import { DateTime } from 'luxon';
 import { RequestStates } from 'redux-reqseq';
 import type { Match } from 'react-router';
 
+import DownloadStatus from './DownloadStatus';
+
 import { useDispatch, useSelector } from '../../../../core/redux';
+import { resetRequestState } from '../../../../core/redux/ReduxActions';
 import { INITIALIZE_HELPLINE, initializeHelpline } from '../../../app/AppActions';
 import { CenterWrapper } from '../../../profile/src/components/styled';
-import { downloadSurveysByDateRange } from '../sagas/DownloadsActions';
+import { DOWNLOAD_SURVEYS_BY_DATE_RANGE, downloadSurveysByDateRange } from '../sagas/DownloadsActions';
 
 const { isValidUUID } = ValidationUtils;
 const { media } = StyleUtils;
@@ -28,6 +31,7 @@ const InputGrid = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr min-content;
   grid-gap: 10px;
+  margin-bottom: 32px;
   ${media.phone`
     grid-auto-flow: row;
     grid-template-columns: none;
@@ -56,6 +60,8 @@ const Downloads = ({
     // do NOT reinitialize whenever match updates
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, organizationId, root]);
+
+  useEffect(() => () => dispatch(resetRequestState([DOWNLOAD_SURVEYS_BY_DATE_RANGE])));
 
   const initializeState = useSelector((state) => state.getIn(['app', INITIALIZE_HELPLINE, 'requestState']));
 
@@ -117,6 +123,7 @@ const Downloads = ({
           </div>
         </InputGrid>
       </form>
+      <DownloadStatus />
     </div>
   );
 };
