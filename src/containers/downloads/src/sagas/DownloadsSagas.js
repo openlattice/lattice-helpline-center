@@ -16,6 +16,7 @@ import {
   SearchApiSagas,
 } from 'lattice-sagas';
 import { DataUtils, Logger, ValidationUtils } from 'lattice-utils';
+import { DateTime } from 'luxon';
 import type { Saga } from '@redux-saga/core';
 import type { WorkerResponse } from 'lattice-sagas';
 import type { SequenceAction } from 'redux-reqseq';
@@ -33,6 +34,7 @@ import {
   PROVIDER_BY_PERSON,
   SURVEYS,
 } from './constants';
+import { generateHelplineSurveyCSV } from './utils';
 
 import { AppTypes } from '../../../../core/edm/constants';
 import { ERR_ACTION_VALUE_TYPE } from '../../../../utils/Errors';
@@ -235,8 +237,13 @@ function* downloadSurveysByDateRangeWorker(action :SequenceAction) :Saga<WorkerR
           [PROVIDER_BY_PERSON]: peopleProvidersResponse.data
         });
       }
-
     }
+
+    const startDate = DateTime.fromISO(startTerm).toFormat('yyyyLLdd');
+    const endDate = DateTime.fromISO(endTerm).toFormat('yyyyLLdd');
+    const filename = `surveys_${startDate}-${endDate}.csv`;
+
+    generateHelplineSurveyCSV(response.data, filename);
 
     yield put(downloadSurveysByDateRange.success(action.id, response.data));
   }
