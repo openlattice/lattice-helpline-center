@@ -65,6 +65,7 @@ import {
 } from './constants';
 
 import { AppTypes, PropertyTypes } from '../../../../core/edm/constants';
+import { getPropertyValue } from '../../../../utils/EntityUtils';
 import { ERR_ACTION_VALUE_TYPE } from '../../../../utils/Errors';
 import { getESIDFromConfig } from '../../../app/AppUtils';
 import { APP_PATHS } from '../../../app/constants';
@@ -545,11 +546,13 @@ function* getSurveyResultsWorker(action :SequenceAction) :Saga<any> {
     // // get question to each answer
     const questionsResponse = yield call(getQuestionsFromAnswersWorker, getQuestionsFromAnswers(answersIds));
     const questionsData = questionsResponse.data;
-    const questions = Map().withMutations((mutable) => {
-      questionsData.forEach((questionsForAnswer) => questionsForAnswer.forEach((question) => {
-        mutable.set(question.get('neighborId'), question.get('neighborDetails'));
-      }));
-    });
+    const questions = Map()
+      .withMutations((mutable) => {
+        questionsData.forEach((questionsForAnswer) => questionsForAnswer.forEach((question) => {
+          mutable.set(question.get('neighborId'), question.get('neighborDetails'));
+        }));
+      })
+      .sortBy((question) => parseInt(getPropertyValue(question, PropertyTypes.CODE), 10));
     const questionsByAnswerId = questionsData.map((question) => question.getIn([0, 'neighborId']));
 
     const surveyAnswersByQuestion = answerIdsBySubmissionId.mapEntries(([submissionId, answerIds]) => {
