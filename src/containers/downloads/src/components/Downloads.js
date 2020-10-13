@@ -28,7 +28,6 @@ const InputGrid = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr min-content;
   grid-gap: 10px;
-  align-items: flex-end;
   ${media.phone`
     grid-auto-flow: row;
     grid-template-columns: none;
@@ -67,7 +66,7 @@ const Downloads = ({
       dateStart,
     });
 
-    const hasValues = dateRange.some((datetime) => DateTime.fromISO(datetime).isValid);
+    const hasValues = dateRange.every((datetime) => DateTime.fromISO(datetime).isValid);
 
     if (hasValues) {
       dispatch(downloadSurveysByDateRange(dateRange));
@@ -77,6 +76,8 @@ const Downloads = ({
   if (initializeState === RequestStates.PENDING || initializeState === RequestStates.STANDBY) {
     return <CenterWrapper><Spinner size="3x" /></CenterWrapper>;
   }
+
+  const today = DateTime.local().toLocaleString(DateTime.DATE_SHORT);
 
   return (
     <div>
@@ -91,16 +92,24 @@ const Downloads = ({
         <InputGrid>
           <div>
             <Label htmlFor="date-start">Date Start</Label>
-            <DatePicker id="date-start" onChange={setDateStart} />
+            <DatePicker
+                id="date-start"
+                maxDate={today}
+                onChange={setDateStart} />
           </div>
           <div>
             <Label htmlFor="date-end">Date End</Label>
-            <DatePicker id="date-end" onChange={setDateEnd} />
+            <DatePicker
+                id="date-end"
+                maxDate={today}
+                onChange={setDateEnd} />
           </div>
           <div>
+            <Label stealth>Submit</Label>
             <Button
                 type="submit"
                 color="primary"
+                disabled={!dateStart || !dateEnd}
                 onClick={onSearch}
                 fullWidth>
               Export
