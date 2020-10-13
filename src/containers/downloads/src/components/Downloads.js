@@ -92,7 +92,7 @@ const Downloads = ({
           color="textSecondary"
           gutterBottom
           variant="subtitle1">
-        Export all surveys within a provided date range to a CSV file.
+        Export all survey submissions within a provided date range to a CSV file.
       </Typography>
       <form>
         <InputGrid>
