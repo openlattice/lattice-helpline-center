@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 
-import { faFileCheck, faFileExclamation } from '@fortawesome/pro-duotone-svg-icons';
+import { faFileCheck, faFileExclamation } from '@fortawesome/pro-light-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Colors, IconSplash, Spinner } from 'lattice-ui-kit';
 import { RequestStates } from 'redux-reqseq';
@@ -24,7 +24,7 @@ const DownloadStatus = () => {
     }
 
     case RequestStates.SUCCESS: {
-      return <IconSplash caption="Success! Check 'Downloads' " icon={SuccessIcon} size="3x" />;
+      return <IconSplash caption="Success!" icon={SuccessIcon} size="3x" />;
     }
 
     case RequestStates.FAILURE: {
