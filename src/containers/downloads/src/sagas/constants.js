@@ -1,15 +1,15 @@
 const ANSWERS = 'answers';
-const PERSON_BY_SURVEY = 'personBySurvey';
-const PROVIDER_BY_PERSON = 'providerByPerson';
+const PERSON_BY_SUBMISSION = 'personBySubmission';
+const PROVIDER_BY_SUBMISSION = 'providerBySubmission';
 const QUESTIONS = 'questions';
-const SURVEYS = 'surveys';
-const SURVEY_ANSWERS_BY_QUESTION = 'surveyAnswersByQuestion';
+const SUBMISSIONS = 'submissions';
+const SUBMISSION_ANSWERS_BY_QUESTION = 'submissionAnswersByQuestion';
 
 export {
   ANSWERS,
-  PERSON_BY_SURVEY,
-  PROVIDER_BY_PERSON,
+  PERSON_BY_SUBMISSION,
+  PROVIDER_BY_SUBMISSION,
   QUESTIONS,
-  SURVEYS,
-  SURVEY_ANSWERS_BY_QUESTION,
+  SUBMISSIONS,
+  SUBMISSION_ANSWERS_BY_QUESTION,
 };

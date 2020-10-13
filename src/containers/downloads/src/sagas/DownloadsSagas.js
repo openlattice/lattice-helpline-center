@@ -23,18 +23,18 @@ import type { SequenceAction } from 'redux-reqseq';
 
 import {
   DOWNLOAD_SURVEYS_BY_DATE_RANGE,
-  GET_PEOPLE_PROVIDERS,
+  GET_SUBMISSION_PROVIDERS,
   GET_SURVEY_PEOPLE,
   downloadSurveysByDateRange,
-  getPeopleProviders,
+  getSubmissionProviders,
   getSurveyPeople,
 } from './DownloadsActions';
 import {
-  PERSON_BY_SURVEY,
-  PROVIDER_BY_PERSON,
-  SURVEYS,
+  PERSON_BY_SUBMISSION,
+  PROVIDER_BY_SUBMISSION,
+  SUBMISSIONS,
 } from './constants';
-import { generateHelplineSurveyCSV } from './utils';
+import { generateHelplineSubmissionsCSV } from './utils';
 
 import { AppTypes } from '../../../../core/edm/constants';
 import { ERR_ACTION_VALUE_TYPE } from '../../../../utils/Errors';
@@ -105,28 +105,28 @@ function* getSurveyPeopleWatcher() :Saga<void> {
   yield takeLatest(GET_SURVEY_PEOPLE, getSurveyPeopleWorker);
 }
 
-function* getPeopleProvidersWorker(action :SequenceAction) :Saga<WorkerResponse> {
+function* getSubmissionProvidersWorker(action :SequenceAction) :Saga<WorkerResponse> {
   let response :WorkerResponse = {
     data: undefined,
   };
 
   try {
-    const { value: peopleIds } = action;
-    if (!(Array.isArray(peopleIds) && peopleIds.every(isValidUUID))) throw ERR_ACTION_VALUE_TYPE;
-    yield put(getPeopleProviders.request(action.id));
+    const { value: submissionIds } = action;
+    if (!(Array.isArray(submissionIds) && submissionIds.every(isValidUUID))) throw ERR_ACTION_VALUE_TYPE;
+    yield put(getSubmissionProviders.request(action.id));
 
     const config = yield select((store) => store.getIn(APP_PATHS.APP_CONFIG));
-    const assessedByESID = getESIDFromConfig(config, AppTypes.ASSESSED_BY);
-    const peopleESID = getESIDFromConfig(config, AppTypes.PEOPLE);
+    const occurredAtESID = getESIDFromConfig(config, AppTypes.OCCURRED_AT);
+    const submissionESID = getESIDFromConfig(config, AppTypes.SUBMISSION);
     const providerESID = getESIDFromConfig(config, AppTypes.PROVIDER);
 
     const providerResponse = yield call(
       searchEntityNeighborsWithFilterWorker,
       searchEntityNeighborsWithFilter({
-        entitySetId: peopleESID,
+        entitySetId: submissionESID,
         filter: {
-          entityKeyIds: peopleIds,
-          edgeEntitySetIds: [assessedByESID],
+          entityKeyIds: submissionIds,
+          edgeEntitySetIds: [occurredAtESID],
           destinationEntitySetIds: [providerESID],
           sourceEntitySetIds: [],
         }
@@ -137,19 +137,19 @@ function* getPeopleProvidersWorker(action :SequenceAction) :Saga<WorkerResponse>
     const providerResponseData = fromJS(providerResponse.data)
       .map((people) => people.getIn([0, 'neighborDetails']));
     response = { data: providerResponseData };
-    yield put(getPeopleProviders.success(action.id, response.data));
+    yield put(getSubmissionProviders.success(action.id, response.data));
   }
   catch (error) {
     LOG.error(action.type, error);
     response = { error };
-    yield put(getPeopleProviders.failure(action.id));
+    yield put(getSubmissionProviders.failure(action.id));
   }
 
   return response;
 }
 
-function* getPeopleProvidersWatcher() :Saga<void> {
-  yield takeLatest(GET_PEOPLE_PROVIDERS, getPeopleProvidersWorker);
+function* getSubmissionProvidersWatcher() :Saga<void> {
+  yield takeLatest(GET_SUBMISSION_PROVIDERS, getSubmissionProvidersWorker);
 }
 
 function* downloadSurveysByDateRangeWorker(action :SequenceAction) :Saga<WorkerResponse> {
@@ -194,56 +194,63 @@ function* downloadSurveysByDateRangeWorker(action :SequenceAction) :Saga<WorkerR
       }
     };
 
-    const surveyResponse :WorkerResponse = yield call(
+    const submissionsResponse :WorkerResponse = yield call(
       searchEntitySetDataWorker,
       searchEntitySetData(searchConstraints)
     );
-    if (surveyResponse.error) throw surveyResponse.error;
+    if (submissionsResponse.error) throw submissionsResponse.error;
 
-    const surveys = surveyResponse?.data?.hits;
-    const surveysById = Map(surveys.map((entity) => [getEntityKeyId(entity), fromJS(entity)]));
+    const submissions = submissionsResponse?.data?.hits;
+    const submissionsById = Map(submissions.map((entity) => [getEntityKeyId(entity), fromJS(entity)]));
 
     response.data = Map({
-      [SURVEYS]: surveysById,
+      [SUBMISSIONS]: submissionsById,
     });
 
-    const surveyIds = surveys?.map(getEntityKeyId) || [];
+    const submissionIds = submissions?.map(getEntityKeyId) || [];
+    console.log(submissionIds);
 
-    // find survey results and people
-    if (surveyIds.length) {
-      const surveyResultsRequest = call(getSurveyResultsWorker, getSurveyResults(surveyIds));
-      const surveyPeopleRequest = call(getSurveyPeopleWorker, getSurveyPeople(surveyIds));
-      const [surveyResultsResponse, surveyPeopleResponse] = yield all([
-        surveyResultsRequest,
-        surveyPeopleRequest,
+    // find submission results and people
+    if (submissionIds.length) {
+      const submissionResultsRequest = call(getSurveyResultsWorker, getSurveyResults(submissionIds));
+      const submissionPeopleRequest = call(getSurveyPeopleWorker, getSurveyPeople(submissionIds));
+      const submissionProvidersRequest = yield call(
+        getSubmissionProvidersWorker, getSubmissionProviders(submissionIds)
+      );
+
+      const [
+        submissionResultsResponse,
+        submissionPeopleResponse,
+        submissionProvidersResponse
+      ] = yield all([
+        submissionResultsRequest,
+        submissionPeopleRequest,
+        submissionProvidersRequest,
       ]);
-      if (surveyResultsResponse.error) throw surveyResultsResponse.error;
-      if (surveyPeopleResponse.error) throw surveyPeopleResponse.error;
 
+      if (submissionResultsResponse.error) throw submissionResultsResponse.error;
+      if (submissionPeopleResponse.error) throw submissionPeopleResponse.error;
+      if (submissionProvidersResponse.error) throw submissionProvidersResponse.error;
       response.data = response?.data?.merge({
-        [PERSON_BY_SURVEY]: surveyPeopleResponse.data,
-      }).merge(surveyResultsResponse.data);
-
-      const peopleIds = [];
-      surveyPeopleResponse?.data?.forEach((person) => {
-        peopleIds.push(getEntityKeyId(person));
+        [PROVIDER_BY_SUBMISSION]: submissionProvidersResponse.data
       });
 
-      // find providers for people
-      if (peopleIds.length) {
-        const peopleProvidersResponse = yield call(getPeopleProvidersWorker, getPeopleProviders(peopleIds));
-        if (peopleProvidersResponse.error) throw peopleProvidersResponse;
-        response.data = response?.data?.merge({
-          [PROVIDER_BY_PERSON]: peopleProvidersResponse.data
-        });
-      }
+      response.data = response?.data?.merge({
+        [PERSON_BY_SUBMISSION]: submissionPeopleResponse.data,
+        [PROVIDER_BY_SUBMISSION]: submissionProvidersResponse.data
+      }).merge(submissionResultsResponse.data);
+
+      const peopleIds = [];
+      submissionPeopleResponse?.data?.forEach((person) => {
+        peopleIds.push(getEntityKeyId(person));
+      });
     }
 
     const startDate = DateTime.fromISO(startTerm).toFormat('yyyyLLdd');
     const endDate = DateTime.fromISO(endTerm).toFormat('yyyyLLdd');
     const filename = `surveys_${startDate}-${endDate}.csv`;
 
-    generateHelplineSurveyCSV(response.data, filename);
+    generateHelplineSubmissionsCSV(response.data, filename);
 
     yield put(downloadSurveysByDateRange.success(action.id, response.data));
   }
@@ -264,6 +271,6 @@ export {
   downloadSurveysByDateRangeWorker,
   getSurveyPeopleWatcher,
   getSurveyPeopleWorker,
-  getPeopleProvidersWatcher,
-  getPeopleProvidersWorker,
+  getSubmissionProvidersWatcher,
+  getSubmissionProvidersWorker,
 };

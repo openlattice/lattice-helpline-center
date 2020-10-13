@@ -13,11 +13,11 @@ import {
 } from './DownloadsActions';
 import {
   ANSWERS,
-  PERSON_BY_SURVEY,
-  PROVIDER_BY_PERSON,
+  PERSON_BY_SUBMISSION,
+  PROVIDER_BY_SUBMISSION,
   QUESTIONS,
-  SURVEYS,
-  SURVEY_ANSWERS_BY_QUESTION,
+  SUBMISSIONS,
+  SUBMISSION_ANSWERS_BY_QUESTION,
 } from './constants';
 
 import { RESET_REQUEST_STATE } from '../../../../core/redux/ReduxActions';
@@ -29,11 +29,11 @@ const INITIAL_STATE :Map = fromJS({
     [REQUEST_STATE]: RequestStates.STANDBY
   },
   [ANSWERS]: Map(),
-  [PERSON_BY_SURVEY]: Map(),
-  [PROVIDER_BY_PERSON]: Map(),
+  [PERSON_BY_SUBMISSION]: Map(),
+  [PROVIDER_BY_SUBMISSION]: Map(),
   [QUESTIONS]: Map(),
-  [SURVEYS]: Map(),
-  [SURVEY_ANSWERS_BY_QUESTION]: Map(),
+  [SUBMISSIONS]: Map(),
+  [SUBMISSION_ANSWERS_BY_QUESTION]: Map(),
 });
 
 export default function downloadsReducer(state :Map<*, *> = INITIAL_STATE, action :Object) {

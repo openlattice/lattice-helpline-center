@@ -8,14 +8,14 @@ const downloadSurveysByDateRange :RequestSequence = newRequestSequence(DOWNLOAD_
 const GET_SURVEY_PEOPLE :'GET_SURVEY_PEOPLE' = 'GET_SURVEY_PEOPLE';
 const getSurveyPeople :RequestSequence = newRequestSequence(GET_SURVEY_PEOPLE);
 
-const GET_PEOPLE_PROVIDERS :'GET_PEOPLE_PROVIDERS' = 'GET_PEOPLE_PROVIDERS';
-const getPeopleProviders :RequestSequence = newRequestSequence(GET_PEOPLE_PROVIDERS);
+const GET_SUBMISSION_PROVIDERS :'GET_SUBMISSION_PROVIDERS' = 'GET_SUBMISSION_PROVIDERS';
+const getSubmissionProviders :RequestSequence = newRequestSequence(GET_SUBMISSION_PROVIDERS);
 
 export {
   DOWNLOAD_SURVEYS_BY_DATE_RANGE,
   GET_SURVEY_PEOPLE,
-  GET_PEOPLE_PROVIDERS,
+  GET_SUBMISSION_PROVIDERS,
   downloadSurveysByDateRange,
   getSurveyPeople,
-  getPeopleProviders,
+  getSubmissionProviders,
 };

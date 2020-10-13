@@ -3,21 +3,18 @@ import Papa from 'papaparse';
 import fs from 'file-saver';
 import { Map } from 'immutable';
 import { Constants } from 'lattice';
-import { DataUtils } from 'lattice-utils';
 
 import {
   ANSWERS,
-  PERSON_BY_SURVEY,
-  PROVIDER_BY_PERSON,
+  PERSON_BY_SUBMISSION,
+  PROVIDER_BY_SUBMISSION,
   QUESTIONS,
-  SURVEYS,
-  SURVEY_ANSWERS_BY_QUESTION,
+  SUBMISSIONS,
+  SUBMISSION_ANSWERS_BY_QUESTION,
 } from './constants';
 
 import { PropertyTypes } from '../../../../core/edm/constants';
 import { getPropertyValue, getPropertyValues } from '../../../../utils/EntityUtils';
-
-const { getEntityKeyId } = DataUtils;
 
 const { OPENLATTICE_ID_FQN } = Constants;
 
@@ -38,7 +35,7 @@ const {
 const INITIAL_HEADERS = [
   'id',
   'datetime',
-  'survey ol id',
+  'submission ol id',
   'provider',
   'first name',
   'last name',
@@ -61,7 +58,7 @@ const getHeaders = (questions :Map) => {
   return headers;
 };
 
-const getSurveyResponseData = (questions :Map, answers :Map, answersByQuestion :Map) => {
+const getSubmissionResponseData = (questions :Map, answers :Map, answersByQuestion :Map) => {
   const data = [];
   questions.forEach((question, questionId) => {
     const title = getPropertyValue(question, TITLE);
@@ -78,43 +75,42 @@ const getSurveyResponseData = (questions :Map, answers :Map, answersByQuestion :
   return data;
 };
 
-const generateHelplineSurveyCSV = (data :Map, filename :string) => {
+const generateHelplineSubmissionsCSV = (data :Map, filename :string) => {
   const answers = data.get(ANSWERS, Map());
-  const personBySurvey = data.get(PERSON_BY_SURVEY, Map());
-  const providerByPerson = data.get(PROVIDER_BY_PERSON, Map());
+  const personBySubmission = data.get(PERSON_BY_SUBMISSION, Map());
+  const providerBySubmission = data.get(PROVIDER_BY_SUBMISSION, Map());
   const questions = data.get(QUESTIONS, Map());
-  const surveyAnswersByQuestion = data.get(SURVEY_ANSWERS_BY_QUESTION, Map());
-  const surveys = data.get(SURVEYS, Map());
+  const submissionAnswersByQuestion = data.get(SUBMISSION_ANSWERS_BY_QUESTION, Map());
+  const submissions = data.get(SUBMISSIONS, Map());
 
   const headers = getHeaders(questions);
-  const surveyData = surveys.reduce((accumulator :Array<any>, survey :Map, surveyId :string) => {
-    const person = personBySurvey.get(surveyId);
-    const personId = getEntityKeyId(person);
-    const provider = providerByPerson.get(personId, Map());
+  const submissionsData = submissions.reduce((accumulator :Array<any>, submission :Map, submissionId :string) => {
+    const person = personBySubmission.get(submissionId);
+    const provider = providerBySubmission.get(submissionId, Map());
 
-    const surveyProperties = getPropertyValues(survey, [
+    const submissionProperties = getPropertyValues(submission, [
       ID,
       DATE_TIME,
       OPENLATTICE_ID_FQN
     ]);
     const providerProperties = getPropertyValues(provider, [FULL_NAME]);
-    const personProperties = getPropertyValues(personBySurvey.get(surveyId), [
+    const personProperties = getPropertyValues(person, [
       GIVEN_NAME,
       SURNAME,
       SSN,
       OPENLATTICE_ID_FQN
     ]);
-    const answersByQuestion = surveyAnswersByQuestion.get(surveyId, Map());
-    const surveyResponseData = getSurveyResponseData(questions, answers, answersByQuestion);
+    const answersByQuestion = submissionAnswersByQuestion.get(submissionId, Map());
+    const submissionResponseData = getSubmissionResponseData(questions, answers, answersByQuestion);
 
-    const row = [].concat(surveyProperties, providerProperties, personProperties, surveyResponseData);
+    const row = [].concat(submissionProperties, providerProperties, personProperties, submissionResponseData);
     accumulator.push(row);
     return accumulator;
   }, []);
 
   const csv = Papa.unparse({
     fields: headers,
-    data: surveyData
+    data: submissionsData
   });
 
   const blob = new Blob([csv], {
@@ -125,6 +121,6 @@ const generateHelplineSurveyCSV = (data :Map, filename :string) => {
 };
 
 export {
-  getSurveyResponseData,
-  generateHelplineSurveyCSV
+  getSubmissionResponseData,
+  generateHelplineSubmissionsCSV
 };
