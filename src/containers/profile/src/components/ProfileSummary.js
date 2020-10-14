@@ -9,9 +9,9 @@ import { RequestStates } from 'redux-reqseq';
 import GreatestNeeds from './GreatestNeeds';
 import SelfSufficiencyMatrix from './SelfSufficiencyMatrix';
 import SurveyHistory from './SurveyHistory';
-import { useDispatch, useSelector } from './HelplineProvider';
 import { Body, CenterWrapper } from './styled';
 
+import { useDispatch, useSelector } from '../../../../core/redux';
 import { GET_PROFILE_SUMMARY, getProfileSummary } from '../sagas/ProfileActions';
 import { PROFILE, PROFILE_PATHS } from '../sagas/constants';
 

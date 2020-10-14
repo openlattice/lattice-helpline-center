@@ -23,15 +23,14 @@ import {
   PROVIDER,
   QUESTIONS,
   SELF_SUFFICIENCY,
-  SURVEYS,
-  SURVEY_ANSWERS_BY_QUESTION,
+  SUBMISSIONS,
+  SUBMISSION_ANSWERS_BY_QUESTION,
   SURVEY_HISTORY,
 } from './constants';
 
-import { ReduxActions } from '../../../../core/redux';
+import { RESET_REQUEST_STATE } from '../../../../core/redux/ReduxActions';
 
 const { REQUEST_STATE } = ReduxConstants;
-const { RESET_REQUEST_STATE } = ReduxActions;
 
 const INITIAL_STATE :Map = fromJS({
   [GET_AGGREGATE_RESULTS]: {
@@ -50,8 +49,8 @@ const INITIAL_STATE :Map = fromJS({
   [PROVIDER]: Map(),
   [QUESTIONS]: Map(),
   [SELF_SUFFICIENCY]: List(),
-  [SURVEYS]: Map(),
-  [SURVEY_ANSWERS_BY_QUESTION]: Map(),
+  [SUBMISSIONS]: Map(),
+  [SUBMISSION_ANSWERS_BY_QUESTION]: Map(),
   [SURVEY_HISTORY]: List(),
 });
 

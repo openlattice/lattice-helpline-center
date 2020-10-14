@@ -5,14 +5,14 @@ import { Breadcrumbs } from 'lattice-ui-kit';
 import { DateTimeUtils } from 'lattice-utils';
 
 import SurveySection from './SurveySection';
-import { useSelector } from './HelplineProvider';
 import { formatSurveyData, getFirstLastFromPerson, getRelativeRoot } from './utils';
 
-import { APP_PATHS } from '../../../../containers/app/constants';
+import { BreadcrumbItem, BreadcrumbLink, BreadcrumbWrapper } from '../../../../components/breadcrumbs';
+import { Caption, Header } from '../../../../components/typography';
 import { PropertyTypes } from '../../../../core/edm/constants';
+import { useSelector } from '../../../../core/redux';
 import { getPropertyValue } from '../../../../utils/EntityUtils';
-import { BreadcrumbItem, BreadcrumbLink, BreadcrumbWrapper } from '../../../breadcrumbs';
-import { Caption, Header } from '../../../typography';
+import { APP_PATHS } from '../../../app/constants';
 import { PROFILE_PATHS } from '../sagas/constants';
 
 const { formatAsDate, formatAsTime } = DateTimeUtils;
@@ -26,15 +26,15 @@ const SocialNeedsSurvey = ({ surveyId } :Props) => {
   // get person and pass to breadcrumb
   const person = useSelector((store) => store.getIn(PROFILE_PATHS.person));
   const provider = useSelector((store) => store.getIn(PROFILE_PATHS.provider));
-  const survey = useSelector((store) => store.getIn([...PROFILE_PATHS.surveys, surveyId]));
+  const submission = useSelector((store) => store.getIn([...PROFILE_PATHS.submissions, surveyId]));
   const questions = useSelector((store) => store.getIn(PROFILE_PATHS.questions));
   const answers = useSelector((store) => store.getIn(PROFILE_PATHS.answers));
   const answersByQuestion = useSelector(
-    (store) => store.getIn([...PROFILE_PATHS.surveyAnswersByQuestion, surveyId])
+    (store) => store.getIn([...PROFILE_PATHS.submissionAnswersByQuestion, surveyId])
   );
   const root = useSelector((store) => store.getIn(APP_PATHS.ROOT));
   const match = useSelector((store) => store.getIn(APP_PATHS.MATCH));
-  const datetime = getPropertyValue(survey, DATE_TIME);
+  const datetime = getPropertyValue(submission, DATE_TIME);
   const name = getFirstLastFromPerson(person).trim();
   const providerName = getPropertyValue(provider, FULL_NAME);
 

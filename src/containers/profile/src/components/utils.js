@@ -50,8 +50,8 @@ const formatSurveyData = (
 const formatAggregateResultsData = (
   questions :Map = Map(),
   answers :Map = Map(),
-  surveyAnswersByQuestion :Map = Map(),
-  surveys :Map = Map()
+  submissionAnswersByQuestion :Map = Map(),
+  submissions :Map = Map()
 ) :List => {
   const aggregateResults :List = fromJS(CATEGORY_BY_QUESTION_NUMBER)
     .sortBy((category, number) => parseInt(number, 10))
@@ -63,16 +63,16 @@ const formatAggregateResultsData = (
         // for each survey, find matching answer for question
         const title = getPropertyValue(question, PropertyTypes.TITLE);
         const data = [];
-        surveyAnswersByQuestion.forEach((answerByQuestion, surveyId) => {
-          const survey = surveys.get(surveyId);
+        submissionAnswersByQuestion.forEach((answerByQuestion, submissionId) => {
+          const submission = submissions.get(submissionId);
           const answerId = answerByQuestion.get(questionId);
           const answer = answers.get(answerId);
 
-          const surveyDate :string = getPropertyValue(survey, PropertyTypes.DATE_TIME);
+          const submissionDate :string = getPropertyValue(submission, PropertyTypes.DATE_TIME);
           const score :number = getPropertyValue(answer, PropertyTypes.SCORE_VALUE);
           const scoreCategory :string = getPropertyValue(answer, PropertyTypes.SCORE_CATEGORY);
           const text :string = getPropertyValue(answer, PropertyTypes.VALUES);
-          const date = DateTime.fromISO(surveyDate).toLocaleString(DateTime.DATE_SHORT);
+          const date = DateTime.fromISO(submissionDate).toLocaleString(DateTime.DATE_SHORT);
 
           data.push({
             date,

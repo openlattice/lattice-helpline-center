@@ -4,13 +4,19 @@
 
 const APP :'app' = 'app';
 const DATA :'data' = 'data';
+const DOWNLOADS :'downloads' = 'downloads';
 const EDM :'edm' = 'edm';
+const PROFILE :'profile' = 'profile';
+const ROUTER :'router' = 'router';
 const SEARCH :'search' = 'search';
 
 const REDUCERS = {
   APP,
   DATA,
+  DOWNLOADS,
   EDM,
+  PROFILE,
+  ROUTER,
   SEARCH,
 };
 
