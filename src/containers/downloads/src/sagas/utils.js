@@ -11,6 +11,7 @@ import {
   QUESTIONS,
   SUBMISSIONS,
   SUBMISSION_ANSWERS_BY_QUESTION,
+  SUMMARY_SET_BY_SUBMISSION,
 } from './constants';
 
 import { PropertyTypes } from '../../../../core/edm/constants';
@@ -41,6 +42,7 @@ const INITIAL_HEADERS = [
   'last name',
   'last 4 digits of ssn',
   'person ol id',
+  'submission score'
 ];
 
 const getHeaders = (questions :Map) => {
@@ -82,11 +84,13 @@ const generateHelplineSubmissionsCSV = (data :Map, filename :string) => {
   const questions = data.get(QUESTIONS, Map());
   const submissionAnswersByQuestion = data.get(SUBMISSION_ANSWERS_BY_QUESTION, Map());
   const submissions = data.get(SUBMISSIONS, Map());
+  const summarySetsBySubmission = data.get(SUMMARY_SET_BY_SUBMISSION, Map());
 
   const headers = getHeaders(questions);
   const submissionsData = submissions.reduce((accumulator :Array<any>, submission :Map, submissionId :string) => {
     const person = personBySubmission.get(submissionId);
     const provider = providerBySubmission.get(submissionId, Map());
+    const summarySet = summarySetsBySubmission.get(submissionId, Map());
 
     const submissionProperties = getPropertyValues(submission, [
       ID,
@@ -100,10 +104,17 @@ const generateHelplineSubmissionsCSV = (data :Map, filename :string) => {
       SSN,
       OPENLATTICE_ID_FQN
     ]);
+    const summarySetProperties = getPropertyValues(summarySet, [VALUES]);
     const answersByQuestion = submissionAnswersByQuestion.get(submissionId, Map());
     const submissionResponseData = getSubmissionResponseData(questions, answers, answersByQuestion);
 
-    const row = [].concat(submissionProperties, providerProperties, personProperties, submissionResponseData);
+    const row = [].concat(
+      submissionProperties,
+      providerProperties,
+      personProperties,
+      summarySetProperties,
+      submissionResponseData
+    );
     accumulator.push(row);
     return accumulator;
   }, []);

@@ -33,6 +33,7 @@ import {
   PERSON_BY_SUBMISSION,
   PROVIDER_BY_SUBMISSION,
   SUBMISSIONS,
+  SUMMARY_SET_BY_SUBMISSION,
 } from './constants';
 import { generateHelplineSubmissionsCSV } from './utils';
 
@@ -41,8 +42,8 @@ import { ERR_ACTION_VALUE_TYPE } from '../../../../utils/Errors';
 import { getSearchTerm } from '../../../../utils/QueryUtils';
 import { getESIDFromConfig } from '../../../app/AppUtils';
 import { APP_PATHS } from '../../../app/constants';
-import { getSubmissionResults } from '../../../profile/src/sagas/ProfileActions';
-import { getSubmissionResultsWorker } from '../../../profile/src/sagas/ProfileSagas';
+import { getSubmissionResults, getSummarySets } from '../../../profile/src/sagas/ProfileActions';
+import { getSubmissionResultsWorker, getSummarySetsWorker } from '../../../profile/src/sagas/ProfileSagas';
 
 const { getEntityKeyId } = DataUtils;
 const { isValidUUID } = ValidationUtils;
@@ -216,27 +217,32 @@ function* downloadSurveysByDateRangeWorker(action :SequenceAction) :Saga<WorkerR
       const submissionProvidersRequest = yield call(
         getSubmissionProvidersWorker, getSubmissionProviders(submissionIds)
       );
+      const submissionSummarySetsRequest = call(getSummarySetsWorker, getSummarySets(submissionIds));
 
       const [
         submissionResultsResponse,
         submissionPeopleResponse,
-        submissionProvidersResponse
+        submissionProvidersResponse,
+        submissionSummarySetsResponse,
       ] = yield all([
         submissionResultsRequest,
         submissionPeopleRequest,
         submissionProvidersRequest,
+        submissionSummarySetsRequest
       ]);
 
       if (submissionResultsResponse.error) throw submissionResultsResponse.error;
       if (submissionPeopleResponse.error) throw submissionPeopleResponse.error;
       if (submissionProvidersResponse.error) throw submissionProvidersResponse.error;
-      response.data = response?.data?.merge({
-        [PROVIDER_BY_SUBMISSION]: submissionProvidersResponse.data
-      });
+      if (submissionSummarySetsResponse.error) throw submissionSummarySetsResponse.error;
+
+      const summarySetResponseData = fromJS(submissionSummarySetsResponse.data)
+        .map((summarySets) => summarySets.getIn([0, 'neighborDetails']));
 
       response.data = response?.data?.merge({
         [PERSON_BY_SUBMISSION]: submissionPeopleResponse.data,
-        [PROVIDER_BY_SUBMISSION]: submissionProvidersResponse.data
+        [PROVIDER_BY_SUBMISSION]: submissionProvidersResponse.data,
+        [SUMMARY_SET_BY_SUBMISSION]: summarySetResponseData,
       }).merge(submissionResultsResponse.data);
 
       const peopleIds = [];
