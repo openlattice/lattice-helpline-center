@@ -57,6 +57,13 @@ export default function downloadsReducer(state :Map<*, *> = INITIAL_STATE, actio
           .merge(action.value)
           .setIn([DOWNLOAD_SURVEYS_BY_DATE_RANGE, REQUEST_STATE], RequestStates.SUCCESS),
         FAILURE: () => state.setIn([DOWNLOAD_SURVEYS_BY_DATE_RANGE, REQUEST_STATE], RequestStates.FAILURE),
+        FINALLY: () => state
+          .set(ANSWERS, INITIAL_STATE.get(ANSWERS))
+          .set(PERSON_BY_SUBMISSION, INITIAL_STATE.get(PERSON_BY_SUBMISSION))
+          .set(PROVIDER_BY_SUBMISSION, INITIAL_STATE.get(PROVIDER_BY_SUBMISSION))
+          .set(QUESTIONS, INITIAL_STATE.get(QUESTIONS))
+          .set(SUBMISSIONS, INITIAL_STATE.get(SUBMISSIONS))
+          .set(SUBMISSION_ANSWERS_BY_QUESTION, INITIAL_STATE.get(SUBMISSION_ANSWERS_BY_QUESTION))
       });
     }
 
