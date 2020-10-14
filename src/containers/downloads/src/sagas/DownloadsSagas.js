@@ -210,7 +210,7 @@ function* downloadSurveysByDateRangeWorker(action :SequenceAction) :Saga<WorkerR
     const submissions = submissionsResponse?.data?.hits;
     const submissionsById = Map(submissions.map((entity) => [getEntityKeyId(entity), fromJS(entity)]));
 
-    response.data = Map({
+    let csvData = Map({
       [SUBMISSIONS]: submissionsById,
     });
 
@@ -245,23 +245,18 @@ function* downloadSurveysByDateRangeWorker(action :SequenceAction) :Saga<WorkerR
       const summarySetResponseData = fromJS(submissionSummarySetsResponse.data)
         .map((summarySets) => summarySets.getIn([0, 'neighborDetails']));
 
-      response.data = response?.data?.merge({
+      csvData = csvData.merge({
         [PERSON_BY_SUBMISSION]: submissionPeopleResponse.data,
         [PROVIDER_BY_SUBMISSION]: submissionProvidersResponse.data,
         [SUMMARY_SET_BY_SUBMISSION]: summarySetResponseData,
       }).merge(submissionResultsResponse.data);
-
-      const peopleIds = [];
-      submissionPeopleResponse?.data?.forEach((person) => {
-        peopleIds.push(getEntityKeyId(person));
-      });
     }
 
     const startDate = DateTime.fromISO(startTerm).toFormat('yyyyLLdd');
     const endDate = DateTime.fromISO(endTerm).toFormat('yyyyLLdd');
     const filename = `surveys_${startDate}-${endDate}.csv`;
 
-    generateHelplineSubmissionsCSV(response.data, filename);
+    generateHelplineSubmissionsCSV(csvData, filename);
 
     yield put(downloadSurveysByDateRange.success(action.id));
   }

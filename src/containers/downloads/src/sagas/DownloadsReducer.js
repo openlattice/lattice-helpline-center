@@ -11,14 +11,6 @@ import {
   DOWNLOAD_SURVEYS_BY_DATE_RANGE,
   downloadSurveysByDateRange,
 } from './DownloadsActions';
-import {
-  ANSWERS,
-  PERSON_BY_SUBMISSION,
-  PROVIDER_BY_SUBMISSION,
-  QUESTIONS,
-  SUBMISSIONS,
-  SUBMISSION_ANSWERS_BY_QUESTION,
-} from './constants';
 
 import { RESET_REQUEST_STATE } from '../../../../core/redux/ReduxActions';
 
@@ -28,12 +20,6 @@ const INITIAL_STATE :Map = fromJS({
   [DOWNLOAD_SURVEYS_BY_DATE_RANGE]: {
     [REQUEST_STATE]: RequestStates.STANDBY
   },
-  [ANSWERS]: Map(),
-  [PERSON_BY_SUBMISSION]: Map(),
-  [PROVIDER_BY_SUBMISSION]: Map(),
-  [QUESTIONS]: Map(),
-  [SUBMISSIONS]: Map(),
-  [SUBMISSION_ANSWERS_BY_QUESTION]: Map(),
 });
 
 export default function downloadsReducer(state :Map<*, *> = INITIAL_STATE, action :Object) {
@@ -54,16 +40,9 @@ export default function downloadsReducer(state :Map<*, *> = INITIAL_STATE, actio
         REQUEST: () => INITIAL_STATE
           .setIn([DOWNLOAD_SURVEYS_BY_DATE_RANGE, REQUEST_STATE], RequestStates.PENDING),
         SUCCESS: () => state
-          .merge(action.value)
           .setIn([DOWNLOAD_SURVEYS_BY_DATE_RANGE, REQUEST_STATE], RequestStates.SUCCESS),
-        FAILURE: () => state.setIn([DOWNLOAD_SURVEYS_BY_DATE_RANGE, REQUEST_STATE], RequestStates.FAILURE),
-        FINALLY: () => state
-          .set(ANSWERS, INITIAL_STATE.get(ANSWERS))
-          .set(PERSON_BY_SUBMISSION, INITIAL_STATE.get(PERSON_BY_SUBMISSION))
-          .set(PROVIDER_BY_SUBMISSION, INITIAL_STATE.get(PROVIDER_BY_SUBMISSION))
-          .set(QUESTIONS, INITIAL_STATE.get(QUESTIONS))
-          .set(SUBMISSIONS, INITIAL_STATE.get(SUBMISSIONS))
-          .set(SUBMISSION_ANSWERS_BY_QUESTION, INITIAL_STATE.get(SUBMISSION_ANSWERS_BY_QUESTION))
+        FAILURE: () => state
+          .setIn([DOWNLOAD_SURVEYS_BY_DATE_RANGE, REQUEST_STATE], RequestStates.FAILURE),
       });
     }
 
