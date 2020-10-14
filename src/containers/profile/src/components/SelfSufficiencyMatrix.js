@@ -12,8 +12,8 @@ import {
   YAxis,
 } from 'recharts';
 
-import { SelfSufficiencyTooltip } from '../../../tooltips';
-import { Header } from '../../../typography';
+import { SelfSufficiencyTooltip } from '../../../../components/tooltips';
+import { Header } from '../../../../components/typography';
 
 const { PURPLE, NEUTRAL } = Colors;
 

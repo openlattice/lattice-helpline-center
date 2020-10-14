@@ -9,10 +9,10 @@ import type { Match } from 'react-router';
 
 import ProfileContainer from './ProfileContainer';
 import SurveyContainer from './SurveyContainer';
-import { useDispatch, useSelector } from './HelplineProvider';
 import { CenterWrapper } from './styled';
 
-import { INITIALIZE_HELPLINE, initializeHelpline } from '../../../../containers/app/AppActions';
+import { useDispatch, useSelector } from '../../../../core/redux';
+import { INITIALIZE_HELPLINE, initializeHelpline } from '../../../app/AppActions';
 
 const { isValidUUID } = ValidationUtils;
 
@@ -32,7 +32,7 @@ const HelplineSwitch = ({
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (isValidUUID) {
+    if (isValidUUID(organizationId)) {
       dispatch(initializeHelpline({ match, organizationId, root }));
     }
     // do NOT reinitialize whenever match updates

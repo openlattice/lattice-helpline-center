@@ -36,19 +36,19 @@ import {
   GET_QUESTIONS_FROM_ANSWERS,
   GET_SUBMISSIONS,
   GET_SUBMISSION_ANSWERS,
+  GET_SUBMISSION_RESULTS,
   GET_SUMMARY_SETS,
   GET_SURVEY,
-  GET_SURVEY_RESULTS,
   getAggregateResults,
   getGreatestNeeds,
   getPerson,
   getProfileSummary,
   getQuestionsFromAnswers,
   getSubmissionAnswers,
+  getSubmissionResults,
   getSubmissions,
   getSummarySets,
   getSurvey,
-  getSurveyResults,
 } from './ProfileActions';
 import {
   ANSWERS,
@@ -59,15 +59,16 @@ import {
   PROVIDER,
   QUESTIONS,
   SELF_SUFFICIENCY,
-  SURVEYS,
-  SURVEY_ANSWERS_BY_QUESTION,
+  SUBMISSIONS,
+  SUBMISSION_ANSWERS_BY_QUESTION,
   SURVEY_HISTORY,
 } from './constants';
 
-import { getESIDFromConfig } from '../../../../containers/app/AppUtils';
-import { APP_PATHS } from '../../../../containers/app/constants';
 import { AppTypes, PropertyTypes } from '../../../../core/edm/constants';
+import { getPropertyValue } from '../../../../utils/EntityUtils';
 import { ERR_ACTION_VALUE_TYPE } from '../../../../utils/Errors';
+import { getESIDFromConfig } from '../../../app/AppUtils';
+import { APP_PATHS } from '../../../app/constants';
 
 const { isValidUUID } = ValidationUtils;
 const { OPENLATTICE_ID_FQN } = Constants;
@@ -102,9 +103,13 @@ function* getPersonWorker(action :SequenceAction) :Saga<any> {
     yield put(getPerson.success(action.id, response.data));
   }
   catch (error) {
+    LOG.error(action.type, error);
+    response.error = error;
     yield put(getPerson.failure(action.id, error));
   }
-
+  finally {
+    yield put(getPerson.finally(action.id));
+  }
   return response;
 }
 
@@ -176,7 +181,11 @@ function* getProfileSummaryWorker(action :SequenceAction) :Saga<any> {
   }
   catch (error) {
     LOG.error(action.type, error);
+    response.error = error;
     yield put(getProfileSummary.failure(action.id, error));
+  }
+  finally {
+    yield put(getProfileSummary.finally(action.id));
   }
   return response;
 }
@@ -231,6 +240,9 @@ function* getSubmissionsWorker(action :SequenceAction) :Saga<any> {
     response.error = error;
     yield put(getSubmissions.failure(action.id, error));
   }
+  finally {
+    yield put(getSubmissions.finally(action.id));
+  }
   return response;
 }
 
@@ -271,7 +283,9 @@ function* getSummarySetsWorker(action :SequenceAction) :Saga<any> {
     LOG.error(action.type, error);
     response.error = error;
     yield put(getSummarySets.failure(action.id, error));
-
+  }
+  finally {
+    yield put(getSummarySets.finally(action.id));
   }
   return response;
 }
@@ -327,6 +341,9 @@ function* getGreatestNeedsWorker(action :SequenceAction) :Saga<any> {
     response.error = error;
     yield put(getGreatestNeeds.failure(action.id, error));
   }
+  finally {
+    yield put(getGreatestNeeds.finally(action.id));
+  }
   return response;
 }
 
@@ -370,6 +387,9 @@ function* getSubmissionAnswersWorker(action :SequenceAction) :Saga<any> {
     response.error = error;
     yield put(getSubmissionAnswers.failure(action.id, error));
   }
+  finally {
+    yield put(getSubmissionAnswers.finally(action.id));
+  }
   return response;
 }
 
@@ -412,6 +432,9 @@ function* getQuestionsFromAnswersWorker(action :SequenceAction) :Saga<any> {
     response.error = error;
     yield put(getQuestionsFromAnswers.failure(action.id, error));
   }
+  finally {
+    yield put(getQuestionsFromAnswers.finally(action.id));
+  }
   return response;
 }
 
@@ -428,25 +451,36 @@ function* getSurveyWorker(action :SequenceAction) :Saga<any> {
 
     // get person
     const config = yield select((store) => store.getIn(APP_PATHS.APP_CONFIG));
-    const assessedWithESID = getESIDFromConfig(config, AppTypes.ASSESSED_BY);
+    const occurredAtESID = getESIDFromConfig(config, AppTypes.OCCURRED_AT);
     const peopleESID = getESIDFromConfig(config, AppTypes.PEOPLE);
     const providerESID = getESIDFromConfig(config, AppTypes.PROVIDER);
     const respondsWithESID = getESIDFromConfig(config, AppTypes.RESPONDS_WITH);
     const submissionsESID = getESIDFromConfig(config, AppTypes.SUBMISSION);
 
-    const personSearchParams = {
-      entitySetId: submissionsESID,
-      filter: {
-        entityKeyIds: [submissionId],
-        edgeEntitySetIds: [respondsWithESID],
-        destinationEntitySetIds: [],
-        sourceEntitySetIds: [peopleESID],
-      }
-    };
-
     const personRequest = call(
       searchEntityNeighborsWithFilterWorker,
-      searchEntityNeighborsWithFilter(personSearchParams)
+      searchEntityNeighborsWithFilter({
+        entitySetId: submissionsESID,
+        filter: {
+          entityKeyIds: [submissionId],
+          edgeEntitySetIds: [respondsWithESID],
+          destinationEntitySetIds: [],
+          sourceEntitySetIds: [peopleESID],
+        }
+      })
+    );
+
+    const providerRequest = call(
+      searchEntityNeighborsWithFilterWorker,
+      searchEntityNeighborsWithFilter({
+        entitySetId: submissionsESID,
+        filter: {
+          entityKeyIds: [submissionId],
+          edgeEntitySetIds: [occurredAtESID],
+          destinationEntitySetIds: [providerESID],
+          sourceEntitySetIds: [],
+        }
+      })
     );
 
     // get submission
@@ -459,43 +493,30 @@ function* getSurveyWorker(action :SequenceAction) :Saga<any> {
     );
 
     const surveyRequest = call(
-      getSurveyResultsWorker,
-      getSurveyResults([submissionId])
+      getSubmissionResultsWorker,
+      getSubmissionResults([submissionId])
     );
 
-    const [personResponse, submissionResponse, surveyResponse] = yield all([
+    const [personResponse, submissionResponse, surveyResponse, providerResponse] = yield all([
       personRequest,
       submissionRequest,
-      surveyRequest
+      surveyRequest,
+      providerRequest
     ]);
 
     if (personResponse.error) throw personResponse.error;
     if (submissionResponse.error) throw submissionResponse.error;
     if (surveyResponse.error) throw surveyResponse.error;
+    if (providerResponse.error) throw providerResponse.error;
     const person = getIn(personResponse, ['data', submissionId, '0', 'neighborDetails']);
 
-    const personEKID = getIn(person, [OPENLATTICE_ID_FQN, 0]);
-
-    const providerResponse = yield call(
-      searchEntityNeighborsWithFilterWorker,
-      searchEntityNeighborsWithFilter({
-        entitySetId: peopleESID,
-        filter: {
-          entityKeyIds: [personEKID],
-          edgeEntitySetIds: [assessedWithESID],
-          destinationEntitySetIds: [providerESID],
-          sourceEntitySetIds: [],
-        }
-      })
-    );
-    if (providerResponse.error) throw providerResponse.error;
     const provider = fromJS(providerResponse.data)
-      .getIn([personEKID, 0, 'neighborDetails']);
+      .getIn([submissionId, 0, 'neighborDetails']);
 
     response.data = fromJS({
       [PERSON]: person,
       [PROVIDER]: provider,
-      [SURVEYS]: {
+      [SUBMISSIONS]: {
         [submissionId]: submissionResponse.data
       },
     }).merge(surveyResponse.data);
@@ -507,6 +528,9 @@ function* getSurveyWorker(action :SequenceAction) :Saga<any> {
     response.error = error;
     yield put(getSurvey.failure(action.id, error));
   }
+  finally {
+    yield put(getSurvey.finally(action.id));
+  }
   return response;
 }
 
@@ -514,12 +538,12 @@ function* getSurveyWatcher() :Saga<any> {
   yield takeLatest(GET_SURVEY, getSurveyWorker);
 }
 
-function* getSurveyResultsWorker(action :SequenceAction) :Saga<any> {
+function* getSubmissionResultsWorker(action :SequenceAction) :Saga<any> {
   const response = {};
   try {
     const { value: submissionsIds } = action;
     if (!(Array.isArray(submissionsIds) && submissionsIds.every(isValidUUID))) throw ERR_ACTION_VALUE_TYPE;
-    yield put(getSurveyResults.request(action.id, action.value));
+    yield put(getSubmissionResults.request(action.id, action.value));
 
     // get all answers to submission
     const answersResponse = yield call(getSubmissionAnswersWorker, getSubmissionAnswers(submissionsIds));
@@ -545,11 +569,13 @@ function* getSurveyResultsWorker(action :SequenceAction) :Saga<any> {
     // // get question to each answer
     const questionsResponse = yield call(getQuestionsFromAnswersWorker, getQuestionsFromAnswers(answersIds));
     const questionsData = questionsResponse.data;
-    const questions = Map().withMutations((mutable) => {
-      questionsData.forEach((questionsForAnswer) => questionsForAnswer.forEach((question) => {
-        mutable.set(question.get('neighborId'), question.get('neighborDetails'));
-      }));
-    });
+    const questions = Map()
+      .withMutations((mutable) => {
+        questionsData.forEach((questionsForAnswer) => questionsForAnswer.forEach((question) => {
+          mutable.set(question.get('neighborId'), question.get('neighborDetails'));
+        }));
+      })
+      .sortBy((question) => parseInt(getPropertyValue(question, PropertyTypes.CODE), 10));
     const questionsByAnswerId = questionsData.map((question) => question.getIn([0, 'neighborId']));
 
     const surveyAnswersByQuestion = answerIdsBySubmissionId.mapEntries(([submissionId, answerIds]) => {
@@ -567,20 +593,23 @@ function* getSurveyResultsWorker(action :SequenceAction) :Saga<any> {
     response.data = fromJS({
       [ANSWERS]: answers,
       [QUESTIONS]: questions,
-      [SURVEY_ANSWERS_BY_QUESTION]: surveyAnswersByQuestion,
+      [SUBMISSION_ANSWERS_BY_QUESTION]: surveyAnswersByQuestion,
     });
-    yield put(getSurveyResults.success(action.id, response.data));
+    yield put(getSubmissionResults.success(action.id, response.data));
   }
   catch (error) {
     LOG.error(action.type, error);
     response.error = error;
-    yield put(getSurveyResults.failure(action.id, error));
+    yield put(getSubmissionResults.failure(action.id, error));
+  }
+  finally {
+    yield put(getSubmissionResults.finally(action.id));
   }
   return response;
 }
 
-function* getSurveyResultsWatcher() :Saga<any> {
-  yield takeLatest(GET_SURVEY_RESULTS, getSurveyResultsWorker);
+function* getSubmissionResultsWatcher() :Saga<any> {
+  yield takeLatest(GET_SUBMISSION_RESULTS, getSubmissionResultsWorker);
 }
 
 function* getAggregateResultsWorker(action :SequenceAction) :Saga<any> {
@@ -600,13 +629,13 @@ function* getAggregateResultsWorker(action :SequenceAction) :Saga<any> {
       });
     });
 
-    const surveyResultsResponse = yield call(getSurveyResultsWorker, getSurveyResults(submissionIds));
+    const surveyResultsResponse = yield call(getSubmissionResultsWorker, getSubmissionResults(submissionIds));
     if (surveyResultsResponse.error) throw surveyResultsResponse.error;
 
     const surveyResultsData = surveyResultsResponse.data;
 
     response.data = fromJS({
-      [SURVEYS]: submissions
+      [SUBMISSIONS]: submissions
     }).merge(surveyResultsData);
 
     yield put(getAggregateResults.success(action.id, response.data));
@@ -615,7 +644,9 @@ function* getAggregateResultsWorker(action :SequenceAction) :Saga<any> {
     LOG.error(action.type, error);
     response.error = error;
     yield put(getAggregateResults.failure(action.id));
-
+  }
+  finally {
+    yield put(getAggregateResults.finally(action.id));
   }
   return response;
 }
@@ -641,8 +672,8 @@ export {
   getSubmissionsWorker,
   getSummarySetWatcher,
   getSummarySetsWorker,
-  getSurveyResultsWatcher,
-  getSurveyResultsWorker,
+  getSubmissionResultsWatcher,
+  getSubmissionResultsWorker,
   getSurveyWatcher,
   getSurveyWorker,
 };

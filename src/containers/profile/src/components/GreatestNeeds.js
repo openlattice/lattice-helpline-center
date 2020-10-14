@@ -4,7 +4,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { Chip } from 'lattice-ui-kit';
 
-import { Caption, Header } from '../../../typography';
+import { Caption, Header } from '../../../../components/typography';
 
 const StyledChip = styled(Chip)`
   font-size: 1rem;
