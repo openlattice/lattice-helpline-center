@@ -103,9 +103,13 @@ function* getPersonWorker(action :SequenceAction) :Saga<any> {
     yield put(getPerson.success(action.id, response.data));
   }
   catch (error) {
+    LOG.error(action.type, error);
+    response.error = error;
     yield put(getPerson.failure(action.id, error));
   }
-
+  finally {
+    yield put(getPerson.finally(action.id));
+  }
   return response;
 }
 
@@ -177,7 +181,11 @@ function* getProfileSummaryWorker(action :SequenceAction) :Saga<any> {
   }
   catch (error) {
     LOG.error(action.type, error);
+    response.error = error;
     yield put(getProfileSummary.failure(action.id, error));
+  }
+  finally {
+    yield put(getProfileSummary.finally(action.id));
   }
   return response;
 }
@@ -232,6 +240,9 @@ function* getSubmissionsWorker(action :SequenceAction) :Saga<any> {
     response.error = error;
     yield put(getSubmissions.failure(action.id, error));
   }
+  finally {
+    yield put(getSubmissions.finally(action.id));
+  }
   return response;
 }
 
@@ -272,7 +283,9 @@ function* getSummarySetsWorker(action :SequenceAction) :Saga<any> {
     LOG.error(action.type, error);
     response.error = error;
     yield put(getSummarySets.failure(action.id, error));
-
+  }
+  finally {
+    yield put(getSummarySets.finally(action.id));
   }
   return response;
 }
@@ -328,6 +341,9 @@ function* getGreatestNeedsWorker(action :SequenceAction) :Saga<any> {
     response.error = error;
     yield put(getGreatestNeeds.failure(action.id, error));
   }
+  finally {
+    yield put(getGreatestNeeds.finally(action.id));
+  }
   return response;
 }
 
@@ -371,6 +387,9 @@ function* getSubmissionAnswersWorker(action :SequenceAction) :Saga<any> {
     response.error = error;
     yield put(getSubmissionAnswers.failure(action.id, error));
   }
+  finally {
+    yield put(getSubmissionAnswers.finally(action.id));
+  }
   return response;
 }
 
@@ -412,6 +431,9 @@ function* getQuestionsFromAnswersWorker(action :SequenceAction) :Saga<any> {
     LOG.error(action.type, error);
     response.error = error;
     yield put(getQuestionsFromAnswers.failure(action.id, error));
+  }
+  finally {
+    yield put(getQuestionsFromAnswers.finally(action.id));
   }
   return response;
 }
@@ -506,6 +528,9 @@ function* getSurveyWorker(action :SequenceAction) :Saga<any> {
     response.error = error;
     yield put(getSurvey.failure(action.id, error));
   }
+  finally {
+    yield put(getSurvey.finally(action.id));
+  }
   return response;
 }
 
@@ -577,6 +602,9 @@ function* getSubmissionResultsWorker(action :SequenceAction) :Saga<any> {
     response.error = error;
     yield put(getSubmissionResults.failure(action.id, error));
   }
+  finally {
+    yield put(getSubmissionResults.finally(action.id));
+  }
   return response;
 }
 
@@ -616,7 +644,9 @@ function* getAggregateResultsWorker(action :SequenceAction) :Saga<any> {
     LOG.error(action.type, error);
     response.error = error;
     yield put(getAggregateResults.failure(action.id));
-
+  }
+  finally {
+    yield put(getAggregateResults.finally(action.id));
   }
   return response;
 }

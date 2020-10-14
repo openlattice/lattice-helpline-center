@@ -96,7 +96,10 @@ function* getSurveyPeopleWorker(action :SequenceAction) :Saga<WorkerResponse> {
   catch (error) {
     LOG.error(action.type, error);
     response = { error };
-    yield put(getSurveyPeople.failure(action.id));
+    yield put(getSurveyPeople.failure(action.id, error));
+  }
+  finally {
+    yield put(getSurveyPeople.finally(action.id));
   }
 
   return response;
@@ -143,7 +146,10 @@ function* getSubmissionProvidersWorker(action :SequenceAction) :Saga<WorkerRespo
   catch (error) {
     LOG.error(action.type, error);
     response = { error };
-    yield put(getSubmissionProviders.failure(action.id));
+    yield put(getSubmissionProviders.failure(action.id, error));
+  }
+  finally {
+    yield put(getSubmissionProviders.finally(action.id));
   }
 
   return response;
@@ -257,13 +263,17 @@ function* downloadSurveysByDateRangeWorker(action :SequenceAction) :Saga<WorkerR
 
     generateHelplineSubmissionsCSV(response.data, filename);
 
-    yield put(downloadSurveysByDateRange.success(action.id, response.data));
+    yield put(downloadSurveysByDateRange.success(action.id));
   }
   catch (error) {
     LOG.error(action.type, error);
     response = { error };
     yield put(downloadSurveysByDateRange.failure(action.id));
   }
+  finally {
+    yield put(downloadSurveysByDateRange.finally(action.id));
+  }
+
   return response;
 }
 
