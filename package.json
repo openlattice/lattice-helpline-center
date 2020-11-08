@@ -44,7 +44,7 @@
     "history": "~4.10.0",
     "immutable": "4.0.0-rc.10",
     "lattice-auth": "~0.21.0",
-    "lattice-utils": "~0.2.0",
+    "lattice-utils": "~0.8.2",
     "lodash": "~4.17.0",
     "loglevel": "~1.6.0",
     "luxon": "~1.24.1",
