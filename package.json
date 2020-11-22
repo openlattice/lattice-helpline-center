@@ -98,7 +98,7 @@
     "import-sort-style-openlattice": "~0.1.0",
     "jest": "~26.4.0",
     "jest-styled-components": "~7.0.0",
-    "lattice": "~0.79.0",
+    "lattice": "~0.83.0",
     "lattice-sagas": "~0.54.0",
     "lattice-ui-kit": "~0.37.0",
     "npm-run-all": "~4.1.0",
@@ -116,7 +116,7 @@
     "webpack-hot-middleware": "~2.25.0"
   },
   "peerDependencies": {
-    "lattice": "~0.79.0",
+    "lattice": "~0.83.0",
     "lattice-sagas": "~0.54.0",
     "lattice-ui-kit": "~0.37.0"
   },
