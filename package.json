@@ -1,7 +1,7 @@
 {
-  "name": "@lattice-works/lattice-helpline-center",
+  "name": "@openlattice/lattice-helpline-center",
   "version": "0.2.0",
-  "homepage": "https://github.com/Lattice-Works/lattice-helpline-center",
+  "homepage": "https://github.com/openlattice/lattice-helpline-center",
   "description": "",
   "author": {
     "name": "OpenLattice, Inc.",
@@ -20,13 +20,13 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Lattice-Works/lattice-helpline-center.git"
+    "url": "git+https://github.com/openlattice/lattice-helpline-center.git"
   },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/"
   },
   "bugs": {
-    "url": "https://github.com/Lattice-Works/lattice-helpline-center/issues"
+    "url": "https://github.com/openlattice/lattice-helpline-center/issues"
   },
   "main": "build/index.js",
   "dependencies": {
@@ -76,6 +76,7 @@
     "@storybook/addon-links": "~5.3.19",
     "@storybook/addons": "~5.3.19",
     "@storybook/react": "~5.3.19",
+    "@storybook/storybook-deployer": "~2.8.7",
     "babel-eslint": "~10.1.0",
     "babel-jest": "~26.3.0",
     "babel-loader": "~8.1.0",
@@ -139,6 +140,7 @@
     "version": "npm-run-all clean build:prod && git add -A package.json",
     "postversion": "git push && git push --tags",
     "storybook": "start-storybook -p 6006",
+    "storybook:deploy": "storybook-to-ghpages  --ci -e build/storybook --source-branch develop -t GITHUB_TOKEN",
     "test": "jest --config config/jest/jest.config.js --coverage=false",
     "test:travis": "jest --maxWorkers=4 --config config/jest/jest.config.js",
     "test:watch": "jest --config config/jest/jest.config.js --watch --coverage=false"
