@@ -140,7 +140,6 @@
     "version": "npm-run-all clean build:prod && git add -A package.json",
     "postversion": "git push && git push --tags",
     "storybook": "start-storybook -p 6006",
-    "storybook:deploy": "storybook-to-ghpages  --ci -e build/storybook --source-branch develop -t GITHUB_TOKEN",
     "test": "jest --config config/jest/jest.config.js --coverage=false",
     "test:travis": "jest --maxWorkers=4 --config config/jest/jest.config.js",
     "test:watch": "jest --config config/jest/jest.config.js --watch --coverage=false"
