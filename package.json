@@ -99,7 +99,7 @@
     "import-sort-style-openlattice": "~0.1.0",
     "jest": "~26.6.3",
     "jest-styled-components": "~7.0.3",
-    "lattice": "~0.85.1",
+    "lattice": "~0.86.0",
     "lattice-sagas": "~0.59.0",
     "lattice-ui-kit": "~0.39.0",
     "npm-run-all": "~4.1.0",
