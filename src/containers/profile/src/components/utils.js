@@ -72,10 +72,9 @@ const formatAggregateResultsData = (
           const score :number = getPropertyValue(answer, PropertyTypes.SCORE_VALUE);
           const scoreCategory :string = getPropertyValue(answer, PropertyTypes.SCORE_CATEGORY);
           const text :string = getPropertyValue(answer, PropertyTypes.VALUES);
-          const date = DateTime.fromISO(submissionDate).toLocaleString(DateTime.DATE_SHORT);
 
           data.push({
-            date,
+            date: submissionDate,
             id: answerId,
             score,
             scoreCategory,
@@ -83,8 +82,18 @@ const formatAggregateResultsData = (
           });
         });
 
+        const sortedData = data.sort((resultA, resultB) => {
+          const { date: dateA } = resultA;
+          const { date: dateB } = resultB;
+          return DateTime.fromISO(dateB) - DateTime.fromISO(dateA);
+        })
+          .map((datum) => {
+            const formattedDate = DateTime.fromISO(datum.date).toLocaleString(DateTime.DATE_SHORT);
+            return { ...datum, date: formattedDate };
+          });
+
         const aggregateQuestion = Map({
-          data,
+          data: sortedData,
           id: questionId,
           title,
         });
