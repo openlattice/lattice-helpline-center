@@ -85,7 +85,7 @@ const formatAggregateResultsData = (
         const sortedData = data.sort((resultA, resultB) => {
           const { date: dateA } = resultA;
           const { date: dateB } = resultB;
-          return DateTime.fromISO(dateB) - DateTime.fromISO(dateA);
+          return DateTime.fromISO(dateB).valueOf() - DateTime.fromISO(dateA).valueOf();
         })
           .map((datum) => {
             const formattedDate = DateTime.fromISO(datum.date).toLocaleString(DateTime.DATE_SHORT);
