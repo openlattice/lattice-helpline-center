@@ -2,6 +2,7 @@
 
 const path = require('path');
 const Webpack = require('webpack');
+const externals = require('webpack-node-externals');
 const TerserPlugin = require('terser-webpack-plugin');
 
 const PACKAGE = require('../../package.json');
@@ -86,43 +87,14 @@ module.exports = (env = {}) => {
     entry: [
       path.resolve(ROOT, 'src/index.js'),
     ],
-    externals: {
-      react: {
-        root: 'React',
-        commonjs2: 'react',
-        commonjs: 'react',
-        amd: 'react'
-      },
-      'react-dom': {
-        root: 'ReactDOM',
-        commonjs2: 'react-dom',
-        commonjs: 'react-dom',
-        amd: 'react-dom'
-      },
-      'styled-components': {
-        amd: 'styled-components',
-        commonjs: 'styled-components',
-        commonjs2: 'styled-components',
-      },
-      lattice: {
-        root: 'lattice',
-        commonjs2: 'lattice',
-        commonjs: 'lattice',
-        amd: 'lattice'
-      },
-      'lattice-sagas': {
-        root: 'lattice-sagas',
-        commonjs2: 'lattice-sagas',
-        commonjs: 'lattice-sagas',
-        amd: 'lattice-sagas'
-      },
-      'lattice-ui-kit': {
-        root: 'lattice-ui-kit',
-        commonjs2: 'lattice-ui-kit',
-        commonjs: 'lattice-ui-kit',
-        amd: 'lattice-ui-kit'
-      },
-    },
+    externals: [
+      externals({
+        allowlist: [
+          'file-saver',
+          'recharts',
+        ]
+      })
+    ],
     mode: env.production ? ENV_PROD : ENV_DEV,
     module: {
       rules: [
