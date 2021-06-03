@@ -7,9 +7,13 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { List as iList } from 'immutable';
 import { Constants } from 'lattice';
 import {
+  // $FlowFixMe
   List,
+  // $FlowFixMe
   ListItem,
+  // $FlowFixMe
   ListItemAvatar,
+  // $FlowFixMe
   ListItemText,
 } from 'lattice-ui-kit';
 import { DateTimeUtils } from 'lattice-utils';
