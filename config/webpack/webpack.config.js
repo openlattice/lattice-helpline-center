@@ -1,11 +1,19 @@
-/* eslint-disable import/extensions */
+/* eslint-disable import/extensions, import/no-extraneous-dependencies */
 
 const path = require('path');
 const Webpack = require('webpack');
+const TerserPlugin = require('terser-webpack-plugin');
 
-const LIB_CONFIG = require('../lib/lib.config.js');
-const LIB_PATHS = require('../lib/paths.config.js');
 const PACKAGE = require('../../package.json');
+const { AUTH0_CLIENT_ID_DEV, AUTH0_CLIENT_ID_PROD, AUTH0_DOMAIN } = require('../auth/auth0.config.js');
+
+const BANNER = `
+${PACKAGE.name} - v${PACKAGE.version}
+${PACKAGE.description}
+${PACKAGE.homepage}
+
+Copyright (c) 2017-${(new Date()).getFullYear()}, OpenLattice, Inc. All rights reserved.
+`;
 
 module.exports = (env = {}) => {
 
@@ -16,8 +24,11 @@ module.exports = (env = {}) => {
   const BABEL_CONFIG = path.resolve(__dirname, '../babel/babel.config.js');
   const ENV_DEV = 'development';
   const ENV_PROD = 'production';
-  const LIB_FILE_NAME = 'index.js';
-  const LIB_NAMESPACE = 'helpline';
+
+  const ROOT = path.resolve(__dirname, '../..');
+  const BUILD = path.resolve(ROOT, 'build');
+  const NODE = path.resolve(ROOT, 'node_modules');
+  const SOURCE = path.resolve(ROOT, 'src');
 
   /*
    * loaders
@@ -26,9 +37,7 @@ module.exports = (env = {}) => {
   const BABEL_LOADER = {
     test: /\.js$/,
     exclude: /node_modules/,
-    include: [
-      LIB_PATHS.ABS.SOURCE,
-    ],
+    include: [SOURCE],
     use: {
       loader: 'babel-loader',
       options: {
@@ -55,11 +64,13 @@ module.exports = (env = {}) => {
    */
 
   const BANNER_PLUGIN = new Webpack.BannerPlugin({
-    banner: LIB_CONFIG.BANNER,
+    banner: BANNER,
     entryOnly: true,
   });
 
   const DEFINE_PLUGIN = new Webpack.DefinePlugin({
+    __AUTH0_CLIENT_ID__: JSON.stringify(env.production ? AUTH0_CLIENT_ID_PROD : AUTH0_CLIENT_ID_DEV),
+    __AUTH0_DOMAIN__: JSON.stringify(AUTH0_DOMAIN),
     __ENV_DEV__: JSON.stringify(!!env.development),
     __ENV_PROD__: JSON.stringify(!!env.production),
     __PACKAGE__: JSON.stringify(PACKAGE.name),
@@ -73,7 +84,7 @@ module.exports = (env = {}) => {
   return {
     bail: true,
     entry: [
-      LIB_PATHS.ABS.ENTRY,
+      path.resolve(ROOT, 'src/index.js'),
     ],
     externals: {
       react: {
@@ -121,15 +132,21 @@ module.exports = (env = {}) => {
       ],
     },
     optimization: {
-      // minimize: !!env.production,
-      minimize: false,
+      minimize: !!env.production,
+      minimizer: [
+        new TerserPlugin({
+          extractComments: false,
+        }),
+      ],
     },
     output: {
-      library: LIB_NAMESPACE,
-      libraryTarget: 'umd',
-      path: LIB_PATHS.ABS.BUILD,
+      filename: 'index.js',
+      library: {
+        name: 'helpline',
+        type: 'umd',
+      },
+      path: BUILD,
       publicPath: '/',
-      filename: LIB_FILE_NAME,
     },
     performance: {
       hints: false, // disable performance hints for now
@@ -141,8 +158,8 @@ module.exports = (env = {}) => {
     resolve: {
       extensions: ['.js'],
       modules: [
-        LIB_PATHS.ABS.SOURCE,
-        'node_modules',
+        SOURCE,
+        NODE,
       ],
     },
     target: 'web',
