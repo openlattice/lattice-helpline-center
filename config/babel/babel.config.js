@@ -34,10 +34,7 @@ module.exports = {
     'babel-plugin-styled-components',
   ],
   presets: [
-    ['@babel/preset-env', {
-      corejs: 3,
-      useBuiltIns: 'entry',
-    }],
+    '@babel/preset-env',
     ['@babel/preset-react', {
       runtime: 'automatic'
     }],
