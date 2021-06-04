@@ -91,6 +91,7 @@ module.exports = (env = {}) => {
       externals({
         allowlist: [
           'file-saver',
+          'papaparse',
           'recharts',
         ]
       })
