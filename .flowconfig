@@ -26,3 +26,6 @@
 [options]
 esproposal.optional_chaining=enable
 react.runtime=automatic
+
+[untyped]
+<PROJECT_ROOT>/node_modules/lattice-ui-kit
